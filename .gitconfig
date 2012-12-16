@@ -1,0 +1,18 @@
+[user]
+	name = Mitchell Kember
+	email = mk12360@gmail.com
+[alias]
+	unstage = reset HEAD --
+	last = log -1 HEAD
+[credential]
+	helper = osxkeychain
+[color]
+	ui = auto
+[core]
+	excludesfile = ~/.gitignore
+[merge]
+	tool = opendiff
+[push]
+	default = simple
+[apply]
+	whitespace = fix
