@@ -103,8 +103,7 @@ nnoremap <Space> <C-f>
 nnoremap <S-space> <C-b>
 
 " Go down wrapped lines one visual line at a time
-"nnoremap j gj
-"nnoremap k gk
+nnoremap <leader>w :nnoremap j gj<cr> :nnoremap k gk<cr>
 
 " Half page scanning
 nnoremap J <C-d>
