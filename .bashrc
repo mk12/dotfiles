@@ -12,6 +12,7 @@ alias df='df -h'
 alias du='du -h'
 alias mkdir='mkdir -p'
 alias sz='du -sh'
+alias upd='brew update && brew upgrade'
 alias notif='/Applications/Terminal\ Notifier.app/Contents/MacOS/terminal-notifier -activate com.apple.Terminal -message'
 
 # Development
