@@ -42,6 +42,7 @@ Bundle 'Rip-Rip/clang_complete'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'Raimondi/YAIFA'
 Bundle 'thinca/vim-ft-markdown_fold'
+Bundle 'tex_autoclose.vim'
 
 " My bundles
 Bundle 'mk12/openssl.vim'
