@@ -173,10 +173,10 @@ set autoindent    " Stay indented on new line
 set smarttab      " <Tab> adds shiftwidth spaces
 set shiftwidth=4  " Indentation width (>>, <<)
 set shiftround    " Round indents to multiples of shiftwidth
-set expandtab     " Insert spaces on <Tab> 
+"set expandtab     " Insert spaces on <Tab> 
 
 " Custom indentation for specific filetypes (YAIFA stills overrides here)
-autocmd Filetype make,tex setlocal noet
+autocmd Filetype c,objc,cpp,objcpp,ruby,python,haskell,scheme,vim setlocal et
 autocmd Filetype ruby setlocal sw=2
 
 " ==================== Mouse ==================== {{{1
