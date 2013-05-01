@@ -169,14 +169,15 @@ set undofile
 
 " These are defaults for new files. For existing files, YAIFA will detect
 " indentation settings. (YAIFA uses the value of shiftwidth here, though)
-set autoindent    " Stay indented on new line
-set smarttab      " <Tab> adds shiftwidth spaces
-set shiftwidth=4  " Indentation width (>>, <<)
-set shiftround    " Round indents to multiples of shiftwidth
-"set expandtab     " Insert spaces on <Tab> 
+set autoindent     " Stay indented on new line
+set smarttab       " <Tab> adds shiftwidth spaces
+set shiftwidth=4   " Indentation width (>>, <<)
+set tabstop=4      " Real tabs are four spaces
+set softtabstop=4  " Make sure this is the same
+set shiftround     " Round indents to multiples of shiftwidth
 
 " Custom indentation for specific filetypes (YAIFA stills overrides here)
-autocmd Filetype c,objc,cpp,objcpp,ruby,python,haskell,scheme,vim setlocal et
+autocmd Filetype c,objc,cpp,objcpp,ruby,python,haskell,scheme,vim,sh setlocal et
 autocmd Filetype ruby setlocal sw=2
 
 " ==================== Mouse ==================== {{{1
