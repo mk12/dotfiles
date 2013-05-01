@@ -72,6 +72,10 @@ colorscheme solarized
 " Make invisible characters less obtrusive when using ":set list"
 highlight link Visual Comment
 
+let g:tex_conceal="adgm"
+set concealcursor="c"
+set conceallevel=2
+
 " ==================== Nice Shortcuts ==================== {{{1
 
 " Remap ; to : so that you don't have to press shift for commands
@@ -267,8 +271,6 @@ let g:clang_complete_patterns=1
 let g:clang_complete_macros=1
 let g:clang_snippets=1
 let g:clang_conceal_snippets=1
-set concealcursor=inv
-set conceallevel=2
 
 nnoremap <leader>q :call g:ClangUpdateQuickFix()<cr>
 
