@@ -94,8 +94,6 @@ cnoreabbrev <expr> w!!
     \((getcmdtype() == ':' && getcmdline() == 'w!!')
     \?('!sudo tee % >/dev/null'):('w!!'))
 
-"nnoremap <leader>/ gcc<cr>
-
 " ==================== Abbreviations ==================== {{{1
 
 " LaTeX
