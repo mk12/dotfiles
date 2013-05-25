@@ -17,6 +17,8 @@ set autoread                    " Reload files changed outside vim
 set viminfo='100,%,f1           " Save marks, buffer
 set enc=utf-8                   " UTF-8 is the best
 set autochdir                   " Auto cd to the file's directory
+set guioptions-=r               " Remove scrollbar
+
 
 " This makes vim act like all other editors, buffers can
 " exist in the background without being in a window.
@@ -67,6 +69,8 @@ nnoremap <leader>d :setlocal filetype=markdown<cr> :setlocal fdm=expr<cr>
 syntax enable
 set background=light
 colorscheme solarized
+
+let g:solarized_menu=0
 
 " Make invisible characters less obtrusive when using ":set list"
 highlight link Visual Comment
@@ -183,12 +187,9 @@ autocmd Filetype ruby setlocal sw=2
 
 " ==================== Mouse ==================== {{{1
 
-if has('gui_running')
-    set mousefocus  " Mouse can control splits
-endif
-
 if has('mouse')
     set mouse=a
+    set mousefocus  " Mouse can control splits
 endif
 
 " ==================== Folds ==================== {{{1
