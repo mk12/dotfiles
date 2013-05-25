@@ -16,9 +16,10 @@ set visualbell t_vb=            " No sounds
 set autoread                    " Reload files changed outside vim
 set viminfo='100,%,f1           " Save marks, buffer
 set enc=utf-8                   " UTF-8 is the best
-set autochdir                   " Auto cd to the file's directory
 set guioptions-=r               " Remove scrollbar
 
+" Auto-change directory to current buffer
+autocmd BufEnter * :cd %:p:h
 
 " This makes vim act like all other editors, buffers can
 " exist in the background without being in a window.
