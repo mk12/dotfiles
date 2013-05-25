@@ -67,10 +67,7 @@ nnoremap <leader>d :setlocal filetype=markdown<cr> :setlocal fdm=expr<cr>
 " ==================== Colorscheme / Syntax ==================== {{{1
 
 syntax enable
-set background=light
 colorscheme solarized
-
-let g:solarized_menu=0
 
 " Make invisible characters less obtrusive when using ":set list"
 highlight link Visual Comment
