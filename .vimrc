@@ -46,7 +46,6 @@ Bundle 'tex_autoclose.vim'
 
 " My bundles
 Bundle 'mk12/openssl.vim'
-Bundle 'mk12/unicycle'
 Bundle 'mk12/tex-pdf'
 
 " ==================== File Type ==================== {{{1
