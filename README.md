@@ -26,6 +26,6 @@ License
 
 Copyright © 2012 Mitchell Kember
 
-Dotfiles is available under the MIT license; see [LICENSE][] for details.
+Dotfiles is available under the MIT License; see [LICENSE][] for details.
 
 [LICENSE]: https://github.com/mk12/dotfiles/blob/master/LICENSE.md
