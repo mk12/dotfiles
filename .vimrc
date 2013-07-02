@@ -2,7 +2,7 @@
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
-" ==================== General Config ==================== {{{1
+" ---------------- General Config ----------------------------------------- {{{1
 
 set number                      " Line numbers are good
 set numberwidth=3               " Most files are in the hundreds
@@ -29,7 +29,7 @@ set hidden
 " It's easier to reach than backslash (default)
 let mapleader = ","
 
-" ==================== Vundle ==================== {{{1
+" ---------------- Vundle ------------------------------------------------- {{{1
 
 " Required for Vundle to work
 filetype on | filetype off
@@ -51,7 +51,7 @@ Bundle 'tex_autoclose.vim'
 Bundle 'mk12/openssl.vim'
 Bundle 'mk12/tex-pdf'
 
-" ==================== File Type ==================== {{{1
+" ---------------- File Type ---------------------------------------------- {{{1
 
 filetype plugin indent on
 
@@ -65,7 +65,7 @@ let pascal_fpc=1
 " Quickly enable markdown syntax highlighting
 nnoremap <leader>d :setlocal filetype=markdown<cr> :setlocal fdm=expr<cr>
 
-" ==================== Colorscheme / Syntax ==================== {{{1
+" ---------------- Colorscheme / Syntax ----------------------------------- {{{1
 
 syntax enable
 colorscheme solarized
@@ -77,7 +77,7 @@ let g:tex_conceal="adgm"
 set concealcursor="c"
 set conceallevel=2
 
-" ==================== Nice Shortcuts ==================== {{{1
+" ---------------- Nice Shortcuts ----------------------------------------- {{{1
 
 " Remap ; to : so that you don't have to press shift for commands
 noremap ; :
@@ -95,12 +95,7 @@ cnoreabbrev <expr> w!!
     \((getcmdtype() == ':' && getcmdline() == 'w!!')
     \?('!sudo tee % >/dev/null'):('w!!'))
 
-" ==================== Abbreviations ==================== {{{1
-
-" LaTeX
-autocmd Filetype tex ab ... \dots | ab Mr. Mr.~ | ab Mrs. Mrs.~ | ab Ms. Ms.~ | ab Dr. Dr.~
-
-" ==================== Navigation ==================== {{{1
+" ---------------- Navigation --------------------------------------------- {{{1
 
 " The second one doesn't work
 nnoremap <Space> <C-f>
@@ -113,7 +108,7 @@ nnoremap <leader>w :nnoremap j gj<cr> :nnoremap k gk<cr>
 nnoremap J <C-d>
 nnoremap K <C-u>
 
-" ==================== Cursor Position ==================== {{{1
+" ---------------- Cursor Position ---------------------------------------- {{{1
 
 set ruler          " Display row & column in status bar
 set cursorline     " Highlight current line
@@ -132,14 +127,14 @@ augroup resCur
     autocmd BufWinEnter * call ResCur()
 augroup END
 
-" ==================== Spelling ==================== {{{1
+" ---------------- Spelling ----------------------------------------------- {{{1
 
 if v:version >= 700
     setlocal spell spelllang=en
     set nospell
 endif
 
-" ==================== Search ==================== {{{1
+" ---------------- Search ------------------------------------------------- {{{1
 
 set incsearch   " Find the next match as we type the search
 set hlsearch    " Hilight searches by default
@@ -147,7 +142,7 @@ set ignorecase  " Ignore case by default
 set smartcase   " Don't ignore case if the search contains uppercase characters
 set gdefault    " /g : all occurences in the line
 
-" ==================== Backups ==================== {{{1
+" ---------------- Backups ------------------------------------------------ {{{1
 
 silent !mkdir -p ~/.vim/backup > /dev/null 2>&1
 silent !mkdir -p ~/.vim/tmp > /dev/null 2>&1
@@ -156,7 +151,7 @@ set backup
 set backupdir=./.backup,~/.vim/backup
 set directory=~/.vim/tmp,~/.tmp,/var/tmp,/tmp
 
-" ==================== Undo ==================== {{{1
+" ---------------- Undo --------------------------------------------------- {{{1
 
 set undolevels=100
 
@@ -168,7 +163,7 @@ inoremap <C-U> <C-G>u<C-U>
 set undodir=~/.vim/backup
 set undofile
 
-" ==================== Indentation ==================== {{{1
+" ---------------- Indentation -------------------------------------------- {{{1
 
 " These are defaults for new files. For existing files, YAIFA will detect
 " indentation settings. (YAIFA uses the value of shiftwidth here, though)
@@ -181,16 +176,16 @@ set shiftround     " Round indents to multiples of shiftwidth
 
 " Custom indentation for specific filetypes (YAIFA stills overrides here)
 autocmd Filetype c,objc,cpp,objcpp,ruby,python,haskell,scheme,vim,sh setlocal et
-autocmd Filetype ruby setlocal sw=2
+autocmd Filetype ruby,scheme setlocal sw=2
 
-" ==================== Mouse ==================== {{{1
+" ---------------- Mouse -------------------------------------------------- {{{1
 
 if has('mouse')
     set mouse=a
     set mousefocus  " Mouse can control splits
 endif
 
-" ==================== Folds ==================== {{{1
+" ---------------- Folds -------------------------------------------------- {{{1
 
 set foldmethod=syntax  " Fold based on indent
 set foldnestmax=3      " Deepest fold is 3 levels
@@ -216,7 +211,7 @@ endfunction
 " Easily switch between fold methods
 nnoremap <leader>f :call ToggleFoldMethod()<cr>
 
-" ==================== Lines / Wrapping ==================== {{{1
+" ---------------- Lines / Wrapping --------------------------------------- {{{1
 
 set wrap              " Do soft wrapping
 set textwidth=0       " No hard wrapping by default
@@ -248,11 +243,11 @@ function! EightyCharsToggle()
     endif
 endfunction
 
-" ==================== Scrolling ==================== {{{1
+" ---------------- Scrolling ---------------------------------------------- {{{1
 
 set scrolloff=8  " Start scrolling when at 8 lines away from margins
 
-" ==================== Autocomplete ==================== {{{1
+" ---------------- Autocomplete ------------------------------------------- {{{1
 
 set completeopt=menu,preview,longest
 
