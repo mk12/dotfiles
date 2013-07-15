@@ -32,13 +32,15 @@ export HISTTIMEFORMAT='%b %d %I:%M %p '
 export HISTCONTROL=ignorespace
 export HISTIGNORE="history:pwd:exit:df:ls:ll"
 
-# Environment variables
+# Misc. environment variables
 export CLICOLOR=true
 export LESS='-MerX'
 export LESSHISTFILE='-'
 export GREP_OPTIONS='--color=auto'
 export MAC_USE_CURRENT_SDK=true
 export HOMEBREW_CC='clang'
+export GOPATH=$HOME/Development/go
+export PATH=$PATH:$GOPATH/bin
 
 # Encryption
 function aes256 {

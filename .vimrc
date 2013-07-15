@@ -46,6 +46,7 @@ Bundle 'altercation/vim-colors-solarized'
 Bundle 'Raimondi/YAIFA'
 Bundle 'thinca/vim-ft-markdown_fold'
 Bundle 'tex_autoclose.vim'
+Bundle 'jnwhiteh/vim-golang'
 
 " My bundles
 Bundle 'mk12/openssl.vim'
