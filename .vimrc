@@ -57,7 +57,7 @@ Bundle 'mk12/tex-pdf'
 filetype plugin indent on
 
 autocmd BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}
-    \ setlocal filetype=markdown fdm=expr
+	\ setlocal filetype=markdown fdm=expr
 autocmd BufRead,BufNewFile *.json setlocal filetype=javascript
 autocmd BufRead,BufNewFile *.less setlocal filetype=css
 
@@ -93,8 +93,8 @@ nnoremap ` '
 
 " Save as sudo using ":w!!"
 cnoreabbrev <expr> w!!
-    \((getcmdtype() == ':' && getcmdline() == 'w!!')
-    \?('!sudo tee % >/dev/null'):('w!!'))
+	\((getcmdtype() == ':' && getcmdline() == 'w!!')
+	\?('!sudo tee % >/dev/null'):('w!!'))
 
 " ---------------- Navigation --------------------------------------------- {{{1
 
@@ -117,22 +117,22 @@ set nostartofline  " Don't return to start of line after page down
 
 " Go back to same cursor position
 function! ResCur()
-    if line("'\"") <= line("$")
-        normal! g`"
-        return 1
-    endif
+	if line("'\"") <= line("$")
+		normal! g`"
+		return 1
+	endif
 endfunction
 
 augroup resCur
-    autocmd!
-    autocmd BufWinEnter * call ResCur()
+	autocmd!
+	autocmd BufWinEnter * call ResCur()
 augroup END
 
 " ---------------- Spelling ----------------------------------------------- {{{1
 
 if v:version >= 700
-    setlocal spell spelllang=en
-    set nospell
+	setlocal spell spelllang=en
+	set nospell
 endif
 
 " ---------------- Search ------------------------------------------------- {{{1
@@ -156,7 +156,7 @@ set directory=~/.vim/tmp,~/.tmp,/var/tmp,/tmp
 
 set undolevels=100
 
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
+" CTRL-U in insert mode deletes a lot.	Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
 
@@ -182,8 +182,8 @@ autocmd Filetype ruby,scheme setlocal sw=2
 " ---------------- Mouse -------------------------------------------------- {{{1
 
 if has('mouse')
-    set mouse=a
-    set mousefocus  " Mouse can control splits
+	set mouse=a
+	set mousefocus  " Mouse can control splits
 endif
 
 " ---------------- Folds -------------------------------------------------- {{{1
@@ -194,19 +194,19 @@ set nofoldenable       " Dont fold by default
 
 let g:FoldMethod=0
 function! ToggleFoldMethod()
-    if g:FoldMethod == 0
-        exe 'set foldmethod=indent'
-        echo 'foldmethod: indent'
-        let g:FoldMethod=1
-    elseif g:FoldMethod == 1
-        exe 'set foldmethod=marker'
-        echo 'foldmethod: marker'
-        let g:FoldMethod=2
-    elseif g:FoldMethod == 2
-        exe 'set foldmethod=syntax'
-        echo 'foldmethod: syntax'
-        let g:FoldMethod=0
-    endif
+	if g:FoldMethod == 0
+		exe 'set foldmethod=indent'
+		echo 'foldmethod: indent'
+		let g:FoldMethod=1
+	elseif g:FoldMethod == 1
+		exe 'set foldmethod=marker'
+		echo 'foldmethod: marker'
+		let g:FoldMethod=2
+	elseif g:FoldMethod == 2
+		exe 'set foldmethod=syntax'
+		echo 'foldmethod: syntax'
+		let g:FoldMethod=0
+	endif
 endfunction
 
 " Easily switch between fold methods
@@ -227,21 +227,21 @@ set listchars=eol:¬,tab:».,trail:~,extends:>,precedes:<
 set nojoinspaces
 
 " Thou shalt not cross 80 columns in thy file.
-nnoremap <leader>8 :set colorcolumn=81<cr>:set textwidth=80<cr>
 nnoremap <leader>7 :set colorcolumn=0<cr>:set textwidth=0<cr>
+nnoremap <leader>8 :set colorcolumn=81<cr>:set textwidth=80<cr>
 nnoremap <leader>9 :call EightyCharsToggle()<cr>
 
 " Highlight columns over 80 in red for quick scanning
 let s:eightychars = 1
 function! EightyCharsToggle()
-    if s:eightychars
-        highlight OverLength ctermbg=red ctermfg=white
-        match OverLength /\%81v.\+/
-        let s:eightychars = 0
-    else
-        highlight OverLength none
-        let s:eightychars = 1
-    endif
+	if s:eightychars
+		highlight OverLength ctermbg=red ctermfg=white
+		match OverLength /\%81v.\+/
+		let s:eightychars = 0
+	else
+		highlight OverLength none
+		let s:eightychars = 1
+	endif
 endfunction
 
 " ---------------- Scrolling ---------------------------------------------- {{{1
@@ -258,7 +258,7 @@ let g:clang_complete_auto=0
 let g:clang_auto_select=0
 let g:clang_snippets_engine='clang_complete'
 let g:clang_close_preview=1
-let g:clang_complete_copen=1    " Open quickfix on error
+let g:clang_complete_copen=1  " Open quickfix on error
 let g:clang_complete_patterns=1
 let g:clang_complete_macros=1
 let g:clang_snippets=1
@@ -270,17 +270,17 @@ nnoremap <leader>q :call g:ClangUpdateQuickFix()<cr>
 " tab indents) or if we want to try autocompletion. This is simpler than
 " Supertab.
 function InsertTabWrapper()
-    if pumvisible()
-        return "\<c-n>"
-    endif
-    let col = col('.') - 1
-    if !col || getline('.')[col - 1] !~ '\k'
-        return "\<tab>"
-    elseif exists('&omnifunc') && &omnifunc != ''
-        return "\<c-x>\<c-o>"
-    else
-        return "\<c-p>"
-    endif
+	if pumvisible()
+		return "\<c-n>"
+	endif
+	let col = col('.') - 1
+	if !col || getline('.')[col - 1] !~ '\k'
+		return "\<tab>"
+	elseif exists('&omnifunc') && &omnifunc != ''
+		return "\<c-x>\<c-o>"
+	else
+		return "\<c-p>"
+	endif
 endfunction
 
 " Remap the tab key to select action with InsertTabWrapper

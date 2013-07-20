@@ -24,7 +24,7 @@ alias dump='gobjdump -d -M intel -s'
 
 # Tab completion
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    source $(brew --prefix)/etc/bash_completion
+	source $(brew --prefix)/etc/bash_completion
 fi
 
 # Bash history
@@ -44,26 +44,26 @@ export PATH=$PATH:$GOPATH/bin
 
 # Encryption
 function aes256 {
-    if [[ -z "$1" ]]; then
-        echo "usage: $FUNCNAME file"
-    elif [[ -f "$1" ]]; then
-        openssl aes-256-cbc -e -a -in "$1" -out "$1".aes
-    else
-        echo "$FUNCNAME: $1: No such file"
-    fi
+	if [[ -z "$1" ]]; then
+		echo "usage: $FUNCNAME file"
+	elif [[ -f "$1" ]]; then
+		openssl aes-256-cbc -e -a -in "$1" -out "$1".aes
+	else
+		echo "$FUNCNAME: $1: No such file"
+	fi
 }
 
 # Decryption
 function aes256d {
-    if [[ -z "$1" ]]; then
-        echo "usage: $FUNCNAME file"
-    elif [[ -f "$1" ]]; then
-        if [[ "${1##*.}" == "aes" ]]; then
-            openssl aes-256-cbc -d -a -in "$1" -out "${1%.aes}"
-        else
-            echo "$FUNCNAME: $1: Does not have AES extension"
-        fi
-    else
-        echo "$FUNCNAME: $1: No such file"
-    fi
+	if [[ -z "$1" ]]; then
+		echo "usage: $FUNCNAME file"
+	elif [[ -f "$1" ]]; then
+		if [[ "${1##*.}" == "aes" ]]; then
+			openssl aes-256-cbc -d -a -in "$1" -out "${1%.aes}"
+		else
+			echo "$FUNCNAME: $1: Does not have AES extension"
+		fi
+	else
+		echo "$FUNCNAME: $1: No such file"
+	fi
 }
