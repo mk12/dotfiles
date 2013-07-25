@@ -44,11 +44,13 @@ Bundle 'tComment'
 Bundle 'Rip-Rip/clang_complete'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'Raimondi/YAIFA'
-Bundle 'thinca/vim-ft-markdown_fold'
+" Bundle 'thinca/vim-ft-markdown_fold'
+" Bundle 'plasticboy/markdown-vim'
 Bundle 'tex_autoclose.vim'
 Bundle 'jnwhiteh/vim-golang'
 
 " My bundles
+Bundle 'mk12/distraction-free-writing-vim'
 Bundle 'mk12/openssl.vim'
 Bundle 'mk12/tex-pdf'
 
@@ -56,15 +58,8 @@ Bundle 'mk12/tex-pdf'
 
 filetype plugin indent on
 
-autocmd BufRead,BufNewFile *.{md,mdown,mkd,mkdn,markdown,mdwn}
-	\ setlocal filetype=markdown fdm=expr
 autocmd BufRead,BufNewFile *.json setlocal filetype=javascript
 autocmd BufRead,BufNewFile *.less setlocal filetype=css
-
-let pascal_fpc=1
-
-" Quickly enable markdown syntax highlighting
-nnoremap <leader>d :setlocal filetype=markdown<cr> :setlocal fdm=expr<cr>
 
 " ---------------- Colorscheme / Syntax ----------------------------------- {{{1
 
@@ -77,6 +72,17 @@ highlight link Visual Comment
 let g:tex_conceal="adgm"
 set concealcursor="c"
 set conceallevel=2
+
+" ---------------- Markdown ----------------------------------------------- {{{1
+
+let g:mkd_colorscheme = "iawriter"
+let g:mkd_font = "Cousine:h14"
+
+nnoremap <leader>d :call ToggleDistractionFreeWriting()<cr>
+
+if has("gui_running")
+	autocmd Filetype mkd call MarkdownMode()
+endif
 
 " ---------------- Nice Shortcuts ----------------------------------------- {{{1
 
@@ -176,7 +182,7 @@ set softtabstop=4  " Make sure this is the same
 set shiftround     " Round indents to multiples of shiftwidth
 
 " Custom indentation for specific filetypes (YAIFA stills overrides here)
-autocmd Filetype c,objc,cpp,objcpp,ruby,python,haskell,scheme,vim,sh setlocal et
+autocmd Filetype objc,objcpp,ruby,python,haskell,scheme setlocal et
 autocmd Filetype ruby,scheme setlocal sw=2
 
 " ---------------- Mouse -------------------------------------------------- {{{1
@@ -188,22 +194,22 @@ endif
 
 " ---------------- Folds -------------------------------------------------- {{{1
 
-set foldmethod=syntax  " Fold based on indent
+set foldmethod=syntax  " Fold based on syntax
 set foldnestmax=3      " Deepest fold is 3 levels
 set nofoldenable       " Dont fold by default
 
 let g:FoldMethod=0
 function! ToggleFoldMethod()
 	if g:FoldMethod == 0
-		exe 'set foldmethod=indent'
+		exec 'set foldmethod=indent'
 		echo 'foldmethod: indent'
 		let g:FoldMethod=1
 	elseif g:FoldMethod == 1
-		exe 'set foldmethod=marker'
+		exec 'set foldmethod=marker'
 		echo 'foldmethod: marker'
 		let g:FoldMethod=2
 	elseif g:FoldMethod == 2
-		exe 'set foldmethod=syntax'
+		exec 'set foldmethod=syntax'
 		echo 'foldmethod: syntax'
 		let g:FoldMethod=0
 	endif
