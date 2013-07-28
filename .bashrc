@@ -23,16 +23,13 @@ alias ccr='clang -Weverything -DNDEBUG -pedantic -std=c99 -Os'
 alias dump='gobjdump -d -M intel -s'
 
 # Tab completion
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-	source $(brew --prefix)/etc/bash_completion
-fi
+brew_completion=$(brew --prefix)/etc/bash_completion
+[[ -f $brew_completion ]] && source $brew_completion
 
-# Bash history
+# Environment variables
 export HISTTIMEFORMAT='%b %d %I:%M %p '
 export HISTCONTROL=ignorespace
 export HISTIGNORE="history:pwd:exit:df:ls:ll"
-
-# Misc. environment variables
 export CLICOLOR=true
 export LESS='-MerX'
 export LESSHISTFILE='-'
@@ -41,29 +38,3 @@ export MAC_USE_CURRENT_SDK=true
 export HOMEBREW_CC='clang'
 export GOPATH=$HOME/Development/go
 export PATH=$PATH:$GOPATH/bin
-
-# Encryption
-function aes256 {
-	if [[ -z "$1" ]]; then
-		echo "usage: $FUNCNAME file"
-	elif [[ -f "$1" ]]; then
-		openssl aes-256-cbc -e -a -in "$1" -out "$1".aes
-	else
-		echo "$FUNCNAME: $1: No such file"
-	fi
-}
-
-# Decryption
-function aes256d {
-	if [[ -z "$1" ]]; then
-		echo "usage: $FUNCNAME file"
-	elif [[ -f "$1" ]]; then
-		if [[ "${1##*.}" == "aes" ]]; then
-			openssl aes-256-cbc -d -a -in "$1" -out "${1%.aes}"
-		else
-			echo "$FUNCNAME: $1: Does not have AES extension"
-		fi
-	else
-		echo "$FUNCNAME: $1: No such file"
-	fi
-}
