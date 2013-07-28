@@ -1,281 +1,262 @@
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
+" Disable Vi compatibility (must come first).
 set nocompatible
 
-" ---------------- General Config ----------------------------------------- {{{1
+" ---------------- Bundles ------------------------------------------------ {{{1
 
-set number                      " Line numbers are good
-set numberwidth=3               " Most files are in the hundreds
-set backspace=indent,eol,start  " Allow backspace in insert mode
-set history=1000                " Store lots of :cmdline history
-set showcmd                     " Show incomplete cmds down the bottom
-set showmode                    " Show current mode down the bottom
-set cmdheight=2                 " Show extra stuff
-set noerrorbells                " Bells are annoying
-set visualbell t_vb=            " No sounds
-set autoread                    " Reload files changed outside vim
-set viminfo='100,%,f1           " Save marks, buffer
-set enc=utf-8                   " UTF-8 is the best
-set guioptions-=r               " Remove scrollbar
-
-" Auto-change directory to current buffer
-autocmd BufEnter * :cd %:p:h
-
-" This makes vim act like all other editors, buffers can
-" exist in the background without being in a window.
-" http://items.sjbach.com/319/configuring-vim-right
-set hidden
-
-" It's easier to reach than backslash (default)
-let mapleader = ","
-
-" ---------------- Vundle ------------------------------------------------- {{{1
-
-" Required for Vundle to work
-filetype on | filetype off
+" This is required for Vundle to work.
+filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
+
+" General
 Bundle 'repeat.vim'
 Bundle 'surround.vim'
 Bundle 'file-line'
 Bundle 'tComment'
-Bundle 'Rip-Rip/clang_complete'
-Bundle 'altercation/vim-colors-solarized'
+Bundle 'Engspchk'
 Bundle 'Raimondi/YAIFA'
-" Bundle 'thinca/vim-ft-markdown_fold'
-" Bundle 'plasticboy/markdown-vim'
+Bundle 'better-snipmate-snippet'
+
+" Language-specific
 Bundle 'tex_autoclose.vim'
 Bundle 'jnwhiteh/vim-golang'
+Bundle 'hallison/vim-markdown'
+Bundle 'thinca/vim-ft-markdown_fold'
 
-" My bundles
-Bundle 'mk12/distraction-free-writing-vim'
-Bundle 'mk12/openssl.vim'
-Bundle 'mk12/tex-pdf'
-
-" ---------------- File Type ---------------------------------------------- {{{1
+" Colour schemes
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'mk12/vim-iawriter'
 
 filetype plugin indent on
 
-autocmd BufRead,BufNewFile *.json setlocal filetype=javascript
-autocmd BufRead,BufNewFile *.less setlocal filetype=css
+" ---------------- General ------------------------------------------------ {{{1
 
-" ---------------- Colorscheme / Syntax ----------------------------------- {{{1
+set number                      " line numbers are good
+set numberwidth=3               " most files are in the hundreds
+set backspace=indent,eol,start  " allow backspace in insert mode
+set undolevels=100              " store lots of undo history
+set history=1000                " store lots of :cmdline history
+set showcmd                     " show incomplete commands down the bottom
+set showmode                    " show current mode down the bottom
+set cmdheight=2                 " show extra stuff
+set noerrorbells                " bells are annoying
+set visualbell t_vb=            " no sounds
+set autoread                    " reload files changed outside Vim
+set viminfo='100,%,f1           " save marks, buffer
+set enc=utf-8                   " UTF-8 is the best
+set guioptions-=r               " remove scrollbar
+set mousefocus                  " let the mouse control splits
+set autochdir                   " cd to the file's directory
+set wildmenu                    " enhanced command-line completion
+set lazyredraw                  " don't redraw while executing macros
+set hidden                      " allow buffers in the background
 
-syntax enable
-colorscheme solarized
+" ---------------- Shortcuts ---------------------------------------------- {{{1
 
-" Make invisible characters less obtrusive when using ":set list"
-highlight link Visual Comment
+" It's easier to reach than the backslash (default leader).
+let mapleader = ","
 
-let g:tex_conceal="adgm"
-set concealcursor="c"
-set conceallevel=2
-
-" ---------------- Markdown ----------------------------------------------- {{{1
-
-let g:mkd_colorscheme = "iawriter"
-let g:mkd_font = "Cousine:h14"
-
-nnoremap <leader>d :call ToggleDistractionFreeWriting()<cr>
-
-if has("gui_running")
-	autocmd Filetype mkd call MarkdownMode()
-endif
-
-" ---------------- Nice Shortcuts ----------------------------------------- {{{1
-
-" Remap ; to : so that you don't have to press shift for commands
+" Remap ; to : so that you don't have to press shift for commands.
 noremap ; :
 noremap : ;
 
-" We'll never need to input 'jj'
-imap jj <Esc>
+" We'll never need to input 'jj'.
+inoremap jj <Esc>
 
-" Backtick is more useful than apostrophe (goes to row AND column) of mark
+" Backtick is more useful than apostrophe (goes to row AND column of mark).
 nnoremap ' `
 nnoremap ` '
 
-" Save as sudo using ":w!!"
-cnoreabbrev <expr> w!!
-	\((getcmdtype() == ':' && getcmdline() == 'w!!')
-	\?('!sudo tee % >/dev/null'):('w!!'))
+" Make Y behave like other capitals.
+nnoremap  Y y$
 
-" ---------------- Navigation --------------------------------------------- {{{1
-
-" The second one doesn't work
+" Make navigation easier.
 nnoremap <Space> <C-f>
 nnoremap <S-space> <C-b>
-
-" Go down wrapped lines one visual line at a time
-nnoremap <leader>w :nnoremap j gj<cr> :nnoremap k gk<cr>
-
-" Half page scanning
 nnoremap J <C-d>
 nnoremap K <C-u>
+nnoremap j gj
+nnoremap k gk
 
-" ---------------- Cursor Position ---------------------------------------- {{{1
+" These actions need quick access.
+nnoremap <silent> <leader>w :w<cr>
+nnoremap <silent> <leader>c :silent :nohlsearch<cr>
+nnoremap <silent> <leader>l :setlocal list!<cr>
+nnoremap <silent> <leader>f :call ToggleFoldMethod()<cr>
+nnoremap <silent> <leader>m :call ToggleMarkdownFS()<cr>
+nnoremap <silent> <leader>s :call ToggleSpellchecker()<cr>
 
-set ruler          " Display row & column in status bar
-set cursorline     " Highlight current line
-set nostartofline  " Don't return to start of line after page down
+" This requires the tComment bundle.
+nmap <leader>/ gcc
+vmap <leader>/ gc
 
-" Go back to same cursor position
-function! ResCur()
-	if line("'\"") <= line("$")
-		normal! g`"
-		return 1
-	endif
-endfunction
+" Thou shalt not cross 80 columns in thy file.
+nnoremap <leader>7 :setlocal textwidth=0 colorcolumn=0<cr>
+nnoremap <leader>8 :setlocal textwidth=80 colorcolumn=81<cr>
 
-augroup resCur
-	autocmd!
-	autocmd BufWinEnter * call ResCur()
-augroup END
-
-" ---------------- Spelling ----------------------------------------------- {{{1
-
-if v:version >= 700
-	setlocal spell spelllang=en
-	set nospell
-endif
-
-" ---------------- Search ------------------------------------------------- {{{1
-
-set incsearch   " Find the next match as we type the search
-set hlsearch    " Hilight searches by default
-set ignorecase  " Ignore case by default
-set smartcase   " Don't ignore case if the search contains uppercase characters
-set gdefault    " /g : all occurences in the line
-
-" ---------------- Backups ------------------------------------------------ {{{1
-
-silent !mkdir -p ~/.vim/backup > /dev/null 2>&1
-silent !mkdir -p ~/.vim/tmp > /dev/null 2>&1
-
-set backup
-set backupdir=./.backup,~/.vim/backup
-set directory=~/.vim/tmp,~/.tmp,/var/tmp,/tmp
-
-" ---------------- Undo --------------------------------------------------- {{{1
-
-set undolevels=100
+" Remap the tab key to a wrapper for tab completion.
+inoremap <silent> <tab> <c-r>=InsertTabWrapper()<cr>
 
 " CTRL-U in insert mode deletes a lot.	Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
 
-" Keep undo history across sessions, by storing in file.
-set undodir=~/.vim/backup
-set undofile
+" ---------------- Theme -------------------------------------------------- {{{1
+
+syntax enable
+colorscheme solarized
+
+" Make invisible characters less obtrusive.
+highligh clear NonText
+highlight link NonText Comment
+
+" This affects HTML and Markdown.
+function! HighlightHTML()
+	highlight htmlItalic gui=italic
+	highlight htmlBold gui=bold
+endfunction
+
+" For some reason it doesn't work unless I use a function + autocmd.
+autocmd VimEnter * call HighlightHTML()
+
+if has("gui_running")
+	autocmd Filetype markdown call MarkdownMode()
+endif
+
+" ---------------- Markdown ----------------------------------------------- {{{1
+
+function! MarkdownMode()
+	colorscheme iawriter
+	setlocal guifont=Cousine:h14
+	setlocal linespace=5
+	setlocal noruler
+	setlocal foldmethod=expr
+endfunction
+
+" Toggle Markdown full screen mode.
+function! ToggleMarkdownFS()
+	if &fullscreen == 1
+		if exists("s_prev_background")
+			exec "set background=" . s:prev_background
+			exec "set lines=" . s:prev_lines
+			exec "set columns=" . s:prev_columns
+			exec "set laststatus=" . s:prev_laststatus
+			exec "set fuoptions=" . s:prev_fuoptions
+		endif
+		set nofullscreen
+		redraw!
+	else
+		let s:prev_background = &background
+		let s:prev_lines = &lines
+		let s:prev_columns = &columns
+		let s:prev_laststatus = &laststatus
+		let s:prev_fuoptions = &fuoptions
+
+		set lines=40 columns=100
+		set laststatus=0
+		set fuoptions=background:#00f5f6f6
+		set fullscreen
+	endif
+endfunction
+
+" ---------------- Lines -------------------------------------------------- {{{1
+
+set wrap              " do soft wrapping
+set textwidth=0       " no hard wrapping by default
+set wrapmargin=0      " don't hard wrap based on terminal width
+set linebreak         " wrap at spaces, not in the middle of words
+set display=lastline  " show part of really long lines (not @s)
+set nojoinspaces      " one space after period in join command
+set scrolloff=8       " start scrolling when 8 lines away from margins
+
+" Modify characters used for ":set list".
+set listchars=eol:¬,tab:».,trail:~,extends:>,precedes:<
 
 " ---------------- Indentation -------------------------------------------- {{{1
 
 " These are defaults for new files. For existing files, YAIFA will detect
-" indentation settings. (YAIFA uses the value of shiftwidth here, though)
-set autoindent     " Stay indented on new line
-set smarttab       " <Tab> adds shiftwidth spaces
-set shiftwidth=4   " Indentation width (>>, <<)
-set tabstop=4      " Real tabs are four spaces
-set softtabstop=4  " Make sure this is the same
-set shiftround     " Round indents to multiples of shiftwidth
+" indentation settings. (YAIFA uses the value of shiftwidth here, though.)
+set noexpandtab    " tabs for indentation, spaces for alignment
+set autoindent     " stay indented on new line
+set smarttab       " <tab> adds shiftwidth spaces
+set shiftwidth=4   " indentation width (>>, <<)
+set tabstop=4      " eight spaces is too many
+set softtabstop=4  " make sure this is the same
+set shiftround     " round indents to multiples of shiftwidth
 
-" Custom indentation for specific filetypes (YAIFA stills overrides here)
+" Use custom indentation for specific file types (YAIFA stills overrides here).
 autocmd Filetype objc,objcpp,ruby,python,haskell,scheme setlocal et
 autocmd Filetype ruby,scheme setlocal sw=2
 
-" ---------------- Mouse -------------------------------------------------- {{{1
-
-if has('mouse')
-	set mouse=a
-	set mousefocus  " Mouse can control splits
-endif
-
 " ---------------- Folds -------------------------------------------------- {{{1
 
-set foldmethod=syntax  " Fold based on syntax
-set foldnestmax=3      " Deepest fold is 3 levels
-set nofoldenable       " Dont fold by default
+set foldmethod=syntax
+set foldnestmax=3
+set nofoldenable
 
-let g:FoldMethod=0
+let s:FoldMethod = 0
 function! ToggleFoldMethod()
-	if g:FoldMethod == 0
-		exec 'set foldmethod=indent'
-		echo 'foldmethod: indent'
-		let g:FoldMethod=1
-	elseif g:FoldMethod == 1
-		exec 'set foldmethod=marker'
+	if s:FoldMethod == 0
+		setlocal foldmethod=marker
 		echo 'foldmethod: marker'
-		let g:FoldMethod=2
-	elseif g:FoldMethod == 2
-		exec 'set foldmethod=syntax'
+		let s:FoldMethod = 1
+	elseif s:FoldMethod == 1
+		setlocal foldmethod=expr
+		echo 'foldmethod: expr'
+		let s:FoldMethod = 2
+	elseif s:FoldMethod == 2
+		setlocal foldmethod=syntax
 		echo 'foldmethod: syntax'
-		let g:FoldMethod=0
+		let s:FoldMethod = 0
 	endif
 endfunction
 
-" Easily switch between fold methods
-nnoremap <leader>f :call ToggleFoldMethod()<cr>
+" ---------------- Search ------------------------------------------------- {{{1
 
-" ---------------- Lines / Wrapping --------------------------------------- {{{1
+set incsearch   " find the next match as we type the search
+set hlsearch    " highlight searches by default
+set ignorecase  " ignore case by default
+set smartcase   " don't ignore case if the search contains uppercase characters
+set gdefault    " /g : all occurrences in the line
 
-set wrap              " Do soft wrapping
-set textwidth=0       " No hard wrapping by default
-set wrapmargin=0      " Don't hard wrap based on terminal width
-set linebreak         " Wrap at spaces, not in the middle of words
-set display=lastline  " Show part of really long lines (not @s)
+" ---------------- Spelling ----------------------------------------------- {{{1
 
-" Modify characters used for ":set list"
-set listchars=eol:¬,tab:».,trail:~,extends:>,precedes:<
+let g:spchkdialect = "can"  " use Canadian English
+let g:spchkacronym = 1      " acronyms are not errors
+let g:spchksilent = 1       " hide loading messages
 
-" Only one space after period in join command
-set nojoinspaces
-
-" Thou shalt not cross 80 columns in thy file.
-nnoremap <leader>7 :set colorcolumn=0<cr>:set textwidth=0<cr>
-nnoremap <leader>8 :set colorcolumn=81<cr>:set textwidth=80<cr>
-nnoremap <leader>9 :call EightyCharsToggle()<cr>
-
-" Highlight columns over 80 in red for quick scanning
-let s:eightychars = 1
-function! EightyCharsToggle()
-	if s:eightychars
-		highlight OverLength ctermbg=red ctermfg=white
-		match OverLength /\%81v.\+/
-		let s:eightychars = 0
+" This function toggles Engspchk and links the highlighting groups it uses to
+" the proper ones after enabling it. Also, if the file's type is Markdown, it
+" will temporarily clear filetype to avoid conflicting highlighting.
+let s:SpellcheckerOn = 0
+let s:WasMarkdown = 0
+function! ToggleSpellchecker()
+	if s:SpellcheckerOn == 0
+		if &filetype == "markdown"
+			let s:WasMarkdown = 1
+			set filetype=
+		endif
+		exec "normal " . g:mapleader . "ec"
+		let s:SpellcheckerOn = 1
+		highlight link BadWord SpellBad
+		highlight link Dialect SpellLocal
+		highlight link RareWord SpellRare
 	else
-		highlight OverLength none
-		let s:eightychars = 1
+		if s:WasMarkdown == 1
+			set filetype=markdown
+		endif
+		exec "normal " . g:mapleader . "ee"
+		let s:SpellcheckerOn = 0
 	endif
 endfunction
 
-" ---------------- Scrolling ---------------------------------------------- {{{1
+" ---------------- Tab completion ----------------------------------------- {{{1
 
-set scrolloff=8  " Start scrolling when at 8 lines away from margins
-
-" ---------------- Autocomplete ------------------------------------------- {{{1
-
-set completeopt=menu,preview,longest
-
-let g:clang_use_library=1
-let g:clang_library_path='/usr/lib/'
-let g:clang_complete_auto=0
-let g:clang_auto_select=0
-let g:clang_snippets_engine='clang_complete'
-let g:clang_close_preview=1
-let g:clang_complete_copen=1  " Open quickfix on error
-let g:clang_complete_patterns=1
-let g:clang_complete_macros=1
-let g:clang_snippets=1
-let g:clang_conceal_snippets=1
-
-nnoremap <leader>q :call g:ClangUpdateQuickFix()<cr>
-
-" This function determines, wether we are on the start of the line text (then
-" tab indents) or if we want to try autocompletion. This is simpler than
-" Supertab.
-function InsertTabWrapper()
+" This function determines, whether we are on the start of the line text (then
+" tab indents) or if we want to try autocompletion.
+function! InsertTabWrapper()
 	if pumvisible()
 		return "\<c-n>"
 	endif
@@ -289,5 +270,49 @@ function InsertTabWrapper()
 	endif
 endfunction
 
-" Remap the tab key to select action with InsertTabWrapper
-inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+" ---------------- Cursor position ---------------------------------------- {{{1
+
+set ruler          " display row & column in status bar
+set cursorline     " highlight current line
+set nostartofline  " don't return to start of line after page down
+
+" Remember the cursor position in a file between sessions.
+function! ResCur()
+	if line("'\"") <= line("$")
+		normal! g`"
+		return 1
+	endif
+endfunction
+
+augroup resCur
+	autocmd!
+	autocmd BufWinEnter * call ResCur()
+augroup END
+
+" ---------------- Special files ------------------------------------------ {{{1
+
+" Create these directories is they don't already exist.
+silent !mkdir -p ~/.vim/backup > /dev/null 2>&1
+silent !mkdir -p ~/.vim/tmp > /dev/null 2>&1
+
+" Don't clutter the working directory with swap files or backups.
+set directory=~/.vim/tmp,~/.tmp,/var/tmp,/tmp
+set backupdir=./.backup,~/.vim/backup
+set undodir=~/.vim/backup
+set backup
+set undofile
+
+" ---------------- Encryption --------------------------------------------- {{{1
+
+" Blowfish is much more secure than the default (zip).
+set cryptmethod=blowfish
+
+" Turn off viminfo when editing encrypted files. Vim handles the rest for us
+" (swap, undo, and backup files).
+function! DisableViminfo()
+	if !empty(&key)
+		set viminfo=
+	endif
+endfunction
+
+autocmd BufRead * call DisableViminfo()
