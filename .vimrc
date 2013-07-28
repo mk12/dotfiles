@@ -17,13 +17,13 @@ Bundle 'file-line'
 Bundle 'tComment'
 Bundle 'Engspchk'
 Bundle 'Raimondi/YAIFA'
-Bundle 'better-snipmate-snippet'
+Bundle 'UltiSnips'
+Bundle 'ervandew/supertab'
 
 " Language-specific
 Bundle 'tex_autoclose.vim'
 Bundle 'jnwhiteh/vim-golang'
-Bundle 'hallison/vim-markdown'
-Bundle 'thinca/vim-ft-markdown_fold'
+Bundle 'mk12/vim-pandoc'
 
 " Colour schemes
 Bundle 'altercation/vim-colors-solarized'
@@ -85,7 +85,7 @@ nnoremap <silent> <leader>w :w<cr>
 nnoremap <silent> <leader>c :silent :nohlsearch<cr>
 nnoremap <silent> <leader>l :setlocal list!<cr>
 nnoremap <silent> <leader>f :call ToggleFoldMethod()<cr>
-nnoremap <silent> <leader>m :call ToggleMarkdownFS()<cr>
+nnoremap <silent> <leader>m :call ToggleWritingFS()<cr>
 nnoremap <silent> <leader>s :call ToggleSpellchecker()<cr>
 
 " This requires the tComment bundle.
@@ -95,9 +95,6 @@ vmap <leader>/ gc
 " Thou shalt not cross 80 columns in thy file.
 nnoremap <leader>7 :setlocal textwidth=0 colorcolumn=0<cr>
 nnoremap <leader>8 :setlocal textwidth=80 colorcolumn=81<cr>
-
-" Remap the tab key to a wrapper for tab completion.
-inoremap <silent> <tab> <c-r>=InsertTabWrapper()<cr>
 
 " CTRL-U in insert mode deletes a lot.	Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
@@ -122,21 +119,21 @@ endfunction
 autocmd VimEnter * call HighlightHTML()
 
 if has("gui_running")
-	autocmd Filetype markdown call MarkdownMode()
+	autocmd Filetype markdown call WritingMode()
 endif
 
-" ---------------- Markdown ----------------------------------------------- {{{1
+" ---------------- Writing ------------------------------------------------ {{{1
 
-function! MarkdownMode()
+function! WritingMode()
 	colorscheme iawriter
+	syntax enable
 	setlocal guifont=Cousine:h14
 	setlocal linespace=5
 	setlocal noruler
-	setlocal foldmethod=expr
 endfunction
 
-" Toggle Markdown full screen mode.
-function! ToggleMarkdownFS()
+" Toggle full screen mode for writing.
+function! ToggleWritingFS()
 	if &fullscreen == 1
 		if exists("s_prev_background")
 			exec "set background=" . s:prev_background
@@ -213,6 +210,13 @@ function! ToggleFoldMethod()
 	endif
 endfunction
 
+" ---------------- Tab completion ----------------------------------------- {{{1
+
+" Hitting tab is easier than the using the default triggers.
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
 " ---------------- Search ------------------------------------------------- {{{1
 
 set incsearch   " find the next match as we type the search
@@ -225,7 +229,6 @@ set gdefault    " /g : all occurrences in the line
 
 let g:spchkdialect = "can"  " use Canadian English
 let g:spchkacronym = 1      " acronyms are not errors
-let g:spchksilent = 1       " hide loading messages
 
 " This function toggles Engspchk and links the highlighting groups it uses to
 " the proper ones after enabling it. Also, if the file's type is Markdown, it
@@ -249,24 +252,6 @@ function! ToggleSpellchecker()
 		endif
 		exec "normal " . g:mapleader . "ee"
 		let s:SpellcheckerOn = 0
-	endif
-endfunction
-
-" ---------------- Tab completion ----------------------------------------- {{{1
-
-" This function determines, whether we are on the start of the line text (then
-" tab indents) or if we want to try autocompletion.
-function! InsertTabWrapper()
-	if pumvisible()
-		return "\<c-n>"
-	endif
-	let col = col('.') - 1
-	if !col || getline('.')[col - 1] !~ '\k'
-		return "\<tab>"
-	elseif exists('&omnifunc') && &omnifunc != ''
-		return "\<c-x>\<c-o>"
-	else
-		return "\<c-p>"
 	endif
 endfunction
 
