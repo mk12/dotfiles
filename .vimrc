@@ -16,9 +16,11 @@ Bundle 'tComment'
 Bundle 'wincent/Command-T'
 Bundle 'SirVer/ultisnips'
 Bundle 'ervandew/supertab'
+Bundle 'ciaranm/detectindent'
 Bundle 'jnwhiteh/vim-golang'
 Bundle 'altercation/vim-colors-solarized'
-Bundle 'mk12/yaifa'
+Bundle 'amdt/vim-niji'
+Bundle 'tpope/vim-fireplace'
 
 filetype plugin indent on
 
@@ -133,11 +135,8 @@ set listchars=eol:¬,tab:».,trail:~,extends:>,precedes:<
 
 " ---------------- Indentation -------------------------------------------- {{{1
 
-set autoindent  " stay indented on new line
-set shiftround  " round indents to multiples of shiftwidth
-
-" These settings will be used as defaults. YAIFA will override them if it
-" detects indentation in an existing file.
+set autoindent     " stay indented on new line
+set shiftround     " round indents to multiples of shiftwidth
 set noexpandtab    " use tabs, not spaces
 set tabstop=8      " tabs are 8 columns wide
 set softtabstop=0  " disable soft tab stops
@@ -146,16 +145,21 @@ set shiftwidth=0   " 0 = use the value of tabstop
 augroup indentation
 	autocmd!
 	" Tabs for indentation, spaces for alignment. I prefer 4-column indents.
-	autocmd Filetype c,cpp,css,go,html,java,javascript,php,sh,vim setlocal ts=4
+	autocmd Filetype c,cpp,css,go,html,xml,java,javascript,php,sh,perl,vim
+		\ call Tabs(4)
 	" These languages work better with spaces for everything. I prefer 4 spaces.
-	autocmd Filetype haskell,markdown,objc,python call Spaces(4)
+	autocmd Filetype haskell,objc,python call Spaces(4)
 	" These languages look better with two-space indents.
-	autocmd Filetype lisp,ruby,scheme call Spaces(2)
+	autocmd Filetype ruby,lisp,scheme,clojure call Spaces(2)
 augroup END
+
+function! Tabs(width)
+	exec "setlocal noet sts=0 sw=0 ts=" . a:width
+endfunction
 
 function! Spaces(width)
 	" sts: -1 = use the value of shiftwidth
-	exec "setlocal et sts=-1 sw=" . a:width
+	exec "setlocal et ts=8 sts=-1 sw=" . a:width
 endfunction
 
 " ---------------- Folds -------------------------------------------------- {{{1
