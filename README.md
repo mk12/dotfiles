@@ -20,6 +20,6 @@ I got the idea for this from [GitHub does dotfiles][1] and received inspiration 
 
 ## License
 
-Copyright © 2012 Mitchell Kember
+© 2012 Mitchell Kember
 
 Dotfiles is available under the MIT License; see [LICENSE](LICENSE.md) for details.
