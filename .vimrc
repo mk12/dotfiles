@@ -21,6 +21,7 @@ Bundle 'jnwhiteh/vim-golang'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'amdt/vim-niji'
 Bundle 'tpope/vim-fireplace'
+Bundle 'wting/rust.vim'
 
 filetype plugin indent on
 
@@ -145,7 +146,7 @@ set shiftwidth=0   " 0 = use the value of tabstop
 augroup indentation
 	autocmd!
 	" Tabs for indentation, spaces for alignment. I prefer 4-column indents.
-	autocmd Filetype c,cpp,css,go,html,xml,java,javascript,php,sh,perl,vim
+	autocmd Filetype c,cpp,css,go,html,xml,java,javascript,php,sh,perl,vim,rust
 		\ call Tabs(4)
 	" These languages work better with spaces for everything. I prefer 4 spaces.
 	autocmd Filetype haskell,objc,python call Spaces(4)
