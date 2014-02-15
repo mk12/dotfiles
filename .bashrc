@@ -36,4 +36,4 @@ export GREP_OPTIONS='--color=auto'
 export MAC_USE_CURRENT_SDK=true
 export HOMEBREW_CC=clang
 export GOPATH=$HOME/Development/go
-export PATH=$PATH:$GOPATH/bin:$HOME/Documents/Scripts
+export PATH=$PATH:$HOME/bin

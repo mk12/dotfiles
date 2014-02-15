@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function link_dotfiles {
+link_dotfiles() {
 	# Get the script's path
 	src="${BASH_SOURCE[0]}"
 	dir=$(dirname "$src")
