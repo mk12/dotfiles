@@ -16,9 +16,12 @@ alias vi='vim'
 alias vim='mvim -v'
 alias upd='brew update && brew upgrade'
 alias notif='terminal-notifier -activate com.apple.Terminal -message'
+alias dump='gobjdump -d -M intel -s'
 alias ccd='clang -Weverything -g -pedantic -std=c99'
 alias ccr='clang -Weverything -DNDEBUG -pedantic -std=c99 -Os'
-alias dump='gobjdump -d -M intel -s'
+alias rc='rustc -Z prefer-dynamic -O'
+# -Z in 0.9, -C in master
+alias jun='ipython3 notebook --profile julia'
 
 # Tab completion
 brew_completion=$(brew --prefix)/etc/bash_completion

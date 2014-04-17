@@ -18,12 +18,16 @@ Bundle 'ciaranm/detectindent'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'amdt/vim-niji'
 Bundle 'tpope/vim-fireplace'
+Bundle 'guns/vim-clojure-static'
+Bundle 'guns/vim-sexp'
 Bundle 'wting/rust.vim'
+Bundle 'JuliaLang/julia-vim'
 
 filetype plugin indent on
 
 " ---------------- General ------------------------------------------------ {{{1
 
+set guifont=Menlo:h14           " bigger is better
 set number                      " line numbers are good
 set numberwidth=4               " most files are in the hundreds
 set backspace=indent,eol,start  " allow backspace in insert mode
@@ -49,6 +53,7 @@ set spelllang=en_ca             " use Canadian English
 
 " It's easier to reach than the backslash (default leader).
 let mapleader = ","
+let maplocalleader = "\\"
 
 " We'll never need to input jj.
 inoremap jj <esc>
@@ -143,7 +148,7 @@ set shiftwidth=0   " 0 = use the value of tabstop
 augroup indentation
 	autocmd!
 	" Tabs for indentation, spaces for alignment. I prefer 4-column indents.
-	autocmd Filetype c,cpp,css,go,html,xml,java,javascript,php,sh,perl,vim,rust
+	autocmd Filetype c,cpp,css,go,html,xml,java,javascript,php,sh,perl,vim,rust,julia
 		\ call Tabs(4)
 	" These languages work better with spaces for everything. I prefer 4 spaces.
 	autocmd Filetype haskell,objc,python call Spaces(4)
