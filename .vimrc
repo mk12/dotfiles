@@ -19,7 +19,6 @@ Bundle 'altercation/vim-colors-solarized'
 Bundle 'amdt/vim-niji'
 Bundle 'tpope/vim-fireplace'
 Bundle 'guns/vim-clojure-static'
-Bundle 'guns/vim-sexp'
 Bundle 'wting/rust.vim'
 Bundle 'JuliaLang/julia-vim'
 
@@ -94,8 +93,8 @@ nnoremap <silent> <leader>f :call ToggleFoldMethod()<cr>
 map <leader>c gcc
 
 " Thou shalt not cross 80 columns in thy file.
-nnoremap <leader>7 :setlocal textwidth=0 colorcolumn=0<cr>
-nnoremap <leader>8 :setlocal textwidth=80 colorcolumn=+1<cr>
+nnoremap <leader>7 :call EightyColumns(0)<cr>
+nnoremap <leader>8 :call EightyColumns(1)<cr>
 
 " Quickly edit/reload this file.
 nnoremap <silent> <leader>v :e $MYVIMRC<cr>
@@ -112,7 +111,13 @@ inoremap <C-U> <C-G>u<C-U>
 
 " ---------------- Colour/syntax ------------------------------------------ {{{1
 
+if !has("gui_running")
+	let g:solarized_termtrans=1
+	let g:solarized_termcolors=16
+endif
+
 syntax enable
+set background=dark
 colorscheme solarized
 
 " Make invisible characters less obtrusive.
@@ -133,8 +138,21 @@ set display=lastline  " show part of really long lines (not @s)
 set nojoinspaces      " one space after period in join command
 set scrolloff=8       " start scrolling when 8 lines away from margins
 
-" Modify characters used for ':set list'.
 set listchars=eol:¬,tab:».,trail:~,extends:>,precedes:<
+
+function! EightyColumns(yes)
+	if a:yes
+		setlocal textwidth=80 colorcolumn=+1
+	else
+		setlocal textwidth=0 colorcolumn=0
+	endif
+endfunction
+
+" Make the eighty-column marker the default.
+augroup eighty
+	autocmd!
+	autocmd BufWinEnter * call EightyColumns(1)
+augroup END
 
 " ---------------- Indentation -------------------------------------------- {{{1
 
@@ -148,8 +166,8 @@ set shiftwidth=0   " 0 = use the value of tabstop
 augroup indentation
 	autocmd!
 	" Tabs for indentation, spaces for alignment. I prefer 4-column indents.
-	autocmd Filetype c,cpp,css,go,html,xml,java,javascript,php,sh,perl,vim,rust,julia
-		\ call Tabs(4)
+	autocmd Filetype c,cpp,css,go,html,xml,java,javascript,php,sh,perl,vim,
+		\rust,julia call Tabs(4)
 	" These languages work better with spaces for everything. I prefer 4 spaces.
 	autocmd Filetype haskell,objc,python call Spaces(4)
 	" These languages look better with two-space indents.
@@ -211,11 +229,14 @@ set ignorecase  " ignore case by default
 set smartcase   " don't ignore case if the search contains uppercase characters
 set gdefault    " use /g by default (match all occurences in the line)
 
-" ---------------- Cursor position ---------------------------------------- {{{1
+" ---------------- Cursor ------------------------------------------------- {{{1
 
 set ruler          " display row & column in status bar
 set cursorline     " highlight current line
 set nostartofline  " don't return to start of line after page down
+
+" Don't blink the block cursor in normal mode or in visual mode.
+set guicursor+=n-v:blinkon0
 
 " Remember the cursor position in a file between sessions.
 function! ResCur()

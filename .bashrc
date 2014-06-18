@@ -19,8 +19,7 @@ alias notif='terminal-notifier -activate com.apple.Terminal -message'
 alias dump='gobjdump -d -M intel -s'
 alias ccd='clang -Weverything -g -pedantic -std=c99'
 alias ccr='clang -Weverything -DNDEBUG -pedantic -std=c99 -Os'
-alias rc='rustc -Z prefer-dynamic -O'
-# -Z in 0.9, -C in master
+alias rc='rustc -C prefer-dynamic -O'
 alias jun='ipython3 notebook --profile julia'
 
 # Tab completion
@@ -40,3 +39,4 @@ export MAC_USE_CURRENT_SDK=true
 export HOMEBREW_CC=clang
 export GOPATH=$HOME/Development/go
 export PATH=$PATH:$HOME/bin
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home
