@@ -20,6 +20,7 @@ alias dump='gobjdump -d -M intel -s'
 alias ccd='clang -Weverything -g -pedantic -std=c99'
 alias ccr='clang -Weverything -DNDEBUG -pedantic -std=c99 -Os'
 alias rc='rustc -C prefer-dynamic -O'
+alias rt='rustc -C prefer-dynamic -O --test'
 alias jun='ipython3 notebook --profile julia'
 
 # Tab completion
@@ -37,6 +38,8 @@ export LESSHISTFILE='-'
 export GREP_OPTIONS='--color=auto'
 export MAC_USE_CURRENT_SDK=true
 export HOMEBREW_CC=clang
+
+dev=$HOME/Development
+export PATH=$PATH:$HOME/.cabal/bin:$dev/scripts:$dev/web/mark/scripts
 export GOPATH=$HOME/Development/go
-export PATH=$PATH:$HOME/bin
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home
