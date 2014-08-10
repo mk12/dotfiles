@@ -21,32 +21,34 @@ Bundle 'tpope/vim-fireplace'
 Bundle 'guns/vim-clojure-static'
 Bundle 'wting/rust.vim'
 Bundle 'JuliaLang/julia-vim'
+Bundle 'cespare/vim-toml'
+Bundle 'idris-hackers/idris-vim'
 
 filetype plugin indent on
 
 " ---------------- General ------------------------------------------------ {{{1
 
-set guifont=Menlo:h14           " bigger is better
-set number                      " line numbers are good
-set numberwidth=4               " most files are in the hundreds
-set backspace=indent,eol,start  " allow backspace in insert mode
-set undolevels=100              " store lots of undo history
-set history=1000                " store lots of :cmdline history
-set showcmd                     " show incomplete commands down the bottom
-set showmode                    " show current mode down the bottom
-set cmdheight=2                 " show extra stuff
-set noerrorbells                " bells are annoying
-set visualbell t_vb=            " no sounds
-set autoread                    " reload files changed outside Vim
-set viminfo='100,%,f1           " save marks, buffer
-set enc=utf-8                   " UTF-8 is the best
-set guioptions-=r               " remove scrollbar
-set mousefocus                  " let the mouse control splits
-set autochdir                   " cd to the file's directory
-set lazyredraw                  " don't redraw while executing macros
-set hidden                      " allow buffers in the background
-set tildeop                     " make ~ (case changer) an operator
-set spelllang=en_ca             " use Canadian English
+set guifont=Triplicate\ T4c:h15  " Triplicate is the best; bigger is better
+set number                       " line numbers are good
+set numberwidth=4                " most files are in the hundreds
+set backspace=indent,eol,start   " allow backspace in insert mode
+set undolevels=100               " store lots of undo history
+set history=1000                 " store lots of :cmdline history
+set showcmd                      " show incomplete commands down the bottom
+set showmode                     " show current mode down the bottom
+set cmdheight=2                  " show extra stuff
+set noerrorbells                 " bells are annoying
+set visualbell t_vb=             " no sounds
+set autoread                     " reload files changed outside Vim
+set viminfo='100,%,f1            " save marks, buffer
+set enc=utf-8                    " UTF-8 is the best
+set guioptions-=r                " remove scrollbar
+set mousefocus                   " let the mouse control splits
+set autochdir                    " cd to the file's directory
+set lazyredraw                   " don't redraw while executing macros
+set hidden                       " allow buffers in the background
+set tildeop                      " make ~ (case changer) an operator
+set spelllang=en_ca              " use Canadian English
 
 " ---------------- Shortcuts ---------------------------------------------- {{{1
 
@@ -66,7 +68,7 @@ noremap 0 ^
 noremap ^ 0
 
 " Make Y behave like other capitals.
-nnoremap  Y y$
+nnoremap Y y$
 
 " Format a paragraph with one keystroke.
 nnoremap Q gqap
