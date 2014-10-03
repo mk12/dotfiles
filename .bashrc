@@ -22,6 +22,7 @@ alias ccr='clang -Weverything -DNDEBUG -pedantic -std=c99 -Os'
 alias rc='rustc -C prefer-dynamic -O'
 alias rt='rustc -C prefer-dynamic -O --test'
 alias jun='ipython3 notebook --profile julia'
+alias sucontext='. /usr/local/Cellar/context/2014.07.30/tex/setuptex'
 
 # Tab completion
 brew_completion=$(brew --prefix)/etc/bash_completion

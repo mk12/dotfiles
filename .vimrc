@@ -5,25 +5,26 @@ set nocompatible
 
 " This is required for Vundle to work.
 filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-Bundle 'gmarik/vundle'
-Bundle 'repeat.vim'
-Bundle 'surround.vim'
-Bundle 'file-line'
-Bundle 'tComment'
-Bundle 'ervandew/supertab'
-Bundle 'ciaranm/detectindent'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'amdt/vim-niji'
-Bundle 'tpope/vim-fireplace'
-Bundle 'guns/vim-clojure-static'
-Bundle 'wting/rust.vim'
-Bundle 'JuliaLang/julia-vim'
-Bundle 'cespare/vim-toml'
-Bundle 'idris-hackers/idris-vim'
+Plugin 'gmarik/Vundle.vim'
+Plugin 'repeat.vim'
+Plugin 'surround.vim'
+Plugin 'file-line'
+Plugin 'tComment'
+Plugin 'ervandew/supertab'
+Plugin 'ciaranm/detectindent'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'amdt/vim-niji'
+Plugin 'tpope/vim-fireplace'
+Plugin 'guns/vim-clojure-static'
+Plugin 'wting/rust.vim'
+Plugin 'JuliaLang/julia-vim'
+Plugin 'cespare/vim-toml'
+Plugin 'idris-hackers/idris-vim'
 
+call vundle#end()
 filetype plugin indent on
 
 " ---------------- General ------------------------------------------------ {{{1
