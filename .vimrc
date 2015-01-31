@@ -15,6 +15,7 @@ Plugin 'file-line'
 Plugin 'tComment'
 Plugin 'ervandew/supertab'
 Plugin 'ciaranm/detectindent'
+Plugin 'wincent/command-t'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'amdt/vim-niji'
 Plugin 'tpope/vim-fireplace'
@@ -23,6 +24,8 @@ Plugin 'wting/rust.vim'
 Plugin 'JuliaLang/julia-vim'
 Plugin 'cespare/vim-toml'
 Plugin 'idris-hackers/idris-vim'
+Plugin 'bling/vim-airline'
+Plugin 'fatih/vim-go'
 
 call vundle#end()
 filetype plugin indent on
@@ -102,11 +105,6 @@ nnoremap <leader>8 :call EightyColumns(1)<cr>
 " Quickly edit/reload this file.
 nnoremap <silent> <leader>v :e $MYVIMRC<cr>
 nnoremap <silent> <leader>r :so $MYVIMRC<cr>
-
-" Always use 'very magic' mode. Everything except alphabetic letters, numbers,
-" and underscores has special meaning and must be escaped to be literal.
-nnoremap / /\v
-cnoremap s/ s/\v
 
 " CTRL-U in insert mode deletes a lot. Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
