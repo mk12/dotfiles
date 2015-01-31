@@ -17,8 +17,8 @@ alias vim='mvim -v'
 alias upd='brew update && brew upgrade'
 alias notif='terminal-notifier -activate com.apple.Terminal -message'
 alias dump='gobjdump -d -M intel -s'
-alias ccd='clang -Weverything -g -pedantic -std=c99'
-alias ccr='clang -Weverything -DNDEBUG -pedantic -std=c99 -Os'
+alias ccd='clang -Weverything -g -pedantic -Wno-padded -std=c11'
+alias ccr='clang -Weverything -DNDEBUG -pedantic -Wno-padded -std=c11 -Os'
 alias rc='rustc -C prefer-dynamic -O'
 alias rt='rustc -C prefer-dynamic -O --test'
 alias jun='ipython3 notebook --profile julia'
@@ -41,6 +41,9 @@ export MAC_USE_CURRENT_SDK=true
 export HOMEBREW_CC=clang
 
 dev=$HOME/Development
-export PATH=$PATH:$HOME/.cabal/bin:$dev/scripts:$dev/web/mark/scripts
+CABAL_BIN=$HOME/.cabal/bin
+SCRIPTS_BIN=$dev/scripts:$dev/web/mark/scripts
+GOROOT=$(go env GOROOT)
 export GOPATH=$HOME/Development/go
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home
+export PATH=$PATH:$CABAL_BIN:$SCRIPTS_BIN:$GOPATH/bin:$GOROOT/bin
