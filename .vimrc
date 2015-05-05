@@ -26,6 +26,8 @@ Plugin 'cespare/vim-toml'
 Plugin 'idris-hackers/idris-vim'
 Plugin 'bling/vim-airline'
 Plugin 'fatih/vim-go'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'raichoo/purescript-vim'
 
 call vundle#end()
 filetype plugin indent on
@@ -93,7 +95,8 @@ nnoremap <silent> <leader>g g<C-g>
 nnoremap <silent> <leader>/ :silent :nohlsearch<cr>
 nnoremap <silent> <leader>l :setlocal list!<cr>
 nnoremap <silent> <leader>s :setlocal spell!<cr>
-nnoremap <silent> <leader>f :call ToggleFoldMethod()<cr>
+nnoremap <silent> <leader>m :call ToggleFoldMethod()<cr>
+nnoremap <silent> <leader>f :CommandTFlush<cr>
 
 " This requires the tComment bundle.
 map <leader>c gcc

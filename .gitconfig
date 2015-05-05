@@ -2,6 +2,9 @@
 	name = Mitchell Kember
 	email = mk12360@gmail.com
 [alias]
+	s = status -s
+	b = branch
+	co = checkout
 	unstage = reset HEAD --
 	last = log -1 HEAD
 [credential]

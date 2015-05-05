@@ -1,5 +1,6 @@
 # Shell prompt
-export PS1='\s:\W \$ '
+# export PS1='\s:\W \$ '
+export PS1='λ:\W \$ '
 
 # Vi command-line editing
 set -o vi
@@ -22,7 +23,8 @@ alias ccr='clang -Weverything -DNDEBUG -pedantic -Wno-padded -std=c11 -Os'
 alias rc='rustc -C prefer-dynamic -O'
 alias rt='rustc -C prefer-dynamic -O --test'
 alias jun='ipython3 notebook --profile julia'
-alias sucontext='. /usr/local/Cellar/context/2014.07.30/tex/setuptex'
+alias sucontext='. /usr/local/Cellar/context/latest/tex/setuptex'
+alias blog='cd "$BLOGPATH"; hugo server -w'
 
 # Tab completion
 brew_completion=$(brew --prefix)/etc/bash_completion
@@ -39,6 +41,7 @@ export LESSHISTFILE='-'
 export GREP_OPTIONS='--color=auto'
 export MAC_USE_CURRENT_SDK=true
 export HOMEBREW_CC=clang
+export BLOGPATH=$HOME/Documents/blog
 
 dev=$HOME/Development
 CABAL_BIN=$HOME/.cabal/bin
