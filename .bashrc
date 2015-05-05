@@ -41,7 +41,8 @@ export LESSHISTFILE='-'
 export GREP_OPTIONS='--color=auto'
 export MAC_USE_CURRENT_SDK=true
 export HOMEBREW_CC=clang
-export BLOGPATH=$HOME/Documents/blog
+export BLOGPATH=$HOME/icloud/blog
+export VAGRANT_CWD=$HOME/Development/vagrant
 
 dev=$HOME/Development
 CABAL_BIN=$HOME/.cabal/bin
