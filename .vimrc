@@ -15,7 +15,9 @@ Plugin 'file-line'
 Plugin 'tComment'
 Plugin 'ervandew/supertab'
 Plugin 'ciaranm/detectindent'
-Plugin 'kien/ctrlp.vim'
+Plugin 'Shougo/vimproc.vim'
+Plugin 'Shougo/neomru.vim'
+Plugin 'Shougo/unite.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'tpope/vim-fireplace'
 Plugin 'guns/vim-clojure-static'
@@ -90,12 +92,11 @@ vnoremap k gk
 
 " These actions need quick access.
 nnoremap <silent> <leader>w :w<cr>
-nnoremap <silent> <leader>g g<C-g>
+nnoremap <silent> <leader>i g<C-g>
 nnoremap <silent> <leader>/ :silent :nohlsearch<cr>
 nnoremap <silent> <leader>l :setlocal list!<cr>
 nnoremap <silent> <leader>s :setlocal spell!<cr>
-nnoremap <silent> <leader>m :call ToggleFoldMethod()<cr>
-nnoremap <silent> <leader>f :CommandTFlush<cr>
+nnoremap <silent> <leader>p :call ToggleFoldMethod()<cr>
 
 " This requires the tComment bundle.
 map <leader>c gcc
@@ -111,6 +112,30 @@ nnoremap <silent> <leader>r :so $MYVIMRC<cr>
 " CTRL-U in insert mode deletes a lot. Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
+
+" ---------------- Unite -------------------------------------------------- {{{1
+
+let g:unite_data_directory='~/.vim/cache/unite'
+let g:unite_enable_start_insert=1
+let g:unite_source_history_yank_enable=1
+let g:unite_prompt='» '
+" let g:unite_split_rule = 'botright'
+
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#filters#sorter_default#use(['sorter_rank'])
+
+nnoremap <silent> <leader>f :Unite -auto-resize file<cr>
+nnoremap <silent> <leader>g :Unite -auto-resize file_rec/git<cr>
+nnoremap <silent> <leader>t :Unite -auto-resize file_rec/async<cr>
+nnoremap <silent> <leader>b :Unite -auto-resize buffer<cr>
+nnoremap <silent> <leader>m :Unite -auto-resize file_mru<cr>
+nnoremap <silent> <leader>a :Unite -auto-resize grep<cr>
+
+if executable('ag')
+	let g:unite_source_grep_command='ag'
+	let g:unite_source_grep_default_opts='--nocolor --nogroup -S -C4'
+	let g:unite_source_grep_recursive_opt=''
+endif
 
 " ---------------- Colour/syntax ------------------------------------------ {{{1
 
