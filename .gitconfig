@@ -12,10 +12,13 @@
 [color]
 	ui = auto
 [core]
+	editor = vim
 	excludesfile = ~/.gitignore
 [merge]
 	tool = opendiff
 [push]
 	default = simple
+[pull]
+	rebase = true
 [apply]
 	whitespace = fix
