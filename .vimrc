@@ -14,21 +14,23 @@ Plugin 'surround.vim'
 Plugin 'file-line'
 Plugin 'tComment'
 Plugin 'ervandew/supertab'
-Plugin 'ciaranm/detectindent'
-Plugin 'Shougo/vimproc.vim'
-Plugin 'Shougo/neomru.vim'
-Plugin 'Shougo/unite.vim'
+Plugin 'rking/ag.vim'
+Plugin 'kien/ctrlp.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'tpope/vim-fireplace'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-rails'
+Plugin 'tpope/vim-sleuth'
+Plugin 'tpope/vim-endwise'
+Plugin 'scrooloose/syntastic'
+Plugin 'bling/vim-airline'
+Plugin 'kchmck/vim-coffee-script'
 Plugin 'guns/vim-clojure-static'
 Plugin 'wting/rust.vim'
-Plugin 'JuliaLang/julia-vim'
-Plugin 'cespare/vim-toml'
-Plugin 'idris-hackers/idris-vim'
-Plugin 'bling/vim-airline'
 Plugin 'fatih/vim-go'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'raichoo/purescript-vim'
+Plugin 'JuliaLang/julia-vim'
+Plugin 'dag/vim-fish'
+Plugin 'cespare/vim-toml'
 
 call vundle#end()
 filetype plugin indent on
@@ -38,6 +40,7 @@ filetype plugin indent on
 set guifont=Triplicate\ T4c:h15  " Triplicate is the best; bigger is better
 set number                       " line numbers are good
 set numberwidth=4                " most files are in the hundreds
+set relativenumber               " easier for quick navigation
 set backspace=indent,eol,start   " allow backspace in insert mode
 set undolevels=100               " store lots of undo history
 set history=1000                 " store lots of :cmdline history
@@ -53,6 +56,7 @@ set guioptions-=r                " remove scrollbar
 set mousefocus                   " let the mouse control splits
 set autochdir                    " cd to the file's directory
 set lazyredraw                   " don't redraw while executing macros
+set ttyfast                      " maybe this makes things smoother?
 set hidden                       " allow buffers in the background
 set tildeop                      " make ~ (case changer) an operator
 set spelllang=en_ca              " use Canadian English
@@ -96,7 +100,8 @@ nnoremap <silent> <leader>i g<C-g>
 nnoremap <silent> <leader>/ :silent :nohlsearch<cr>
 nnoremap <silent> <leader>l :setlocal list!<cr>
 nnoremap <silent> <leader>s :setlocal spell!<cr>
-nnoremap <silent> <leader>p :call ToggleFoldMethod()<cr>
+nnoremap <silent> <leader>p :call CycleFoldMethod()<cr>
+nnoremap <silent> <leader>n :set relativenumber!<cr>
 
 " This requires the tComment bundle.
 map <leader>c gcc
@@ -113,29 +118,9 @@ nnoremap <silent> <leader>r :so $MYVIMRC<cr>
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
 
-" ---------------- Unite -------------------------------------------------- {{{1
-
-let g:unite_data_directory='~/.vim/cache/unite'
-let g:unite_enable_start_insert=1
-let g:unite_source_history_yank_enable=1
-let g:unite_prompt='» '
-" let g:unite_split_rule = 'botright'
-
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
-
-nnoremap <silent> <leader>f :Unite -auto-resize file<cr>
-nnoremap <silent> <leader>g :Unite -auto-resize file_rec/git<cr>
-nnoremap <silent> <leader>t :Unite -auto-resize file_rec/async<cr>
-nnoremap <silent> <leader>b :Unite -auto-resize buffer<cr>
-nnoremap <silent> <leader>m :Unite -auto-resize file_mru<cr>
-nnoremap <silent> <leader>a :Unite -auto-resize grep<cr>
-
-if executable('ag')
-	let g:unite_source_grep_command='ag'
-	let g:unite_source_grep_default_opts='--nocolor --nogroup -S -C4'
-	let g:unite_source_grep_recursive_opt=''
-endif
+" CtrlP shortcuts
+nnoremap <silent> <leader>b :CtrlPBuffer<cr>
+nnoremap <silent> <leader>m :CtrlPMRU<cr>
 
 " ---------------- Colour/syntax ------------------------------------------ {{{1
 
@@ -155,6 +140,17 @@ highlight link NonText Comment
 highlight htmlItalic gui=italic
 highlight htmlBold gui=bold
 highlight htmlBoldItalic gui=bold,italic
+
+" Syntastic settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_ruby_checkers = ['rubocop']
 
 " ---------------- Lines -------------------------------------------------- {{{1
 
@@ -186,39 +182,16 @@ augroup END
 
 set autoindent     " stay indented on new line
 set shiftround     " round indents to multiples of shiftwidth
-set noexpandtab    " use tabs, not spaces
-set tabstop=8      " tabs are 8 columns wide
-set softtabstop=0  " disable soft tab stops
-set shiftwidth=0   " 0 = use the value of tabstop
-
-augroup indentation
-	autocmd!
-	" Tabs for indentation, spaces for alignment. I prefer 4-column indents.
-	autocmd Filetype c,cpp,css,go,html,xml,java,javascript,php,sh,perl,vim,
-		\rust,julia call Tabs(4)
-	" These languages work better with spaces for everything. I prefer 4 spaces.
-	autocmd Filetype haskell,objc,python call Spaces(4)
-	" These languages look better with two-space indents.
-	autocmd Filetype ruby,lisp,scheme,clojure call Spaces(2)
-augroup END
-
-function! Tabs(width)
-	exec "setlocal noet sts=0 sw=0 ts=" . a:width
-endfunction
-
-function! Spaces(width)
-	" sts: -1 = use the value of shiftwidth
-	exec "setlocal et ts=8 sts=-1 sw=" . a:width
-endfunction
+set tabstop=4      " use 4-wide tabs for most files
 
 " ---------------- Folds -------------------------------------------------- {{{1
 
-set foldmethod=syntax
+set foldmethod=manual  " I would default to syntax, but it's slow
 set foldnestmax=3
 set nofoldenable
 
 let s:FoldMethod = 0
-function! ToggleFoldMethod()
+function! CycleFoldMethod()
 	if s:FoldMethod == 0
 		setlocal foldmethod=marker
 		echo 'foldmethod: marker'
