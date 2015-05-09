@@ -11,24 +11,18 @@ link_dotfiles() {
 	done
 	dir=$(cd -P "$( dirname "$src")" && pwd)
 
-	# Symlink the dotfiles with relative links
-	relbase=$(python -c "import os.path; print os.path.relpath('$dir','$HOME')")
-	for filepath in $(find "$dir" -mindepth 1 -maxdepth 1 \! -name ".git" \! -name ".DS_Store" \! -name "*.md" \! -name "$(basename "$src")"); do
-		file=$(basename $filepath)
+	cd -P "$dir"
+	for filepath in $(find . -type f -not -path "./.git/*" \
+			-not -name ".DS_Store" -not -name "*.md" \
+			-not -name "$(basename "$src")"); do
+		file=${filepath#'./'}
 		if [[ -e ~/$file ]]; then
-			echo "~/$file: File exists"
+			echo "~/$file: file exists"
 		else
-			ln -s $relbase/$file ~/$file > /dev/null
-			echo "Symlinked ~/$file"
+			echo "symlinking ~/$file -> $dir/$file"
+			ln -s "$dir/$file" "$HOME/$file" > /dev/null
 		fi
 	done
-
-	# Clone Vundle and install bundles
-	if [[ ! -d "$HOME/.vim/bundle/vundle" ]]; then
-		mkdir -p ~/.vim/bundle
-		git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
-		vim -c 'BundleInstall' -c 'q|q'
-	fi
 }
 
 if [ "$1" == "--force" -o "$1" == "-f" ]; then
