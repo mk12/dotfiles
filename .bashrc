@@ -1,12 +1,26 @@
-# Shell prompt
-# export PS1='\s:\W \$ '
-export PS1='λ:\W \$ '
+# If not running interactively, don't do anything.
+case $- in
+	*i*) ;;
+	*) return;;
+esac
 
 # Vi command-line editing
 set -o vi
 
+# Bash variables
+PS1='λ:\W \$ '
+HISTTIMEFORMAT='%b %d %I:%M %p '
+HISTCONTROL=ignoreboth
+HISTIGNORE=history:pwd:exit:df:ls:ll
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# Shell options
+shopt -s histappend
+shopt -s checkwinsize
+
 # Shortcuts
-alias ll='ls -lah'
+alias ll='ls -lahF'
 alias mv='mv -i'
 alias cp='cp -i'
 alias df='df -h'
@@ -32,9 +46,6 @@ brew_completion=$(brew --prefix)/etc/bash_completion
 
 # Environment variables
 export EDITOR=vim
-export HISTTIMEFORMAT='%b %d %I:%M %p '
-export HISTCONTROL=ignorespace
-export HISTIGNORE=history:pwd:exit:df:ls:ll
 export CLICOLOR=true
 export LESS='-MerX'
 export LESSHISTFILE='-'
@@ -44,6 +55,7 @@ export HOMEBREW_CC=clang
 export BLOGPATH=$HOME/icloud/blog
 export VAGRANT_CWD=$HOME/Development/vagrant
 
+# Path
 dev=$HOME/Development
 CABAL_BIN=$HOME/.cabal/bin
 SCRIPTS_BIN=$dev/scripts:$dev/web/mark/scripts
