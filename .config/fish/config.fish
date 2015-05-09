@@ -2,9 +2,9 @@
 function fish_prompt --description "Write out the prompt"
 	echo -n "$USER:"
 	set_color $fish_color_cwd
-	echo -ns (prompt_pwd)
+	echo -n (prompt_pwd)
 	set_color normal
-	echo -ns '> '
+	echo -n '> '
 end
 
 # Shortcuts
