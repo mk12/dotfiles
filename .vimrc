@@ -102,6 +102,7 @@ nnoremap <silent> <leader>l :setlocal list!<cr>
 nnoremap <silent> <leader>s :setlocal spell!<cr>
 nnoremap <silent> <leader>p :call CycleFoldMethod()<cr>
 nnoremap <silent> <leader>n :set relativenumber!<cr>
+nnoremap <silent> <C-n> :tabnext<cr>
 
 " This requires the tComment bundle.
 map <leader>c gcc

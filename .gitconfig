@@ -4,6 +4,7 @@
 [alias]
 	s = status -s
 	b = branch
+	ap = add --patch
 	co = checkout
 	unstage = reset HEAD --
 	last = log -1 HEAD
