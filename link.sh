@@ -11,6 +11,9 @@ link_dotfiles() {
 	done
 	dir=$(cd -P "$( dirname "$src")" && pwd)
 
+	# For the fish config
+	mkdir -p "$HOME/.config/fish"
+
 	cd -P "$dir"
 	for filepath in $(find . -type f -not -path "./.git/*" \
 			-not -name ".DS_Store" -not -name "*.md" \

@@ -14,7 +14,7 @@ Plugin 'surround.vim'
 Plugin 'file-line'
 Plugin 'tComment'
 Plugin 'ervandew/supertab'
-Plugin 'rking/ag.vim'
+Plugin 'Numkil/ag.nvim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'tpope/vim-fireplace'
@@ -47,6 +47,7 @@ set history=1000                 " store lots of :cmdline history
 set showcmd                      " show incomplete commands down the bottom
 set showmode                     " show current mode down the bottom
 set cmdheight=2                  " show extra stuff
+set laststatus=2                 " required for airline to work properly
 set noerrorbells                 " bells are annoying
 set visualbell t_vb=             " no sounds
 set autoread                     " reload files changed outside Vim
@@ -99,10 +100,9 @@ nnoremap <silent> <leader>w :w<cr>
 nnoremap <silent> <leader>i g<C-g>
 nnoremap <silent> <leader>/ :silent :nohlsearch<cr>
 nnoremap <silent> <leader>l :setlocal list!<cr>
-nnoremap <silent> <leader>s :setlocal spell!<cr>
 nnoremap <silent> <leader>p :call CycleFoldMethod()<cr>
 nnoremap <silent> <leader>n :set relativenumber!<cr>
-nnoremap <silent> <C-n> :tabnext<cr>
+nnoremap <silent> <C-n> :tabnew<cr>
 
 " This requires the tComment bundle.
 map <leader>c gcc
@@ -117,11 +117,18 @@ nnoremap <silent> <leader>r :so $MYVIMRC<cr>
 
 " CTRL-U in insert mode deletes a lot. Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
-inoremap <C-U> <C-G>u<C-U>
+inoremap <C-u> <C-g>u<C-u>
 
 " CtrlP shortcuts
 nnoremap <silent> <leader>b :CtrlPBuffer<cr>
 nnoremap <silent> <leader>m :CtrlPMRU<cr>
+
+" Search for the word under the cursor with Ag.
+nnoremap <silent> <leader>a :Ag "\b<C-r><C-w>\b"<cr>
+vnoremap <silent> <leader>a y:Ag "<C-r>""<cr>
+
+" Toggle Syntastic
+nnoremap <silent> <leader>s :SyntasticToggleMode<cr>
 
 " ---------------- Colour/syntax ------------------------------------------ {{{1
 
@@ -230,6 +237,9 @@ set hlsearch    " highlight searches by default
 set ignorecase  " ignore case by default
 set smartcase   " don't ignore case if the search contains uppercase characters
 set gdefault    " use /g by default (match all occurences in the line)
+
+let g:ag_working_path_mode="r"            " search from the project root
+let g:ag_prg="ag --smart-case"  " use smart case
 
 " ---------------- Cursor ------------------------------------------------- {{{1
 
