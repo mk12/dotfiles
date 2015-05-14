@@ -9,18 +9,21 @@ end
 
 # Shortcuts
 function sz --description "Calculate the size of a directory"
-	command du -sh $argv
+	du -sh $argv
 end
 function upd --description "Updates homebrew packages"
-	command brew update
-	and command brew upgrade
+	brew update
+	and brew upgrade
 end
 function blog --description "Starts the Hugo server for my blog"
 	cd ~/icloud/blog
-	and command hugo server -w
+	and hugo server -w
 end
 function notif --description "Makes a notification via Notification Center"
-	command terminal-notifier -activate com.apple.Terminal -message "$argv"
+	terminal-notifier -activate com.apple.Terminal -message "$argv"
+end
+function be --description "Shortcut for bundle exec"
+	bundle exec $argv
 end
 function sucontext --description "Sets up the ConTeXt root"
 	echo "TODO: implement this function"

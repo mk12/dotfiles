@@ -238,8 +238,7 @@ set ignorecase  " ignore case by default
 set smartcase   " don't ignore case if the search contains uppercase characters
 set gdefault    " use /g by default (match all occurences in the line)
 
-let g:ag_working_path_mode="r"            " search from the project root
-let g:ag_prg="ag --smart-case"  " use smart case
+let g:ag_working_path_mode="r"  " search from the project root
 
 " ---------------- Cursor ------------------------------------------------- {{{1
 
