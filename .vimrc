@@ -1,4 +1,4 @@
-" Disable Vi compatibility (must come first).
+scriptencoding utf-8
 set nocompatible
 
 " ---------------- Bundles ------------------------------------------------ {{{1
@@ -15,10 +15,11 @@ Plugin 'file-line'
 Plugin 'tComment'
 Plugin 'ervandew/supertab'
 Plugin 'Numkil/ag.nvim'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'tpope/vim-fireplace'
 Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-sleuth'
 Plugin 'tpope/vim-endwise'
@@ -52,7 +53,7 @@ set noerrorbells                 " bells are annoying
 set visualbell t_vb=             " no sounds
 set autoread                     " reload files changed outside Vim
 set viminfo='100,%,f1            " save marks, buffer
-set enc=utf-8                    " UTF-8 is the best
+set encoding=utf-8               " UTF-8 is the best
 set guioptions-=r                " remove scrollbar
 set mousefocus                   " let the mouse control splits
 set autochdir                    " cd to the file's directory
@@ -102,6 +103,10 @@ nnoremap <silent> <leader>/ :silent :nohlsearch<cr>
 nnoremap <silent> <leader>l :setlocal list!<cr>
 nnoremap <silent> <leader>p :call CycleFoldMethod()<cr>
 nnoremap <silent> <leader>n :set relativenumber!<cr>
+
+nnoremap <silent> <tab> :bnext<cr>
+nnoremap <silent> <S-tab> :bprev<cr>
+nnoremap <silent> <leader>d :bdel<cr>
 nnoremap <silent> <C-n> :tabnew<cr>
 
 " This requires the tComment bundle.
@@ -149,6 +154,11 @@ highlight htmlItalic gui=italic
 highlight htmlBold gui=bold
 highlight htmlBoldItalic gui=bold,italic
 
+" Airline settings
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+
 " Syntastic settings
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -159,6 +169,7 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 let g:syntastic_ruby_checkers = ['rubocop']
+let g:syntastic_mode_map = { 'mode': 'passive' }
 
 " ---------------- Lines -------------------------------------------------- {{{1
 
@@ -239,6 +250,7 @@ set smartcase   " don't ignore case if the search contains uppercase characters
 set gdefault    " use /g by default (match all occurences in the line)
 
 let g:ag_working_path_mode="r"  " search from the project root
+let g:ag_prg="ag --smart-case --column"  " use smart case
 
 " ---------------- Cursor ------------------------------------------------- {{{1
 

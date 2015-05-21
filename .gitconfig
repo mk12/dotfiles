@@ -4,8 +4,10 @@
 [alias]
 	s = status -s
 	b = branch
+	c = checkout
 	ap = add --patch
-	co = checkout
+	cm = commit
+	rb = rebase
 	unstage = reset HEAD --
 	last = log -1 HEAD
 [credential]
