@@ -5,6 +5,7 @@ set nocompatible
 
 " This is required for Vundle to work.
 filetype off
+set shell=/bin/bash
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
@@ -91,17 +92,12 @@ nnoremap <space> <C-f>
 nnoremap <S-space> <C-b>
 nnoremap J <C-d>
 nnoremap K <C-u>
-nnoremap j gj
-nnoremap k gk
-vnoremap j gj
-vnoremap k gk
 
 " These actions need quick access.
 nnoremap <silent> <leader>w :w<cr>
 nnoremap <silent> <leader>i g<C-g>
 nnoremap <silent> <leader>/ :silent :nohlsearch<cr>
 nnoremap <silent> <leader>l :setlocal list!<cr>
-nnoremap <silent> <leader>p :call CycleFoldMethod()<cr>
 nnoremap <silent> <leader>n :set relativenumber!<cr>
 
 nnoremap <silent> <tab> :bnext<cr>
@@ -125,6 +121,7 @@ nnoremap <silent> <leader>r :so $MYVIMRC<cr>
 inoremap <C-u> <C-g>u<C-u>
 
 " CtrlP shortcuts
+nnoremap <silent> <leader>p :CtrlP<cr>
 nnoremap <silent> <leader>b :CtrlPBuffer<cr>
 nnoremap <silent> <leader>m :CtrlPMRU<cr>
 
@@ -156,8 +153,8 @@ highlight htmlBoldItalic gui=bold,italic
 
 " Airline settings
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#left_sep = ''
+let g:airline#extensions#tabline#left_alt_sep = ''
 
 " Syntastic settings
 set statusline+=%#warningmsg#
