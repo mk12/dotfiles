@@ -10,8 +10,6 @@
 	rb = rebase
 	unstage = reset HEAD --
 	last = log -1 HEAD
-[credential]
-	helper = osxkeychain
 [color]
 	ui = auto
 [core]
@@ -19,6 +17,7 @@
 	excludesfile = ~/.gitignore
 [merge]
 	tool = opendiff
+	conflictstyle = diff3
 [push]
 	default = simple
 [pull]

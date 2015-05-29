@@ -17,6 +17,7 @@ Plugin 'tComment'
 Plugin 'ervandew/supertab'
 Plugin 'Numkil/ag.nvim'
 Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'JazzCore/ctrlp-cmatcher'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'tpope/vim-fireplace'
 Plugin 'tpope/vim-fugitive'
@@ -100,6 +101,7 @@ nnoremap <silent> <leader>/ :silent :nohlsearch<cr>
 nnoremap <silent> <leader>l :setlocal list!<cr>
 nnoremap <silent> <leader>n :set relativenumber!<cr>
 
+" Tab and buffer stuff.
 nnoremap <silent> <tab> :bnext<cr>
 nnoremap <silent> <S-tab> :bprev<cr>
 nnoremap <silent> <leader>d :bdel<cr>
@@ -132,6 +134,10 @@ vnoremap <silent> <leader>a y:Ag "<C-r>""<cr>
 " Toggle Syntastic
 nnoremap <silent> <leader>s :SyntasticToggleMode<cr>
 
+" Regex to update Ruby hash syntax.
+nnoremap <C-h> :%s/:\([^=,'": ]\{-}\) =>/\1:/c<cr>
+vnoremap <C-h> :/:\([^=,'": ]\{-}\) =>/\1:/c<cr>
+
 " ---------------- Colour/syntax ------------------------------------------ {{{1
 
 if !has("gui_running")
@@ -152,6 +158,7 @@ highlight htmlBold gui=bold
 highlight htmlBoldItalic gui=bold,italic
 
 " Airline settings
+let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ''
 let g:airline#extensions#tabline#left_alt_sep = ''
@@ -246,6 +253,8 @@ set ignorecase  " ignore case by default
 set smartcase   " don't ignore case if the search contains uppercase characters
 set gdefault    " use /g by default (match all occurences in the line)
 
+let g:ctrlp_working_ath_mode = 'r'
+let g:ctrlp_match_func = {'match': 'matcher#cmatch'}
 let g:ag_working_path_mode="r"  " search from the project root
 let g:ag_prg="ag --smart-case --column"  " use smart case
 
