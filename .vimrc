@@ -43,7 +43,6 @@ filetype plugin indent on
 set guifont=Triplicate\ T4c:h15  " Triplicate is the best; bigger is better
 set number                       " line numbers are good
 set numberwidth=4                " most files are in the hundreds
-set relativenumber               " easier for quick navigation
 set backspace=indent,eol,start   " allow backspace in insert mode
 set undolevels=100               " store lots of undo history
 set history=1000                 " store lots of :cmdline history

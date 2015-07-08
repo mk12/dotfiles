@@ -5,9 +5,13 @@
 	s = status -s
 	b = branch
 	c = checkout
+	a = add
 	ap = add --patch
 	cm = commit
+	cmv = commit --verbose
+	fx = commit --amend --reuse-message=HEAD
 	rb = rebase
+	sh = stash
 	unstage = reset HEAD --
 	last = log -1 HEAD
 [color]
@@ -15,8 +19,11 @@
 [core]
 	editor = vim
 	excludesfile = ~/.gitignore
+[diff]
+	tool = vimdiff
+	prompt = false
 [merge]
-	tool = opendiff
+	tool = vimdiff
 	conflictstyle = diff3
 [push]
 	default = simple
