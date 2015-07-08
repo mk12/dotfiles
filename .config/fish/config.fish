@@ -25,6 +25,9 @@ end
 function be --description "Shortcut for bundle exec"
 	bundle exec $argv
 end
+function gg --description "Show git branches and status"
+	git branch; and git status --short
+end
 function sucontext --description "Sets up the ConTeXt root"
 	echo "TODO: implement this function"
 end
