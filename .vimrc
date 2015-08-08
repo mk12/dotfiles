@@ -99,6 +99,7 @@ nnoremap <silent> <leader>i g<C-g>
 nnoremap <silent> <leader>/ :silent :nohlsearch<cr>
 nnoremap <silent> <leader>l :setlocal list!<cr>
 nnoremap <silent> <leader>n :set relativenumber!<cr>
+nnoremap <silent> <leader>t :set paste!<cr>
 
 " Tab and buffer stuff.
 nnoremap <silent> <tab> :bnext<cr>
@@ -173,6 +174,8 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 let g:syntastic_ruby_checkers = ['rubocop']
 let g:syntastic_mode_map = { 'mode': 'passive' }
+
+let g:go_doc_keywordprg_enabled = 0
 
 " ---------------- Lines -------------------------------------------------- {{{1
 
