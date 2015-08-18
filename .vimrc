@@ -9,7 +9,7 @@ set shell=/bin/bash
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-Plugin 'gmarik/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 Plugin 'repeat.vim'
 Plugin 'surround.vim'
 Plugin 'file-line'
@@ -207,7 +207,7 @@ augroup END
 
 set autoindent     " stay indented on new line
 set shiftround     " round indents to multiples of shiftwidth
-set tabstop=4      " use 4-wide tabs for most files
+set ts=4 sw=4      " use 4-wide tabs for most files
 
 " ---------------- Folds -------------------------------------------------- {{{1
 
