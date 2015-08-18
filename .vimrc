@@ -175,6 +175,7 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_ruby_checkers = ['rubocop']
 let g:syntastic_mode_map = { 'mode': 'passive' }
 
+let g:go_fmt_command = "goimports"
 let g:go_doc_keywordprg_enabled = 0
 
 " ---------------- Lines -------------------------------------------------- {{{1
