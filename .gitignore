@@ -9,6 +9,7 @@ a.out
 *.a
 *.dylib
 *.pyc
+*.hi
 
 # Packages
 *.7z
