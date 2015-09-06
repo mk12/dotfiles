@@ -42,3 +42,6 @@ set -x PRO_BASE $dev
 
 # Path
 set PATH $PATH $dev/scripts $GOPATH/bin $go_root/bin ~/.cabal/bin
+
+# This file is for secret information.
+source ~/.config/fish/secret.fish
