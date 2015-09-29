@@ -34,6 +34,8 @@ Plugin 'fatih/vim-go'
 Plugin 'JuliaLang/julia-vim'
 Plugin 'dag/vim-fish'
 Plugin 'cespare/vim-toml'
+Plugin 'derekwyatt/vim-scala'
+Plugin 'hkmix/vim-george'
 
 call vundle#end()
 filetype plugin indent on
@@ -256,7 +258,7 @@ set ignorecase  " ignore case by default
 set smartcase   " don't ignore case if the search contains uppercase characters
 set gdefault    " use /g by default (match all occurences in the line)
 
-let g:ctrlp_working_ath_mode = 'r'
+let g:ctrlp_working_path_mode = 'r'
 let g:ctrlp_match_func = {'match': 'matcher#cmatch'}
 let g:ag_working_path_mode="r"  " search from the project root
 let g:ag_prg="ag --smart-case --column"  " use smart case
