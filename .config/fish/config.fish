@@ -16,7 +16,7 @@ function upd --description "Updates homebrew packages"
 	and brew upgrade
 end
 function blog --description "Starts the Hugo server for my blog"
-	cd ~/icloud/blog
+	cd ~/Documents/blog
 	and hugo server -w
 end
 function notif --description "Makes a notification via Notification Center"
