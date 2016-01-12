@@ -34,7 +34,7 @@ end
 
 # Environment variables
 set dev ~/Development
-set go_root (command go env GOROOT)
+command --search go; and set go_root (command go env GOROOT)
 set -x GOPATH $dev/go
 set -x VAGRANT_CWD $dev/vagrant
 set -x EDITOR vim
