@@ -36,6 +36,7 @@ Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 Plug 'hkmix/vim-george', { 'for': 'george' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'dbakker/vim-projectroot'
 
 filetype plugin indent on
 
@@ -125,7 +126,7 @@ nnoremap <silent> <leader>r :so $MYVIMRC<cr>
 inoremap <C-u> <C-g>u<C-u>
 
 " FZF shortcuts
-nnoremap <silent> <leader>p :Files<cr>
+nnoremap <silent> <leader>p :execute 'Files '.projectroot#guess()<cr>
 nnoremap <silent> <leader>b :Buffers<cr>
 
 " Search for the word under the cursor with Ag.
@@ -163,6 +164,9 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ''
 let g:airline#extensions#tabline#left_alt_sep = ''
+
+" Ctags
+set tags+=tags;/
 
 " Syntastic settings
 set statusline+=%#warningmsg#
@@ -244,11 +248,6 @@ set wildmode=longest,full
 set completeopt+=longest
 let g:SuperTabLongestEnhanced = 1
 
-" Hitting tab is easier than the using the default triggers.
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<S-tab>"
-
 " ---------------- Search ------------------------------------------------- {{{1
 
 set incsearch   " find the next match as we type the search
@@ -257,9 +256,7 @@ set ignorecase  " ignore case by default
 set smartcase   " don't ignore case if the search contains uppercase characters
 set gdefault    " use /g by default (match all occurences in the line)
 
-let g:ctrlp_working_path_mode = 'r'
-let g:ctrlp_match_func = {'match': 'matcher#cmatch'}
-let g:ag_working_path_mode="r"  " search from the project root
+" let g:ag_working_path_mode="r"  " search from the project root
 let g:ag_prg="ag --smart-case --column"  " use smart case
 
 " ---------------- Cursor ------------------------------------------------- {{{1
