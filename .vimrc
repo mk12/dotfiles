@@ -3,42 +3,43 @@ set nocompatible
 
 " ---------------- Bundles ------------------------------------------------ {{{1
 
-" This is required for Vundle to work.
-filetype off
-set shell=/bin/bash
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" Load vim-plug if it's not there.
+if empty(glob("~/.vim/autoload/plug.vim"))
+    execute '!curl -fLo ~/.vim/autoload/plug.vim --create-dirs'
+		\ 'https://raw.github.com/junegunn/vim-plug/master/plug.vim'
+endif
 
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'repeat.vim'
-Plugin 'surround.vim'
-Plugin 'file-line'
-Plugin 'tComment'
-Plugin 'ervandew/supertab'
-Plugin 'Numkil/ag.nvim'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'JazzCore/ctrlp-cmatcher'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'tpope/vim-fireplace'
-Plugin 'tpope/vim-fugitive'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-sleuth'
-Plugin 'tpope/vim-endwise'
-Plugin 'scrooloose/syntastic'
-Plugin 'bling/vim-airline'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'guns/vim-clojure-static'
-Plugin 'wting/rust.vim'
-Plugin 'fatih/vim-go'
-Plugin 'JuliaLang/julia-vim'
-Plugin 'dag/vim-fish'
-Plugin 'cespare/vim-toml'
-Plugin 'derekwyatt/vim-scala'
-Plugin 'hkmix/vim-george'
+call plug#begin()
 
-call vundle#end()
+Plug 'tpope/vim-sensible'
+Plug 'repeat.vim'
+Plug 'surround.vim'
+Plug 'file-line'
+Plug 'tComment'
+Plug 'ervandew/supertab'
+Plug 'altercation/vim-colors-solarized'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-endwise'
+Plug 'scrooloose/syntastic'
+Plug 'bling/vim-airline'
+Plug 'tpope/vim-rails', { 'for': 'ruby' }
+Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
+Plug 'wting/rust.vim', { 'for': 'rust' }
+Plug 'fatih/vim-go', { 'for': 'go' }
+Plug 'dag/vim-fish', { 'for': 'fish' }
+Plug 'cespare/vim-toml', { 'for': 'toml' }
+Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
+Plug 'hkmix/vim-george', { 'for': 'george' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
 filetype plugin indent on
+
+call plug#end()
 
 " ---------------- General ------------------------------------------------ {{{1
 
@@ -47,7 +48,6 @@ set number                       " line numbers are good
 set numberwidth=4                " most files are in the hundreds
 set backspace=indent,eol,start   " allow backspace in insert mode
 set undolevels=100               " store lots of undo history
-set history=1000                 " store lots of :cmdline history
 set showcmd                      " show incomplete commands down the bottom
 set showmode                     " show current mode down the bottom
 set cmdheight=2                  " show extra stuff
@@ -124,10 +124,9 @@ nnoremap <silent> <leader>r :so $MYVIMRC<cr>
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-u> <C-g>u<C-u>
 
-" CtrlP shortcuts
-nnoremap <silent> <leader>p :CtrlP<cr>
-nnoremap <silent> <leader>b :CtrlPBuffer<cr>
-nnoremap <silent> <leader>m :CtrlPMRU<cr>
+" FZF shortcuts
+nnoremap <silent> <leader>p :Files<cr>
+nnoremap <silent> <leader>b :Buffers<cr>
 
 " Search for the word under the cursor with Ag.
 nnoremap <silent> <leader>a :Ag "\b<C-r><C-w>\b"<cr>
