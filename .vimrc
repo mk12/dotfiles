@@ -128,6 +128,7 @@ inoremap <C-u> <C-g>u<C-u>
 " FZF shortcuts
 nnoremap <silent> <leader>p :execute 'Files '.projectroot#guess()<cr>
 nnoremap <silent> <leader>b :Buffers<cr>
+nnoremap <silent> <leader>m :Marks<cr>
 
 " Search for the word under the cursor with Ag.
 nnoremap <silent> <leader>a :Ag "\b<C-r><C-w>\b"<cr>
