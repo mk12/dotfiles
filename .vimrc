@@ -1,7 +1,7 @@
 scriptencoding utf-8
 set nocompatible
 
-" ---------------- Bundles ------------------------------------------------ {{{1
+" ---------------- Plugins ------------------------------------------------ {{{1
 
 " Load vim-plug if it's not there.
 if empty(glob("~/.vim/autoload/plug.vim"))
@@ -110,16 +110,12 @@ nnoremap <silent> <S-tab> :bprev<cr>
 nnoremap <silent> <leader>d :bdel<cr>
 nnoremap <silent> <C-n> :tabnew<cr>
 
-" This requires the tComment bundle.
+" This requires the tComment plugin.
 map <leader>c gcc
 
 " Thou shalt not cross 80 columns in thy file.
 nnoremap <leader>7 :call EightyColumns(0)<cr>
 nnoremap <leader>8 :call EightyColumns(1)<cr>
-
-" Quickly edit/reload this file.
-nnoremap <silent> <leader>v :e $MYVIMRC<cr>
-nnoremap <silent> <leader>r :so $MYVIMRC<cr>
 
 " CTRL-U in insert mode deletes a lot. Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
@@ -138,14 +134,41 @@ vnoremap <silent> <leader>a y:Ag "<C-r>""<cr>
 nnoremap <silent> <leader>s :SyntasticToggleMode<cr>
 
 " Regex to update Ruby hash syntax.
-nnoremap <C-h> :%s/:\([^=,'": ]\{-}\) =>/\1:/c<cr>
-vnoremap <C-h> :/:\([^=,'": ]\{-}\) =>/\1:/c<cr>
+" nnoremap <C-h> :%s/:\([^=,'": ]\{-}\) =>/\1:/c<cr>
+" vnoremap <C-h> :/:\([^=,'": ]\{-}\) =>/\1:/c<cr>
+
+" Switch between header and source file
+nnoremap <silent> <C-h> :call ToggleSourceHeader()<cr>
+
+function! ToggleSourceHeader()
+	let l:extension = expand("%:e")
+	if l:extension == "h" || l:extension == "hpp"
+		echo expand("%:p:r.cpp")
+		if filereadable(expand("%:p:r") . ".c")
+			execute "e " . expand("%:p:r") . ".c"
+		elseif filereadable(expand("%:p:r") . ".cpp")
+			execute "e " . expand("%:p:r") . ".cpp"
+		else
+			echo "can't find source file"
+		endif
+	elseif l:extension == "c" || l:extension == "cpp"
+		if filereadable(expand("%:p:r") . ".h")
+			execute "e " . expand("%:p:r") . ".h"
+		elseif filereadable(expand("%:p:r") . ".hpp")
+			execute "e " . expand("%:p:r") . ".hpp"
+		else
+			echo "can't find header file"
+		endif
+	else
+		echo "not a source file or header file"
+	end
+endfunction
 
 " ---------------- Colour/syntax ------------------------------------------ {{{1
 
 if !has("gui_running")
-	let g:solarized_termtrans=1
-	let g:solarized_termcolors=16
+	let g:solarized_termtrans = 1
+	let g:solarized_termcolors = 16
 endif
 
 syntax enable
