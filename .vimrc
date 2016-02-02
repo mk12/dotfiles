@@ -18,6 +18,7 @@ Plug 'file-line'
 Plug 'tComment'
 Plug 'ervandew/supertab'
 Plug 'altercation/vim-colors-solarized'
+Plug 'junegunn/goyo.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-sleuth'
@@ -164,7 +165,11 @@ function! ToggleSourceHeader()
 	end
 endfunction
 
-" ---------------- Colour/syntax ------------------------------------------ {{{1
+" Toggle light/dark background
+nnoremap <C-l> :call ToggleBackground()<cr>
+nnoremap <leader>g :Goyo<cr>
+
+" ---------------- Colour ------------------------------------------------- {{{1
 
 if !has("gui_running")
 	let g:solarized_termtrans = 1
@@ -179,9 +184,25 @@ colorscheme solarized
 highlight clear NonText
 highlight link NonText Comment
 
-highlight htmlItalic gui=italic
-highlight htmlBold gui=bold
-highlight htmlBoldItalic gui=bold,italic
+" Toggle the Terminal profile and the Vim background colour
+function! ToggleBackground()
+	silent execute "!darklight.applescript"
+	let &background=(&background == "light" ? "dark" : "light")
+endfunction
+
+" Toggle the Terminal profile and the Vim background colour
+function! RestoreBackground()
+	if &background == "light"
+		call ToggleBackground()
+	endif
+endfunction
+
+augroup background
+	autocmd!
+	autocmd VimLeave * call RestoreBackground()
+augroup END
+
+" ---------------- Syntax ------------------------------------------------- {{{1
 
 " Airline settings
 let g:airline#extensions#tabline#formatter = 'unique_tail'
