@@ -118,9 +118,12 @@ map <leader>c gcc
 nnoremap <leader>7 :call EightyColumns(0)<cr>
 nnoremap <leader>8 :call EightyColumns(1)<cr>
 
-" CTRL-U in insert mode deletes a lot. Use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break.
+" CTRL-U in insert mode deletes a lot. Use CTRL-G u to first break undo, so that
+" you can undo CTRL-U after inserting a line break.
 inoremap <C-u> <C-g>u<C-u>
+
+" I almost never want to replace the " register when pasting in visual mode.
+vnoremap <silent> <expr> p <sid>VisualReplace()
 
 " FZF shortcuts
 nnoremap <silent> <leader>p :execute 'Files '.projectroot#guess()<cr>
@@ -140,30 +143,6 @@ nnoremap <silent> <leader>s :SyntasticToggleMode<cr>
 
 " Switch between header and source file
 nnoremap <silent> <C-h> :call ToggleSourceHeader()<cr>
-
-function! ToggleSourceHeader()
-	let l:extension = expand("%:e")
-	if l:extension == "h" || l:extension == "hpp"
-		echo expand("%:p:r.cpp")
-		if filereadable(expand("%:p:r") . ".c")
-			execute "e " . expand("%:p:r") . ".c"
-		elseif filereadable(expand("%:p:r") . ".cpp")
-			execute "e " . expand("%:p:r") . ".cpp"
-		else
-			echo "can't find source file"
-		endif
-	elseif l:extension == "c" || l:extension == "cpp"
-		if filereadable(expand("%:p:r") . ".h")
-			execute "e " . expand("%:p:r") . ".h"
-		elseif filereadable(expand("%:p:r") . ".hpp")
-			execute "e " . expand("%:p:r") . ".hpp"
-		else
-			echo "can't find header file"
-		endif
-	else
-		echo "not a source file or header file"
-	end
-endfunction
 
 " Toggle light/dark background
 nnoremap <C-l> :call ToggleBackground()<cr>
@@ -201,6 +180,32 @@ augroup background
 	autocmd!
 	autocmd VimLeave * call RestoreBackground()
 augroup END
+
+" ---------------- Navigation --------------------------------------------- {{{1
+
+function! ToggleSourceHeader()
+	let l:extension = expand("%:e")
+	if l:extension == "h" || l:extension == "hpp"
+		echo expand("%:p:r.cpp")
+		if filereadable(expand("%:p:r") . ".c")
+			execute "e " . expand("%:p:r") . ".c"
+		elseif filereadable(expand("%:p:r") . ".cpp")
+			execute "e " . expand("%:p:r") . ".cpp"
+		else
+			echo "can't find source file"
+		endif
+	elseif l:extension == "c" || l:extension == "cpp"
+		if filereadable(expand("%:p:r") . ".h")
+			execute "e " . expand("%:p:r") . ".h"
+		elseif filereadable(expand("%:p:r") . ".hpp")
+			execute "e " . expand("%:p:r") . ".hpp"
+		else
+			echo "can't find header file"
+		endif
+	else
+		echo "not a source file or header file"
+	end
+endfunction
 
 " ---------------- Syntax ------------------------------------------------- {{{1
 
@@ -253,6 +258,18 @@ augroup eighty
 	autocmd!
 	autocmd BufWinEnter * call EightyColumns(1)
 augroup END
+
+" ---------------- Registers ---------------------------------------------- {{{1
+
+function! RestoreRegister()
+    let @" = s:restore_reg
+    return ''
+endfunction
+
+function! s:VisualReplace()
+    let s:restore_reg = @"
+    return "p@=RestoreRegister()\<cr>"
+endfunction
 
 " ---------------- Indentation -------------------------------------------- {{{1
 
