@@ -34,14 +34,13 @@ end
 
 # Environment variables
 set dev ~/Development
-command --search go; and set go_root (command go env GOROOT)
 set -x GOPATH $dev/go
 set -x VAGRANT_CWD $dev/vagrant
 set -x EDITOR vim
 set -x PRO_BASE $dev
 
 # Path
-set PATH $PATH $dev/scripts $GOPATH/bin $go_root/bin ~/.cabal/bin
+set PATH $PATH $dev/scripts $GOPATH/bin ~/.cabal/bin
 
 # This file is for secret information.
 source ~/.config/fish/secret.fish
