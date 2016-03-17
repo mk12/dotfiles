@@ -38,6 +38,7 @@ Plug 'hkmix/vim-george', { 'for': 'george' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'dbakker/vim-projectroot'
+Plug 'ledger/vim-ledger'
 
 filetype plugin indent on
 

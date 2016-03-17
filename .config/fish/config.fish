@@ -16,7 +16,7 @@ function upd --description "Updates homebrew packages"
 	and brew upgrade
 end
 function blog --description "Starts the Hugo server for my blog"
-	cd ~/Documents/blog
+	cd ~/icloud/blog
 	and hugo server -w
 end
 function notif --description "Makes a notification via Notification Center"
@@ -37,6 +37,7 @@ set dev ~/Development
 set -x GOPATH $dev/go
 set -x VAGRANT_CWD $dev/vagrant
 set -x EDITOR vim
+set -x LEDGER_FILE ~/icloud/finance/journal.ledger
 set -x PRO_BASE $dev
 
 # Path
