@@ -255,9 +255,11 @@ function! EightyColumns(yes)
 endfunction
 
 " Make the eighty-column marker the default.
-augroup eighty
+augroup columns
 	autocmd!
 	autocmd BufWinEnter * call EightyColumns(1)
+	" Use 60 columns for ledger journals.
+	autocmd FileType ledger setlocal textwidth=60
 augroup END
 
 " ---------------- Registers ---------------------------------------------- {{{1
