@@ -258,8 +258,8 @@ endfunction
 augroup columns
 	autocmd!
 	autocmd BufWinEnter * call EightyColumns(1)
-	" Use 60 columns for ledger journals.
-	autocmd FileType ledger setlocal textwidth=60
+	" Use markers for 60 and 80 columns in ledger journals.
+	autocmd FileType ledger setlocal tw=0 cc=61,81
 augroup END
 
 " ---------------- Registers ---------------------------------------------- {{{1
