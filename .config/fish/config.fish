@@ -37,7 +37,6 @@ set dev ~/Development
 set -x GOPATH $dev/go
 set -x VAGRANT_CWD $dev/vagrant
 set -x EDITOR vim
-set -x LEDGER_FILE ~/icloud/finance/journal.ledger
 set -x PRO_BASE $dev
 
 # Path

@@ -1,0 +1,5 @@
+--file ~/icloud/ledger/journal.ledger
+--strict
+--explicit
+--empty
+--basis

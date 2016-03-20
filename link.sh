@@ -17,6 +17,7 @@ link_dotfiles() {
 	cd -P "$dir"
 	for filepath in $(find . -type f -not -path "./.git/*" \
 			-not -name ".DS_Store" -not -name "*.md" \
+			-not -path "./.config/fish/.gitignore" \
 			-not -name "$(basename "$src")"); do
 		file=${filepath#'./'}
 		if [[ -e ~/$file ]]; then
