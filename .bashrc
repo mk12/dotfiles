@@ -53,14 +53,13 @@ export GREP_OPTIONS='--color=auto'
 export MAC_USE_CURRENT_SDK=true
 export HOMEBREW_CC=clang
 export BLOGPATH=$HOME/icloud/blog
-export VAGRANT_CWD=$HOME/Development/vagrant
 
 # Path
-dev=$HOME/Development
+dev=$HOME/GitHub
 CABAL_BIN=$HOME/.cabal/bin
 SCRIPTS_BIN=$dev/scripts:$dev/web/mark/scripts
 GOROOT=$(go env GOROOT)
-export GOPATH=$HOME/Development/go
+export GOPATH=$dev/go
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_05.jdk/Contents/Home
 export PATH=$PATH:$CABAL_BIN:$SCRIPTS_BIN:$GOPATH/bin:$GOROOT/bin
 
