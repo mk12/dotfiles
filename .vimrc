@@ -71,7 +71,7 @@ set spelllang=en_ca              " use Canadian English
 
 " ---------------- Shortcuts ---------------------------------------------- {{{1
 
-" It's easier to reach than the backslash (default leader).
+" Comma is easier to reach than backslash (the default leader).
 let mapleader = ","
 let maplocalleader = "\\"
 
@@ -82,7 +82,7 @@ inoremap jj <esc>
 noremap ; :
 noremap : ;
 
-" Swap ^ and 0 because ^ is more useful but 0 is easier to use.
+" Swap ^ and 0 because ^ is more useful but 0 is easier to type.
 noremap 0 ^
 noremap ^ 0
 
@@ -97,6 +97,14 @@ nnoremap <space> <C-f>
 nnoremap <S-space> <C-b>
 nnoremap J <C-d>
 nnoremap K <C-u>
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-h> <c-w>h
+nnoremap <c-l> <c-w>l
+nnoremap <silent> <tab> :bnext<cr>
+nnoremap <silent> <S-tab> :bprev<cr>
+nnoremap <silent> <leader>d :bdel<cr>
+nnoremap <silent> <C-n> :tabnew<cr>
 
 " These actions need quick access.
 nnoremap <silent> <leader>w :w<cr>
@@ -105,12 +113,6 @@ nnoremap <silent> <leader>/ :silent :nohlsearch<cr>
 nnoremap <silent> <leader>l :setlocal list!<cr>
 nnoremap <silent> <leader>n :set relativenumber!<cr>
 nnoremap <silent> <leader>t :set paste!<cr>
-
-" Tab and buffer stuff.
-nnoremap <silent> <tab> :bnext<cr>
-nnoremap <silent> <S-tab> :bprev<cr>
-nnoremap <silent> <leader>d :bdel<cr>
-nnoremap <silent> <C-n> :tabnew<cr>
 
 " This requires the tComment plugin.
 map <leader>c gcc
@@ -138,15 +140,10 @@ vnoremap <silent> <leader>a y:Ag "<C-r>""<cr>
 " Toggle Syntastic
 nnoremap <silent> <leader>s :SyntasticToggleMode<cr>
 
-" Regex to update Ruby hash syntax.
-" nnoremap <C-h> :%s/:\([^=,'": ]\{-}\) =>/\1:/c<cr>
-" vnoremap <C-h> :/:\([^=,'": ]\{-}\) =>/\1:/c<cr>
-
 " Switch between header and source file
-nnoremap <silent> <C-h> :call ToggleSourceHeader()<cr>
+nnoremap <silent> H :call ToggleSourceHeader()<cr>
 
-" Toggle light/dark background
-nnoremap <C-l> :call ToggleBackground()<cr>
+" Toggle Goyo (distraction-free mode).
 nnoremap <leader>g :Goyo<cr>
 
 " ---------------- Colour ------------------------------------------------- {{{1
@@ -159,6 +156,9 @@ endif
 syntax enable
 set background=dark
 colorscheme solarized
+
+" Toggle light/dark background
+command DarkLight :call ToggleBackground()
 
 " Make invisible characters less obtrusive.
 highlight clear NonText
