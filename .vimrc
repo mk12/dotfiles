@@ -34,11 +34,12 @@ Plug 'cespare/vim-toml', { 'for': 'toml' }
 Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
+Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'hkmix/vim-george', { 'for': 'george' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'dbakker/vim-projectroot'
-Plug 'ledger/vim-ledger'
+Plug 'christoomey/vim-tmux-navigator'
 
 filetype plugin indent on
 
