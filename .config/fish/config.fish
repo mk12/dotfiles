@@ -8,6 +8,22 @@ function fish_prompt --description "Write out the prompt"
 end
 
 # Shortcuts
+function tm --description "Shortcut for tmux commands"
+	if [ (count $argv) -ne 2 ]
+		tmux ls
+		return
+	end
+	switch $argv[1]
+	case 'n'
+		tmux new -s $argv[2]
+	case 'a'
+		tmux attach -t $argv[2]
+	case 'k'
+		tmux kill-session -t $argv[2]
+	case '*'
+		echo tm: $argv[2]: invalid argument >&2
+	end
+end
 function sz --description "Calculate the size of a directory"
 	du -sh $argv
 end
