@@ -9,19 +9,19 @@ end
 
 # Shortcuts
 function tm --description "Shortcut for tmux commands"
-	if [ (count $argv) -ne 2 ]
+	if [ (count $argv) -lt 2 ]
 		tmux ls
 		return
 	end
 	switch $argv[1]
 	case 'n'
-		tmux new -s $argv[2]
+		tmux new -s $argv[2..-1]
 	case 'a'
-		tmux attach -t $argv[2]
+		tmux attach -t $argv[2..-1]
 	case 'k'
-		tmux kill-session -t $argv[2]
+		tmux kill-session -t $argv[2..-1]
 	case '*'
-		echo tm: $argv[2]: invalid argument >&2
+		echo tm: $argv[1]: invalid argument >&2
 	end
 end
 function sz --description "Calculate the size of a directory"
