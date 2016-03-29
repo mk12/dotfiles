@@ -62,6 +62,8 @@ set autoread                     " reload files changed outside Vim
 set viminfo='100,%,f1            " save marks, buffer
 set encoding=utf-8               " UTF-8 is the best
 set guioptions-=r                " remove scrollbar
+set mouse=a                      " use mouse to make sections and drag splits
+set ttymouse=sgr                 " the best tty mouse mode
 set mousefocus                   " let the mouse control splits
 set autochdir                    " cd to the file's directory
 set lazyredraw                   " don't redraw while executing macros
