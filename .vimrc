@@ -40,6 +40,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'dbakker/vim-projectroot'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'rking/ag.vim'
 
 filetype plugin indent on
 
@@ -54,7 +55,7 @@ set backspace=indent,eol,start   " allow backspace in insert mode
 set undolevels=100               " store lots of undo history
 set showcmd                      " show incomplete commands down the bottom
 set showmode                     " show current mode down the bottom
-set cmdheight=2                  " show extra stuff
+set cmdheight=2                  " show more to avoid 'Enter to continue'
 set laststatus=2                 " required for airline to work properly
 set noerrorbells                 " bells are annoying
 set visualbell t_vb=             " no sounds
@@ -71,6 +72,37 @@ set ttyfast                      " maybe this makes things smoother?
 set hidden                       " allow buffers in the background
 set tildeop                      " make ~ (case changer) an operator
 set spelllang=en_ca              " use Canadian English
+
+" ---------------- Plugin settings ---------------------------------------- {{{1
+
+" FZF
+let g:fzf_command_prefix = 'Fzf'
+
+" Ag
+let g:ag_prg="ag --smart-case --column"
+
+" Airline
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+
+" Ctags
+set tags+=tags;/
+
+" Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_ruby_checkers = ['rubocop']
+let g:syntastic_mode_map = { 'mode': 'passive' }
+
+" Go
+let g:go_fmt_command = "goimports"
+let g:go_doc_keywordprg_enabled = 0
 
 " ---------------- Shortcuts ---------------------------------------------- {{{1
 
@@ -132,13 +164,14 @@ inoremap <C-u> <C-g>u<C-u>
 vnoremap <silent> <expr> p <sid>VisualReplace()
 
 " FZF shortcuts
-nnoremap <silent> <leader>p :execute 'Files '.projectroot#guess()<cr>
-nnoremap <silent> <leader>b :Buffers<cr>
-nnoremap <silent> <leader>m :Marks<cr>
+nnoremap <silent> <leader>p :execute 'FzfFiles '.projectroot#guess()<cr>
+nnoremap <silent> <leader>b :FzfBuffers<cr>
+nnoremap <silent> <leader>m :FzfMarks<cr>
 
 " Search for the word under the cursor with Ag.
-nnoremap <silent> <leader>a :Ag "\b<C-r><C-w>\b"<cr>
-vnoremap <silent> <leader>a y:Ag "<C-r>""<cr>
+nnoremap <leader>a :execute 'Ag "\b<C-r><C-w>\b" '.projectroot#guess()<cr>
+vnoremap <leader>a y:execute 'Ag "<C-r>"" '.projectroot#guess()<cr>
+command -nargs=1 Pag execute 'Ag <args> '.projectroot#guess()
 
 " Toggle Syntastic
 nnoremap <silent> <leader>s :SyntasticToggleMode<cr>
@@ -161,7 +194,7 @@ set background=dark
 colorscheme solarized
 
 " Toggle light/dark background
-command DarkLight :call ToggleBackground()
+command DarkLight call ToggleBackground()
 
 " Make invisible characters less obtrusive.
 highlight clear NonText
@@ -210,31 +243,6 @@ function! ToggleSourceHeader()
 		echo "not a source file or header file"
 	end
 endfunction
-
-" ---------------- Syntax ------------------------------------------------- {{{1
-
-" Airline settings
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 1
-
-" Ctags
-set tags+=tags;/
-
-" Syntastic settings
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_ruby_checkers = ['rubocop']
-let g:syntastic_mode_map = { 'mode': 'passive' }
-
-let g:go_fmt_command = "goimports"
-let g:go_doc_keywordprg_enabled = 0
 
 " ---------------- Lines -------------------------------------------------- {{{1
 
@@ -322,9 +330,6 @@ set hlsearch    " highlight searches by default
 set ignorecase  " ignore case by default
 set smartcase   " don't ignore case if the search contains uppercase characters
 set gdefault    " use /g by default (match all occurences in the line)
-
-" let g:ag_working_path_mode="r"  " search from the project root
-let g:ag_prg="ag --smart-case --column"  " use smart case
 
 " ---------------- Cursor ------------------------------------------------- {{{1
 
