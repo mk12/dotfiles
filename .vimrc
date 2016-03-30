@@ -79,7 +79,7 @@ set spelllang=en_ca              " use Canadian English
 let g:fzf_command_prefix = 'Fzf'
 
 " Ag
-let g:ag_prg="ag --smart-case --column"
+let g:ag_prg="ag --smart-case --column --ignore tags"
 
 " Airline
 let g:airline#extensions#tabline#formatter = 'unique_tail'
