@@ -24,7 +24,8 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-endwise'
 Plug 'scrooloose/syntastic'
-Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-rails', { 'for': 'ruby' }
 Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
 Plug 'wting/rust.vim', { 'for': 'rust' }
