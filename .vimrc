@@ -11,37 +11,38 @@ endif
 
 call plug#begin()
 
-Plug 'tpope/vim-sensible'
-Plug 'repeat.vim'
-Plug 'surround.vim'
-Plug 'file-line'
-Plug 'tComment'
-Plug 'ervandew/supertab'
-Plug 'altercation/vim-colors-solarized'
-Plug 'junegunn/goyo.vim'
-Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-endwise'
-Plug 'scrooloose/syntastic'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'tpope/vim-rails', { 'for': 'ruby' }
-Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
-Plug 'wting/rust.vim', { 'for': 'rust' }
-Plug 'fatih/vim-go', { 'for': 'go' }
-Plug 'dag/vim-fish', { 'for': 'fish' }
+Plug 'altercation/vim-colors-solarized'
 Plug 'cespare/vim-toml', { 'for': 'toml' }
-Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'dag/vim-fish', { 'for': 'fish' }
+Plug 'dbakker/vim-projectroot'
 Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
-Plug 'ledger/vim-ledger', { 'for': 'ledger' }
+Plug 'ervandew/supertab'
+Plug 'fatih/vim-go', { 'for': 'go' }
+Plug 'file-line'
+Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
 Plug 'hkmix/vim-george', { 'for': 'george' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'dbakker/vim-projectroot'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'rking/ag.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
+Plug 'ledger/vim-ledger', { 'for': 'ledger' }
+Plug 'mk12/ag.vim'
+Plug 'repeat.vim'
+Plug 'scrooloose/syntastic'
+Plug 'surround.vim'
+Plug 'tComment'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rails', { 'for': 'ruby' }
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-sleuth'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'wting/rust.vim', { 'for': 'rust' }
 
 filetype plugin indent on
 
@@ -80,7 +81,8 @@ set spelllang=en_ca              " use Canadian English
 let g:fzf_command_prefix = 'Fzf'
 
 " Ag
-let g:ag_prg="ag --smart-case --column --ignore tags"
+let g:ag_working_path_mode='r'
+let g:ag_prg='ag --smart-case --column --ignore tags'
 
 " Airline
 let g:airline#extensions#tabline#formatter = 'unique_tail'
@@ -102,14 +104,14 @@ let g:syntastic_ruby_checkers = ['rubocop']
 let g:syntastic_mode_map = { 'mode': 'passive' }
 
 " Go
-let g:go_fmt_command = "goimports"
+let g:go_fmt_command = 'goimports'
 let g:go_doc_keywordprg_enabled = 0
 
 " ---------------- Shortcuts ---------------------------------------------- {{{1
 
 " Comma is easier to reach than backslash (the default leader).
-let mapleader = ","
-let maplocalleader = "\\"
+let mapleader = ','
+let maplocalleader = '\\'
 
 " We'll never need to input jj.
 inoremap jj <esc>
@@ -170,9 +172,8 @@ nnoremap <silent> <leader>b :FzfBuffers<cr>
 nnoremap <silent> <leader>m :FzfMarks<cr>
 
 " Search for the word under the cursor with Ag.
-nnoremap <leader>a :execute 'Ag "\b<C-r><C-w>\b" '.projectroot#guess()<cr>
-vnoremap <leader>a y:execute 'Ag "<C-r>"" '.projectroot#guess()<cr>
-command -nargs=1 Pag execute 'Ag <args> '.projectroot#guess()
+nnoremap <leader>a :Ag "\b<C-r><C-w>\b"<cr>
+vnoremap <leader>a y:Ag "<C-r>""<cr>
 
 " Toggle Syntastic
 nnoremap <silent> <leader>s :SyntasticToggleMode<cr>
@@ -321,6 +322,7 @@ set wildmenu
 set wildmode=longest,full
 
 " Put SuperTab in longest mode as well.
+" asdfasdf
 set completeopt+=longest
 let g:SuperTabLongestEnhanced = 1
 
