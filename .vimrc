@@ -27,6 +27,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'junegunn/vim-easy-align'
 Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mk12/ag.vim'
@@ -183,6 +184,10 @@ nnoremap <silent> H :call ToggleSourceHeader()<cr>
 
 " Toggle Goyo (distraction-free mode).
 nnoremap <leader>g :Goyo<cr>
+
+" EasyAlign
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
 
 " ---------------- Colour ------------------------------------------------- {{{1
 
