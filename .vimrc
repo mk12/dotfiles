@@ -108,6 +108,15 @@ let g:syntastic_mode_map = { 'mode': 'passive' }
 let g:go_fmt_command = 'goimports'
 let g:go_doc_keywordprg_enabled = 0
 
+" EasyAlign
+let g:easy_align_delimiters = {
+\	'/': {
+\		'pattern':         '//\+\|/\*\|\*/',
+\		'delimiter_align': 'l',
+\		'ignore_groups':   ['!Comment']
+\	}
+\}
+
 " ---------------- Shortcuts ---------------------------------------------- {{{1
 
 " Comma is easier to reach than backslash (the default leader).
