@@ -5,7 +5,7 @@ set nocompatible
 
 " Load vim-plug if it's not there.
 if empty(glob("~/.vim/autoload/plug.vim"))
-    execute '!curl -fLo ~/.vim/autoload/plug.vim --create-dirs'
+	execute '!curl -fLo ~/.vim/autoload/plug.vim --create-dirs'
 		\ 'https://raw.github.com/junegunn/vim-plug/master/plug.vim'
 endif
 
@@ -51,7 +51,7 @@ call plug#end()
 
 " ---------------- General ------------------------------------------------ {{{1
 
-set guifont=Triplicate\ T4c:h15  " Triplicate is the best; bigger is better
+set guifont=Hack:h14             " Hack is the best font
 set number                       " line numbers are good
 set numberwidth=4                " most files are in the hundreds
 set backspace=indent,eol,start   " allow backspace in insert mode
@@ -110,12 +110,12 @@ let g:go_doc_keywordprg_enabled = 0
 
 " EasyAlign
 let g:easy_align_delimiters = {
-\	'/': {
-\		'pattern':         '//\+\|/\*\|\*/',
-\		'delimiter_align': 'l',
-\		'ignore_groups':   ['!Comment']
-\	}
-\}
+	\ '/': {
+		\ 'pattern': '//\+\|/\*\|\*/',
+		\ 'delimiter_align': 'l',
+		\ 'ignore_groups': ['!Comment']
+	\ }
+\ }
 
 " ---------------- Shortcuts ---------------------------------------------- {{{1
 
@@ -149,8 +149,8 @@ nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-h> <c-w>h
 nnoremap <c-l> <c-w>l
-nnoremap <silent> <tab> :bnext<cr>
-nnoremap <silent> <S-tab> :bprev<cr>
+nnoremap <silent> <tab> :call NextBufOrTab()<cr>
+nnoremap <silent> <S-tab> :call PrevBufOrTab()<cr>
 nnoremap <silent> <leader>d :bdel<cr>
 nnoremap <silent> <C-n> :tabnew<cr>
 
@@ -218,7 +218,7 @@ highlight link NonText Comment
 
 " Toggle the Terminal profile and the Vim background colour
 function! ToggleBackground()
-	silent execute "!darklight.applescript"
+	silent !darklight.applescript
 	let &background=(&background == "light" ? "dark" : "light")
 endfunction
 
@@ -235,6 +235,22 @@ augroup background
 augroup END
 
 " ---------------- Navigation --------------------------------------------- {{{1
+
+function! NextBufOrTab()
+	if tabpagenr('$') > 1
+		tabnext
+	else
+		bnext
+	end
+endfunction
+
+function! PrevBufOrTab()
+	if tabpagenr('$') > 1
+		tabprev
+	else
+		bprev
+	end
+endfunction
 
 function! ToggleSourceHeader()
 	let l:extension = expand("%:e")
@@ -291,13 +307,13 @@ augroup END
 " ---------------- Registers ---------------------------------------------- {{{1
 
 function! RestoreRegister()
-    let @" = s:restore_reg
-    return ''
+	let @" = s:restore_reg
+	return ''
 endfunction
 
 function! s:VisualReplace()
-    let s:restore_reg = @"
-    return "p@=RestoreRegister()\<cr>"
+	let s:restore_reg = @"
+	return "p@=RestoreRegister()\<cr>"
 endfunction
 
 " ---------------- Indentation -------------------------------------------- {{{1
