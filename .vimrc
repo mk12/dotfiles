@@ -189,7 +189,7 @@ vnoremap <leader>a y:Ag "<C-r>""<cr>
 nnoremap <silent> <leader>s :SyntasticToggleMode<cr>
 
 " Switch between header and source file
-nnoremap <silent> <C-h> :call ToggleSourceHeader()<cr>
+nnoremap <silent> H :call ToggleSourceHeader()<cr>
 
 " Toggle Goyo (distraction-free mode).
 nnoremap <leader>g :Goyo<cr>
