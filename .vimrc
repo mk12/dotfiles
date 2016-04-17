@@ -189,14 +189,14 @@ vnoremap <leader>a y:Ag "<C-r>""<cr>
 nnoremap <silent> <leader>s :SyntasticToggleMode<cr>
 
 " Switch between header and source file
-nnoremap <silent> H :call ToggleSourceHeader()<cr>
+nnoremap <silent> <C-h> :call ToggleSourceHeader()<cr>
 
 " Toggle Goyo (distraction-free mode).
 nnoremap <leader>g :Goyo<cr>
 
 " EasyAlign
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
+xnoremap ga <Plug>(EasyAlign)
+nnoremap ga <Plug>(EasyAlign)
 
 " ---------------- Colour ------------------------------------------------- {{{1
 
