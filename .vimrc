@@ -328,23 +328,6 @@ set foldmethod=manual  " I would default to syntax, but it's slow
 set foldnestmax=3
 set nofoldenable
 
-let s:FoldMethod = 0
-function! CycleFoldMethod()
-	if s:FoldMethod == 0
-		setlocal foldmethod=marker
-		echo 'foldmethod: marker'
-		let s:FoldMethod = 1
-	elseif s:FoldMethod == 1
-		setlocal foldmethod=expr
-		echo 'foldmethod: expr'
-		let s:FoldMethod = 2
-	elseif s:FoldMethod == 2
-		setlocal foldmethod=syntax
-		echo 'foldmethod: syntax'
-		let s:FoldMethod = 0
-	endif
-endfunction
-
 " ---------------- Tab completion ----------------------------------------- {{{1
 
 " Use enhanced command completion.
