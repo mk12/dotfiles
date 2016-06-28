@@ -23,9 +23,13 @@
 [core]
 	editor = vim
 	excludesfile = ~/.gitignore
+	pager = diff-highlight | less -RFX
 [diff]
 	tool = vimdiff
 	prompt = false
+	algorithm = minimal
+	compactionHeuristic = true
+    renames = true
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3

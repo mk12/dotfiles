@@ -55,7 +55,8 @@ set -x PAGER less
 set -x BLOG ~/icloud/blog
 
 # Path
-set PATH $PATH $gh/scripts $GOPATH/bin ~/.cabal/bin
+set PATH $PATH $gh/scripts $GOPATH/bin ~/.cabal/bin \
+	/usr/local/share/git-core/contrib/diff-highlight
 
 # This file is for secret information.
 source ~/.config/fish/secret.fish
