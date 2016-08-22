@@ -180,7 +180,6 @@ vnoremap <silent> <expr> p <sid>VisualReplace()
 " FZF shortcuts
 nnoremap <silent> <leader>p :execute 'FzfFiles '.projectroot#guess()<cr>
 nnoremap <silent> <leader>b :FzfBuffers<cr>
-nnoremap <silent> <leader>m :FzfMarks<cr>
 
 " Search for the word under the cursor with Ag.
 nnoremap <leader>a :Ag "\b<C-r><C-w>\b"<cr>
@@ -198,6 +197,13 @@ nnoremap <leader>g :Goyo<cr>
 " EasyAlign
 xnoremap ga <Plug>(EasyAlign)
 nnoremap ga <Plug>(EasyAlign)
+
+" Filetype-specific shortcuts
+augroup shortcuts
+	autocmd!
+	autocmd filetype lean nnoremap <silent> <leader>m :LeanCheck<cr> \
+		nnoremap <silent> <leader>r :LeanReplace<cr>
+augroup END
 
 " ---------------- Colour ------------------------------------------------- {{{1
 
