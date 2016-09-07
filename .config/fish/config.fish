@@ -44,11 +44,22 @@ set -x EDITOR vim
 set -x VISUAL vim
 set -x PAGER less
 
-# Path
-set PATH $PATH $gh/scripts $GOPATH/bin ~/.cabal/bin
+# PATH
+set paths $gh/scripts $GOPATH/bin ~/.cabal/bin
+for dir in $paths
+	if test -d $dir
+		set PATH $PATH $dir
+	end
+end
 
 # OS-specific configuration
-source ~/.config/fish/(uname -s | tr '[A-Z]' '[a-z]').fish
+set specific ~/.config/fish/(uname -s | tr '[A-Z]' '[a-z]').fish
+if test -e $specific
+	source $specific
+end
 
 # Secret information
-source ~/.config/fish/secret.fish
+set secret ~/.config/fish/secret.fish
+if test -e $secret
+	source $secret
+end
