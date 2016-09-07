@@ -1,4 +1,3 @@
-# Set the prompt.
 function fish_prompt --description "Write out the prompt"
 	echo -n "$USER:"
 	set_color $fish_color_cwd
@@ -7,7 +6,10 @@ function fish_prompt --description "Write out the prompt"
 	echo -n '> '
 end
 
-# Shortcuts
+function sz --description "Calculate the size of a directory"
+	du -sh $argv
+end
+
 function tm --description "Shortcut for tmux commands"
 	if [ (count $argv) -lt 2 ]
 		tmux ls
@@ -24,24 +26,13 @@ function tm --description "Shortcut for tmux commands"
 		echo tm: $argv[1]: invalid argument >&2
 	end
 end
-function sz --description "Calculate the size of a directory"
-	du -sh $argv
-end
-function upd --description "Updates homebrew packages"
-	brew update
-	and brew upgrade
-end
-function blog --description "Starts the Hugo server for my blog"
-	cd $BLOG; and hugo server -w
-end
-function notif --description "Makes a notification via Notification Center"
-	terminal-notifier -activate com.apple.Terminal -message "$argv"
-end
-function be --description "Shortcut for bundle exec"
-	bundle exec $argv
-end
+
 function gg --description "Show git branches and status"
 	git branch; and git status --short
+end
+
+function be --description "Shortcut for bundle exec"
+	bundle exec $argv
 end
 
 # Environment variables
@@ -52,11 +43,12 @@ set -x LEDGER_FILE $gh/finance/journal.ledger
 set -x EDITOR vim
 set -x VISUAL vim
 set -x PAGER less
-set -x BLOG ~/icloud/blog
 
 # Path
-set PATH $PATH $gh/scripts $GOPATH/bin ~/.cabal/bin \
-	/usr/local/share/git-core/contrib/diff-highlight
+set PATH $PATH $gh/scripts $GOPATH/bin ~/.cabal/bin
 
-# This file is for secret information.
+# OS-specific configuration
+source ~/.config/fish/(uname -s | tr '[A-Z]' '[a-z]').fish
+
+# Secret information
 source ~/.config/fish/secret.fish
