@@ -13,4 +13,4 @@ end
 
 set -x BLOG ~/icloud/blog
 
-set -x PATH $PATH /usr/local/share/git-core/contrib/diff-highlight
+set PATH $PATH /usr/local/share/git-core/contrib/diff-highlight
