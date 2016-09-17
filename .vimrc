@@ -192,6 +192,9 @@ nnoremap <silent> <leader>s :SyntasticToggleMode<cr>
 " Switch between header and source file
 nnoremap <silent> H :call ToggleSourceHeader()<cr>
 
+" Jump to next Git hunk
+nnoremap <silent> <C-f> :GitGutterNextHunk<cr>
+
 " Toggle Goyo (distraction-free mode).
 nnoremap <leader>g :Goyo<cr>
 
@@ -201,7 +204,7 @@ vnoremap ga :EasyAlign<cr>
 " Filetype-specific shortcuts
 augroup shortcuts
 	autocmd!
-	autocmd filetype lean nnoremap <silent> <leader>m :LeanCheck<cr> \
+	autocmd filetype lean nnoremap <silent> <leader>m :LeanCheck<cr> | \
 		nnoremap <silent> <leader>r :LeanReplace<cr>
 augroup END
 
