@@ -12,5 +12,3 @@ function blog --description "Starts the Hugo server for my blog"
 end
 
 set -x BLOG ~/icloud/blog
-
-set PATH $PATH /usr/local/share/git-core/contrib/diff-highlight

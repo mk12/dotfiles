@@ -6,6 +6,14 @@ function fish_prompt --description "Write out the prompt"
 	echo -n '> '
 end
 
+function sudo --description "Execute a command as superuser"
+	if test "$argv" = !!
+		eval command sudo $history[1]
+	else
+		command sudo $argv
+	end
+end
+
 function sz --description "Calculate the size of a directory"
 	du -sh $argv
 end
@@ -47,7 +55,7 @@ set -x PAGER less
 # PATH
 set paths $gh/scripts $GOPATH/bin ~/.fzf/bin ~/.cabal/bin
 for dir in $paths
-	if test -d $dir
+	if not contains $dir $PATH; and test -d $dir
 		set PATH $PATH $dir
 	end
 end
