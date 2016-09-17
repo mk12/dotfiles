@@ -23,7 +23,8 @@ Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'file-line'
 Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
 Plug 'hkmix/vim-george', { 'for': 'george' }
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'jiangmiao/auto-pairs'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/rainbow_parentheses.vim'
@@ -52,23 +53,23 @@ call plug#end()
 
 " ---------------- General ------------------------------------------------ {{{1
 
-set guifont=Hack:h14             " Hack is the best font
-set number                       " line numbers are good
+set guifont=monoki               " current favourite mono font
+set number                       " show line numbers
 set numberwidth=4                " most files are in the hundreds
 set backspace=indent,eol,start   " allow backspace in insert mode
 set undolevels=100               " store lots of undo history
-set showcmd                      " show incomplete commands down the bottom
-set showmode                     " show current mode down the bottom
-set cmdheight=2                  " show more to avoid 'Enter to continue'
+set showcmd                      " show incomplete commands
+set showmode                     " show current mode
+set cmdheight=2                  " to avoid 'Enter to continue'
 set laststatus=2                 " required for airline to work properly
-set noerrorbells                 " bells are annoying
+set noerrorbells                 " no bells
 set visualbell t_vb=             " no sounds
 set autoread                     " reload files changed outside Vim
 set viminfo='100,%,f1            " save marks, buffer
-set encoding=utf-8               " UTF-8 is the best
+set encoding=utf-8               " assume UTF-8
 set guioptions-=r                " remove scrollbar
-set mouse=a                      " use mouse to make sections and drag splits
-set ttymouse=sgr                 " the best tty mouse mode
+set mouse=a                      " use mouse to select and drag
+set ttymouse=sgr                 " best tty mouse mode
 set mousefocus                   " let the mouse control splits
 set autochdir                    " cd to the file's directory
 set lazyredraw                   " don't redraw while executing macros
@@ -195,8 +196,7 @@ nnoremap <silent> H :call ToggleSourceHeader()<cr>
 nnoremap <leader>g :Goyo<cr>
 
 " EasyAlign
-xnoremap ga <Plug>(EasyAlign)
-nnoremap ga <Plug>(EasyAlign)
+vnoremap ga :EasyAlign<cr>
 
 " Filetype-specific shortcuts
 augroup shortcuts
@@ -217,7 +217,7 @@ set background=dark
 colorscheme solarized
 
 " Toggle light/dark background
-command DarkLight call ToggleBackground()
+command! DarkLight call ToggleBackground()
 
 " Make invisible characters less obtrusive.
 highlight clear NonText

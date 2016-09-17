@@ -45,7 +45,7 @@ set -x VISUAL vim
 set -x PAGER less
 
 # PATH
-set paths $gh/scripts $GOPATH/bin ~/.cabal/bin
+set paths $gh/scripts $GOPATH/bin ~/.fzf/bin ~/.cabal/bin
 for dir in $paths
 	if test -d $dir
 		set PATH $PATH $dir
