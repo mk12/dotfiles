@@ -29,7 +29,9 @@
 	prompt = false
 	algorithm = minimal
 	compactionHeuristic = true
-    renames = true
+	renames = true
+[interactive]
+	diffFilter = diff-highlight
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3
