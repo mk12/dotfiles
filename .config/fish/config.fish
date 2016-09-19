@@ -19,7 +19,7 @@ function sz --description "Calculate the size of a directory"
 end
 
 function tm --description "Shortcut for tmux commands"
-	if [ (count $argv) -lt 2 ]
+	if test (count $argv) -lt 2
 		tmux ls
 		return
 	end
