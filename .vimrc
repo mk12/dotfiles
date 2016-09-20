@@ -165,7 +165,8 @@ nnoremap <silent> <leader>n :set relativenumber!<cr>
 nnoremap <silent> <leader>t :set paste!<cr>
 
 " This requires the tComment plugin.
-map <leader>c gcc
+nnoremap <leader>c gcc
+vnoremap <leader>c gc
 
 " Thou shalt not cross 80 columns in thy file.
 nnoremap <leader>7 :call EightyColumns(0)<cr>
