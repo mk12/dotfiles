@@ -53,7 +53,7 @@ call plug#end()
 
 " ---------------- General ------------------------------------------------ {{{1
 
-set guifont=monoki               " current favourite mono font
+set guifont=mononoki             " current favourite mono font
 set number                       " show line numbers
 set numberwidth=4                " most files are in the hundreds
 set backspace=indent,eol,start   " allow backspace in insert mode
