@@ -159,6 +159,7 @@ nnoremap <Leader>qq :quit<CR>
 nnoremap <Leader>t8 :call EightyColumns()<CR>
 nnoremap <Leader>tc :RainbowParentheses!!<CR>
 nnoremap <Leader>tg :Goyo<CR>
+nnoremap <Leader>th :GitGutterLineHighlightsToggle<CR>
 nnoremap <Leader>tn :set number!<CR>
 nnoremap <Leader>tp :set paste!<CR>
 nnoremap <Leader>tr :set relativenumber!<CR>
