@@ -30,6 +30,7 @@ Plug 'junegunn/goyo.vim'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
+Plug 'lambdatoast/elm.vim'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mk12/ag.vim'
 Plug 'mk12/vim-lean', { 'for': 'lean' }
