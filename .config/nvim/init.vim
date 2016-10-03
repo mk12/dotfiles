@@ -8,7 +8,7 @@ endif
 
 call plug#begin()
 
-Plug 'Valloric/YouCompleteMe'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter'
 Plug 'altercation/vim-colors-solarized'
@@ -74,6 +74,8 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 
+let g:deoplete#enable_at_startup = 1
+
 let g:easy_align_delimiters = {
 	\ '/': {
 		\ 'pattern': '//\+\|/\*\|\*/',
@@ -90,9 +92,6 @@ let g:go_fmt_command = 'goimports'
 let g:go_doc_keywordprg_enabled = 0
 
 let g:hardtime_default_on = 1
-
-let g:ycm_key_detailed_diagnostics = ''
-let g:ycm_key_invoke_completion = ''
 
 " =========== Mappings =========================================================
 
@@ -115,6 +114,7 @@ xnoremap <silent> <expr> p <SID>VisualReplace()
 
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
+inoremap <silent> <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 
 nnoremap J <C-d>
 nnoremap K <C-u>
