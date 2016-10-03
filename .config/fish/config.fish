@@ -53,7 +53,7 @@ set -x VISUAL vim
 set -x PAGER less
 
 # PATH
-set paths $gh/scripts $GOPATH/bin
+set paths $gh/scripts $GOPATH/bin ~/.fzf/bin
 for dir in $paths
 	if not contains $dir $PATH; and test -d $dir
 		set PATH $PATH $dir
