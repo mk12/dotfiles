@@ -112,8 +112,8 @@ nnoremap Y y$
 
 xnoremap <silent> <expr> p <SID>VisualReplace()
 
-nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
-nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
+nnoremap <silent> <Tab> :call <SID>NextBufOrTab()<CR>
+nnoremap <silent> <S-Tab> :call <SID>PrevBufOrTab()<CR>
 inoremap <silent> <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 
 nnoremap J <C-d>
@@ -138,6 +138,7 @@ nnoremap <Leader>/ :Ag<CR>
 nnoremap <Leader>* :Ag <C-r><C-w><CR>
 xnoremap <Leader>* y:Ag <C-r>"<CR>
 nnoremap <Leader><Tab> :b#<CR>
+nnoremap <silent> <Leader><Leader> :call <SID>ProjectFiles()<CR>
 
 nnoremap <Leader>bd :bdelete<CR>
 nnoremap <Leader>bn :bnext<CR>
@@ -160,7 +161,7 @@ nnoremap <Leader>gp :Gpush<CR>
 nnoremap <Leader>gs :Gstatus<CR>
 nnoremap <Leader>gw :Gwrite<CR>
 
-nnoremap <Leader>h :call ToggleSourceHeader()<CR>
+nnoremap <Leader>h :call <SID>ToggleSourceHeader()<CR>
 
 nnoremap <Leader>l :nohlsearch<CR>
 
@@ -246,23 +247,31 @@ set spellfile=~/.config/nvim/spell/en.utf-8.add,en.utf-8.add
 
 " =========== Functions ========================================================
 
-function! NextBufOrTab()
+function! s:NextBufOrTab()
 	if tabpagenr('$') > 1
 		tabnext
 	else
 		bnext
-	end
+	endif
 endfunction
 
-function! PrevBufOrTab()
+function! s:PrevBufOrTab()
 	if tabpagenr('$') > 1
 		tabprev
 	else
 		bprev
-	end
+	endif
 endfunction
 
-function! ToggleSourceHeader()
+function! s:ProjectFiles()
+	if exists('b:git_dir')
+		GitFiles
+	else
+		Files
+	endif
+endfunction
+
+function! s:ToggleSourceHeader()
 	let l:extension = expand('%:e')
 	if l:extension == 'h' || l:extension == 'hpp'
 		echo expand('%:p:r.cpp')
@@ -283,7 +292,7 @@ function! ToggleSourceHeader()
 		endif
 	else
 		echo "Not a source file or header file"
-	end
+	endif
 endfunction
 
 function! RestoreRegister()
