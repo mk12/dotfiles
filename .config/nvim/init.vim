@@ -26,6 +26,7 @@ Plug 'junegunn/vim-easy-align'
 Plug 'lambdatoast/elm.vim', { 'for': 'elm' }
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mk12/vim-lean', { 'for': 'lean' }
+Plug 'mk12/vim-llvm', { 'for': 'llvm' }
 Plug 'takac/vim-hardtime'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
