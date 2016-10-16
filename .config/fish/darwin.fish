@@ -1,18 +1,20 @@
-function upd --description "Updates homebrew packages"
+function upd --description "Update homebrew and neovim"
 	brew update
 	and brew upgrade
+	and nvim +PlugUpgrade +PlugUpdate +qall
 end
 
 function dump --description "Dissassemble to Intel syntax"
 	gobjdump -d -M intel -s $argv
 end
 
-function notif --description "Makes a notification via Notification Center"
+function notif --description "Send to Notification Center"
 	terminal-notifier -activate com.apple.Terminal -message "$argv"
 end
 
-function blog --description "Starts the Hugo server for my blog"
-	cd $BLOG; and hugo server -w
+function blog --description "Start the Hugo server"
+	cd $BLOG
+	and hugo server -w
 end
 
 set -x BLOG ~/icloud/blog

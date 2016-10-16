@@ -35,6 +35,10 @@ function tm --description "Shortcut for tmux commands"
 	end
 end
 
+function vim --description "Remap vim to nvim"
+	command nvim $argv
+end
+
 function gg --description "Show git branches and status"
 	git branch; and git status --short
 end
@@ -48,8 +52,8 @@ set gh ~/GitHub
 set -x PRO_BASE $gh
 set -x GOPATH $gh/go
 set -x LEDGER_FILE $gh/finance/journal.ledger
-set -x EDITOR vim
-set -x VISUAL vim
+set -x EDITOR nvim
+set -x VISUAL nvim
 set -x PAGER less
 
 # PATH

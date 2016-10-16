@@ -10,17 +10,18 @@ call plug#begin()
 
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
-Plug 'airblade/vim-rooter'
+Plug 'airblade/vim-rooter', { 'on': 'Rooter' }
 Plug 'altercation/vim-colors-solarized'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'fatih/vim-go', { 'for': 'go'}
-Plug 'gabesoft/vim-ags'
+Plug 'fatih/vim-go', { 'for': 'go' }
+Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
+Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'mk12/vim-lean', { 'for': 'lean' }
 Plug 'mk12/vim-llvm', { 'for': 'llvm' }
 Plug 'sheerun/vim-polyglot'
@@ -30,7 +31,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-tbone'
+Plug 'tpope/vim-tbone', { 'on': ['Tyank', 'Tput'] }
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -87,6 +88,8 @@ let g:go_doc_keywordprg_enabled = 0
 
 let g:rooter_manual_only = 1
 
+let g:undotree_SplitWidth = 35
+
 " =========== Mappings =========================================================
 
 nnoremap <Space> <Nop>
@@ -138,6 +141,8 @@ nnoremap <Leader>c :Commentary<CR>
 xnoremap <Leader>c :Commentary<CR>
 
 xnoremap <Leader>da :EasyAlign<CR>
+nnoremap <Leader>df :call <SID>FormatComment()<CR>
+nnoremap <Leader>ds vip :sort<CR>
 xnoremap <Leader>ds :sort<CR>
 
 nnoremap <Leader>eR :source $MYVIMRC<CR>
@@ -165,8 +170,8 @@ nnoremap <Leader>pl :Lines<CR>
 nnoremap <Leader>pm :Marks<CR>
 nnoremap <Leader>pt :Tags<CR>
 
-nnoremap <Leader>qk :bdelete<CR>
-nnoremap <Leader>qq :quit<CR>
+nnoremap <Leader>q :quit<CR>
+nnoremap <Leader>Q :bdelete<CR>
 
 nnoremap <Leader>s :write<CR>
 nnoremap <Leader>S :wall<CR>
@@ -179,6 +184,8 @@ nnoremap <Leader>tp :set paste!<CR>
 nnoremap <Leader>tr :set relativenumber!<CR>
 nnoremap <Leader>ts :set spell!<CR>
 nnoremap <Leader>tw :set list!<CR>
+
+nnoremap <Leader>u :UndotreeToggle<CR>
 
 nnoremap <Leader>w- :split<CR>
 nnoremap <Leader>w/ :vsplit<CR>
@@ -209,8 +216,8 @@ highlight link NonText Comment
 
 set listchars=eol:¬,tab:».,trail:~,extends:>,precedes:<
 
-function! EightyColumns()
-	if &colorcolumn == '' || &colorcolumn == '0'
+function! EightyColumns(...)
+	if a:0 > 0 || &colorcolumn == '' || &colorcolumn == '0'
 		setlocal textwidth=80 colorcolumn=+1
 	else
 		setlocal textwidth=0 colorcolumn=0
@@ -219,7 +226,7 @@ endfunction
 
 augroup columns
 	autocmd!
-	autocmd BufWinEnter * call EightyColumns()
+	autocmd BufRead * call EightyColumns(1)
 	autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
 augroup END
 
@@ -260,6 +267,10 @@ function! s:ProjectFiles()
 	else
 		Files
 	endif
+endfunction
+
+function! s:FormatComment()
+	" Todo
 endfunction
 
 function! s:ToggleSourceHeader()
