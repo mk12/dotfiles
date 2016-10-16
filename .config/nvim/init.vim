@@ -13,31 +13,24 @@ Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter'
 Plug 'altercation/vim-colors-solarized'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'dag/vim-fish', { 'for': 'fish' }
-Plug 'dietsche/vim-lastplace'
-Plug 'fatih/vim-go', { 'for': 'go' }
-Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
+Plug 'fatih/vim-go', { 'for': 'go'}
+Plug 'gabesoft/vim-ags'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
-Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'junegunn/vim-easy-align'
-Plug 'lambdatoast/elm.vim', { 'for': 'elm' }
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mk12/vim-lean', { 'for': 'lean' }
 Plug 'mk12/vim-llvm', { 'for': 'llvm' }
-Plug 'takac/vim-hardtime'
+Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-rails', { 'for': 'ruby' }
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-tbone'
-Plug 'tpope/vim-vinegar'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -92,7 +85,7 @@ let g:gitgutter_map_keys = 0
 let g:go_fmt_command = 'goimports'
 let g:go_doc_keywordprg_enabled = 0
 
-let g:hardtime_default_on = 1
+let g:rooter_manual_only = 1
 
 " =========== Mappings =========================================================
 
@@ -101,7 +94,7 @@ nnoremap <Space> <Nop>
 let mapleader = "\<Space>"
 let maplocalleader = '\'
 
-inoremap jj <Esc>
+inoremap jk <Esc>
 
 noremap ; :
 noremap : ;
@@ -127,13 +120,13 @@ nnoremap <C-l> <C-w>l
 " https://github.com/neovim/neovim/issues/2048
 nnoremap <BS> :<C-u>TmuxNavigateLeft<CR>
 
-nmap ]h <Plug>GitGutterNextHunk
-nmap [h <Plug>GitGutterPrevHunk
+nmap ]c <Plug>GitGutterNextHunk
+nmap [c <Plug>GitGutterPrevHunk
 
-omap ih <Plug>GitGutterTextObjectInnerPending
-omap ah <Plug>GitGutterTextObjectOuterPending
-xmap ih <Plug>GitGutterTextObjectInnerVisual
-xmap ah <Plug>GitGutterTextObjectOuterVisual
+omap ic <Plug>GitGutterTextObjectInnerPending
+omap ac <Plug>GitGutterTextObjectOuterPending
+xmap ic <Plug>GitGutterTextObjectInnerVisual
+xmap ac <Plug>GitGutterTextObjectOuterVisual
 
 nnoremap <Leader>/ :Ag<CR>
 nnoremap <Leader>* :Ag <C-r><C-w><CR>
@@ -141,19 +134,16 @@ xnoremap <Leader>* y:Ag <C-r>"<CR>
 nnoremap <Leader><Tab> :b#<CR>
 nnoremap <silent> <Leader><Leader> :call <SID>ProjectFiles()<CR>
 
-nnoremap <Leader>bd :bdelete<CR>
-nnoremap <Leader>bn :bnext<CR>
-nnoremap <Leader>bp :bprevious<CR>
-nnoremap <Leader>bK :%bdelete \| edit#<CR>
-
 nnoremap <Leader>c :Commentary<CR>
 xnoremap <Leader>c :Commentary<CR>
 
-nnoremap <Leader>ff :Files<CR>
-nnoremap <Leader>fed :edit $MYVIMRC<CR>
-nnoremap <Leader>feR :source $MYVIMRC<CR>
-nnoremap <Leader>fs :write<CR>
-nnoremap <Leader>fS :wall<CR>
+xnoremap <Leader>da :EasyAlign<CR>
+xnoremap <Leader>ds :sort<CR>
+
+nnoremap <Leader>eR :source $MYVIMRC<CR>
+nnoremap <Leader>ed :edit $MYVIMRC<CR>
+nnoremap <Leader>en :enew<CR>
+nnoremap <Leader>et :tabnew<CR>
 
 nnoremap <Leader>gb :Gblame<CR>
 nnoremap <Leader>gc :Gcommit<CR>
@@ -166,24 +156,24 @@ nnoremap <Leader>h :call <SID>ToggleSourceHeader()<CR>
 
 nnoremap <Leader>l :nohlsearch<CR>
 
-xnoremap <Leader>sa :EasyAlign<CR>
-xnoremap <Leader>ss :sort<CR>
-
 nnoremap <Leader>pb :Buffers<CR>
 nnoremap <Leader>pc :Commits<CR>
+nnoremap <Leader>pf :Files<CR>
 nnoremap <Leader>pg :GFiles<CR>
+nnoremap <Leader>ph :Helptags<CR>
 nnoremap <Leader>pl :Lines<CR>
 nnoremap <Leader>pm :Marks<CR>
 nnoremap <Leader>pt :Tags<CR>
 
-nnoremap <Leader>qs :wq<CR>
+nnoremap <Leader>qk :bdelete<CR>
 nnoremap <Leader>qq :quit<CR>
 
+nnoremap <Leader>s :write<CR>
+nnoremap <Leader>S :wall<CR>
+
 nnoremap <Leader>t8 :call EightyColumns()<CR>
-nnoremap <Leader>tc :RainbowParentheses!!<CR>
 nnoremap <Leader>tg :Goyo<CR>
-nnoremap <Leader>th :HardTimeToggle<CR>
-nnoremap <Leader>tl :GitGutterLineHighlightsToggle<CR>
+nnoremap <Leader>th :GitGutterLineHighlightsToggle<CR>
 nnoremap <Leader>tn :set number!<CR>
 nnoremap <Leader>tp :set paste!<CR>
 nnoremap <Leader>tr :set relativenumber!<CR>
