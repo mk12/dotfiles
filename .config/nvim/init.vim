@@ -88,6 +88,8 @@ let g:gitgutter_map_keys = 0
 let g:go_fmt_command = 'goimports'
 let g:go_doc_keywordprg_enabled = 0
 
+let g:lean_auto_replace = 1
+
 let g:rooter_manual_only = 1
 
 let g:undotree_SplitWidth = 35
