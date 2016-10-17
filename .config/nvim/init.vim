@@ -15,11 +15,13 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
+Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
+Plug 'kana/vim-textobj-user'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'mk12/vim-lean', { 'for': 'lean' }
@@ -98,6 +100,7 @@ let mapleader = "\<Space>"
 let maplocalleader = '\'
 
 inoremap jk <Esc>
+inoremap kj <Esc>
 
 noremap ; :
 noremap : ;
@@ -106,6 +109,9 @@ noremap 0 ^
 noremap ^ 0
 
 nnoremap Y y$
+
+nmap Q gqap
+xmap Q gq
 
 xnoremap <silent> <expr> p <SID>VisualReplace()
 
@@ -123,13 +129,13 @@ nnoremap <C-l> <C-w>l
 " https://github.com/neovim/neovim/issues/2048
 nnoremap <BS> :<C-u>TmuxNavigateLeft<CR>
 
-nmap ]c <Plug>GitGutterNextHunk
-nmap [c <Plug>GitGutterPrevHunk
+nmap ]h <Plug>GitGutterNextHunk
+nmap [h <Plug>GitGutterPrevHunk
 
-omap ic <Plug>GitGutterTextObjectInnerPending
-omap ac <Plug>GitGutterTextObjectOuterPending
-xmap ic <Plug>GitGutterTextObjectInnerVisual
-xmap ac <Plug>GitGutterTextObjectOuterVisual
+omap ih <Plug>GitGutterTextObjectInnerPending
+omap ah <Plug>GitGutterTextObjectOuterPending
+xmap ih <Plug>GitGutterTextObjectInnerVisual
+xmap ah <Plug>GitGutterTextObjectOuterVisual
 
 nnoremap <Leader>/ :Ag<CR>
 nnoremap <Leader>* :Ag <C-r><C-w><CR>
@@ -140,15 +146,16 @@ nnoremap <silent> <Leader><Leader> :call <SID>ProjectFiles()<CR>
 nnoremap <Leader>c :Commentary<CR>
 xnoremap <Leader>c :Commentary<CR>
 
+nnoremap <Leader>di vip=
+nnoremap <Leader>ds vip:sort<CR>
 xnoremap <Leader>da :EasyAlign<CR>
-nnoremap <Leader>df :call <SID>FormatComment()<CR>
-nnoremap <Leader>ds vip :sort<CR>
 xnoremap <Leader>ds :sort<CR>
 
-nnoremap <Leader>eR :source $MYVIMRC<CR>
-nnoremap <Leader>ed :edit $MYVIMRC<CR>
+nnoremap <Leader>ek :bdelete<CR>
 nnoremap <Leader>en :enew<CR>
 nnoremap <Leader>et :tabnew<CR>
+nnoremap <Leader>ev :edit $MYVIMRC<CR>
+nnoremap <Leader>eR :source $MYVIMRC<CR>
 
 nnoremap <Leader>gb :Gblame<CR>
 nnoremap <Leader>gc :Gcommit<CR>
@@ -171,10 +178,10 @@ nnoremap <Leader>pm :Marks<CR>
 nnoremap <Leader>pt :Tags<CR>
 
 nnoremap <Leader>q :quit<CR>
-nnoremap <Leader>Q :bdelete<CR>
+nnoremap <Leader>Q :quit!<CR>
 
 nnoremap <Leader>s :write<CR>
-nnoremap <Leader>S :wall<CR>
+nnoremap <Leader>S :write!<CR>
 
 nnoremap <Leader>t8 :call EightyColumns()<CR>
 nnoremap <Leader>tg :Goyo<CR>
@@ -183,9 +190,8 @@ nnoremap <Leader>tn :set number!<CR>
 nnoremap <Leader>tp :set paste!<CR>
 nnoremap <Leader>tr :set relativenumber!<CR>
 nnoremap <Leader>ts :set spell!<CR>
+nnoremap <Leader>tu :UndotreeToggle<CR>
 nnoremap <Leader>tw :set list!<CR>
-
-nnoremap <Leader>u :UndotreeToggle<CR>
 
 nnoremap <Leader>w- :split<CR>
 nnoremap <Leader>w/ :vsplit<CR>
@@ -200,10 +206,8 @@ nnoremap <Leader>wl <C-w>l
 
 " =========== Colour ===========================================================
 
-if !has('gui_running')
-	let g:solarized_termtrans = 1
-	let g:solarized_termcolors = 16
-endif
+let g:solarized_termtrans = 1
+let g:solarized_termcolors = 16
 
 syntax enable
 set background=dark
@@ -267,10 +271,6 @@ function! s:ProjectFiles()
 	else
 		Files
 	endif
-endfunction
-
-function! s:FormatComment()
-	" Todo
 endfunction
 
 function! s:ToggleSourceHeader()
