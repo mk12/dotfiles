@@ -157,6 +157,7 @@ nnoremap <Leader>ek :bdelete<CR>
 nnoremap <Leader>en :enew<CR>
 nnoremap <Leader>et :tabnew<CR>
 nnoremap <Leader>ev :edit $MYVIMRC<CR>
+nnoremap <Leader>er :edit!<CR>
 nnoremap <Leader>eR :source $MYVIMRC<CR>
 
 nnoremap <Leader>gb :Gblame<CR>
