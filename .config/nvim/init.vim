@@ -41,7 +41,6 @@ call plug#end()
 
 " =========== General ==========================================================
 
-set autoread
 set cmdheight=2
 set cursorline
 set gdefault
@@ -49,14 +48,12 @@ set hidden
 set ignorecase
 set lazyredraw
 set linebreak
-set mouse=a
 set mousefocus
 set nofoldenable
 set nojoinspaces
 set nostartofline
 set number
-set ruler
-set scrolloff=8
+set scrolloff=4
 set shiftround
 set shiftwidth=4
 set showcmd
