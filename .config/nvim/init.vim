@@ -15,13 +15,11 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
-Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
-Plug 'kana/vim-textobj-user'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'mk12/vim-lean', { 'for': 'lean' }
@@ -91,6 +89,12 @@ let g:rooter_manual_only = 1
 
 let g:undotree_SplitWidth = 35
 
+augroup comments
+	autocmd!
+	autocmd FileType c,cpp setlocal commentstring=//\ %s
+	autocmd FileType sql setlocal commentstring=--\ %s
+augroup END
+
 " =========== Mappings =========================================================
 
 nnoremap <Space> <Nop>
@@ -128,13 +132,13 @@ nnoremap <C-l> <C-w>l
 " https://github.com/neovim/neovim/issues/2048
 nnoremap <BS> :<C-u>TmuxNavigateLeft<CR>
 
-nmap ]h <Plug>GitGutterNextHunk
-nmap [h <Plug>GitGutterPrevHunk
+nmap ]c <Plug>GitGutterNextHunk
+nmap [c <Plug>GitGutterPrevHunk
 
-omap ih <Plug>GitGutterTextObjectInnerPending
-omap ah <Plug>GitGutterTextObjectOuterPending
-xmap ih <Plug>GitGutterTextObjectInnerVisual
-xmap ah <Plug>GitGutterTextObjectOuterVisual
+omap ic <Plug>GitGutterTextObjectInnerPending
+omap ac <Plug>GitGutterTextObjectOuterPending
+xmap ic <Plug>GitGutterTextObjectInnerVisual
+xmap ac <Plug>GitGutterTextObjectOuterVisual
 
 nnoremap <Leader>/ :Ag<CR>
 nnoremap <Leader>* :Ag <C-r><C-w><CR>
@@ -156,6 +160,10 @@ nnoremap <Leader>et :tabnew<CR>
 nnoremap <Leader>ev :edit $MYVIMRC<CR>
 nnoremap <Leader>er :edit!<CR>
 nnoremap <Leader>eR :source $MYVIMRC<CR>
+
+nnoremap <Leader>fr :execute 'Rooter'<CR>:pwd<CR>
+nnoremap <Leader>ff :cd %:h<CR>:pwd<CR>
+nnoremap <Leader>fp :pwd<CR>
 
 nnoremap <Leader>gb :Gblame<CR>
 nnoremap <Leader>gc :Gcommit<CR>
@@ -203,6 +211,7 @@ nnoremap <Leader>wh <C-w>h
 nnoremap <Leader>wj <C-w>j
 nnoremap <Leader>wk <C-w>k
 nnoremap <Leader>wl <C-w>l
+nnoremap <Leader>w= <C-w>=
 
 " =========== Colour ===========================================================
 
