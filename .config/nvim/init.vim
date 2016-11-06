@@ -155,6 +155,7 @@ xnoremap <Leader>da :EasyAlign<CR>
 xnoremap <Leader>ds :sort<CR>
 
 nnoremap <Leader>ek :bdelete<CR>
+nnoremap <Leader>eK :bdelete!<CR>
 nnoremap <Leader>en :enew<CR>
 nnoremap <Leader>et :tabnew<CR>
 nnoremap <Leader>ev :edit $MYVIMRC<CR>
