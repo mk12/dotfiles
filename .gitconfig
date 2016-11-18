@@ -21,11 +21,11 @@
 [color]
 	ui = auto
 [core]
-	editor = vim
+	editor = nvim
 	excludesfile = ~/.gitignore
 	pager = diff-highlight | less -RFX
 [diff]
-	tool = vimdiff
+	tool = nvim -d
 	prompt = false
 	algorithm = minimal
 	compactionHeuristic = true
