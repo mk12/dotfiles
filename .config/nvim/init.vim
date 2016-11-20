@@ -192,6 +192,7 @@ nnoremap <Leader>Q :quit!<CR>
 nnoremap <Leader>s :write<CR>
 nnoremap <Leader>S :write!<CR>
 
+nnoremap <Leader>ta :call AutoPairsToggle()<CR>
 nnoremap <Leader>t8 :call EightyColumns()<CR>
 nnoremap <Leader>tg :Goyo<CR>
 nnoremap <Leader>th :GitGutterLineHighlightsToggle<CR>
