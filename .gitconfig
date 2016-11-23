@@ -25,7 +25,7 @@
 	excludesfile = ~/.gitignore
 	pager = diff-highlight | less -RFX
 [diff]
-	tool = nvim -d
+	tool = vimdiff
 	prompt = false
 	algorithm = minimal
 	compactionHeuristic = true
@@ -35,6 +35,8 @@
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3
+[mergetool "vimdiff"]
+	path = nvim
 [push]
 	default = simple
 [pull]
