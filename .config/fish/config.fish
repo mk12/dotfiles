@@ -24,11 +24,11 @@ function tm --description "Shortcut for tmux commands"
 		return
 	end
 	switch $argv[1]
-	case 'n'
+	case 'n' 'N'
 		tmux new -s $argv[2..-1]
-	case 'a'
+	case 'a' 'A'
 		tmux attach -t $argv[2..-1]
-	case 'k'
+	case 'k' 'K'
 		tmux kill-session -t $argv[2..-1]
 	case '*'
 		echo tm: $argv[1]: invalid argument >&2
@@ -47,6 +47,14 @@ function be --description "Shortcut for bundle exec"
 	bundle exec $argv
 end
 
+function add_paths --description "Adds to the PATH variable"
+	for dir in $argv
+		if not contains $dir $PATH; and test -d $dir
+			set PATH $PATH $dir
+		end
+	end
+end
+
 # Environment variables
 set gh ~/GitHub
 set -x PRO_BASE $gh
@@ -57,12 +65,7 @@ set -x VISUAL nvim
 set -x PAGER less
 
 # PATH
-set paths $gh/scripts $GOPATH/bin ~/.fzf/bin
-for dir in $paths
-	if not contains $dir $PATH; and test -d $dir
-		set PATH $PATH $dir
-	end
-end
+add_paths $gh/scripts $GOPATH/bin ~/.fzf/bin
 
 # OS-specific configuration
 set specific ~/.config/fish/(uname -s | tr '[A-Z]' '[a-z]').fish
