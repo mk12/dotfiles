@@ -28,6 +28,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-obsession', { 'on': 'Obsess' }
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
@@ -192,11 +193,12 @@ nnoremap <Leader>Q :quit!<CR>
 nnoremap <Leader>s :write<CR>
 nnoremap <Leader>S :write!<CR>
 
-nnoremap <Leader>ta :call AutoPairsToggle()<CR>
 nnoremap <Leader>t8 :call EightyColumns()<CR>
+nnoremap <Leader>ta :call AutoPairsToggle()<CR>
 nnoremap <Leader>tg :Goyo<CR>
 nnoremap <Leader>th :GitGutterLineHighlightsToggle<CR>
 nnoremap <Leader>tn :set number!<CR>
+nnoremap <Leader>to :Obsess!<CR>
 nnoremap <Leader>tp :set paste!<CR>
 nnoremap <Leader>tr :set relativenumber!<CR>
 nnoremap <Leader>ts :set spell!<CR>
