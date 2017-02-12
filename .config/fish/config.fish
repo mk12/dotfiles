@@ -19,6 +19,12 @@ function sz --description "Calculate the size of a directory"
 end
 
 function tm --description "Shortcut for tmux commands"
+	# Start the server if it's not running (tmux-continuum will auto-restore).
+	if not tmux ls > /dev/null ^&1
+		tmux new-session -d -s _start
+		bash -c 'tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh'
+		tmux kill-session -t _start
+	end
 	if test (count $argv) -lt 2
 		tmux ls
 		return
