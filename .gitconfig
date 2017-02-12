@@ -18,6 +18,7 @@
 	sh = stash
 	unstage = reset HEAD --
 	last = log -1 HEAD
+	lol = log --pretty=oneline --abbrev-commit --graph --decorate
 [color]
 	ui = auto
 [core]
