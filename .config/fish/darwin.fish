@@ -1,9 +1,3 @@
-function upd --description "Update homebrew and neovim"
-	brew update
-	and brew upgrade
-	and nvim +PlugUpgrade +PlugUpdate +qall
-end
-
 function dump --description "Dissassemble to Intel syntax"
 	gobjdump -d -M intel -s $argv
 end

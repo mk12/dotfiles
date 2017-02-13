@@ -6,23 +6,22 @@ function fish_prompt --description "Write out the prompt"
 	echo -n '> '
 end
 
-function sudo --description "Execute a command as superuser"
-	if test "$argv" = !!
-		eval command sudo $history[1]
-	else
-		command sudo $argv
+function upd --description "Updates homebrew, tmux, and neovim"
+	if command -qv brew
+		brew update; and brew upgrade
 	end
-end
-
-function sz --description "Calculate the size of a directory"
-	du -sh $argv
+	if set -q TMUX
+		~/.tmux/plugins/tpm/bin/clean_plugins
+		~/.tmux/plugins/tpm/bin/update_plugins all
+	end
+	nvim +PlugUpgrade +PlugUpdate +qall
 end
 
 function tm --description "Shortcut for tmux commands"
 	# Start the server if it's not running (tmux-continuum will auto-restore).
 	if not tmux ls > /dev/null ^&1
 		tmux new-session -d -s _start
-		bash -c 'tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh'
+		tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh
 		tmux kill-session -t _start
 	end
 	if test (count $argv) -lt 2
@@ -51,6 +50,18 @@ end
 
 function be --description "Shortcut for bundle exec"
 	bundle exec $argv
+end
+
+function sz --description "Calculate the size of a directory"
+	du -sh $argv
+end
+
+function sudo --description "Execute a command as superuser"
+	if test "$argv" = !!
+		eval command sudo $history[1]
+	else
+		command sudo $argv
+	end
 end
 
 function add_paths --description "Adds to the PATH variable"
