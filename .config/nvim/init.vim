@@ -278,7 +278,7 @@ function! s:PrevBufOrTab()
 endfunction
 
 function! s:ProjectFiles()
-	if exists('b:git_dir')
+	if exists('b:git_dir') && getcwd() . '/.git' == b:git_dir
 		GitFiles
 	else
 		Files
