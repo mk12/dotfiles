@@ -6,15 +6,48 @@ function fish_prompt --description "Write out the prompt"
 	echo -n '> '
 end
 
+function inform --description "Writes a pretty message"
+	set_color purple
+	echo $argv...
+	set_color normal
+end
+
 function upd --description "Updates homebrew, tmux, and neovim"
 	if command -qv brew
+		inform 'Updating homebrew'
 		brew update; and brew upgrade
 	end
 	if set -q TMUX
+		inform 'Updating tmux'
 		~/.tmux/plugins/tpm/bin/clean_plugins
 		~/.tmux/plugins/tpm/bin/update_plugins all
 	end
-	nvim +PlugUpgrade +PlugUpdate +qall
+	if command -qv nvim
+		inform 'Updating neovim'
+		nvim +PlugUpgrade +PlugUpdate +qall
+	end
+end
+
+function cleanup --description "Frees up disk space"
+	if command -qv brew
+		inform 'Cleaning homebrew'
+		brew cleanup -S --force; and brew prune
+	end
+	if set -q TMUX
+		inform 'Cleaning tmux'
+		set last (readlink ~/.tmux/resurrect/last)
+		if test -n $last
+			for f in ~/.tmux/resurrect/*.txt
+				if test (basename $f) != $last
+					rm $f
+				end
+			end
+		end
+	end
+	if command -qv nvim
+		inform 'Cleaning neovim'
+		nvim +PlugClean +qall
+	end
 end
 
 function tm --description "Shortcut for tmux commands"
@@ -36,7 +69,8 @@ function tm --description "Shortcut for tmux commands"
 	case 'k' 'K'
 		tmux kill-session -t $argv[2..-1]
 	case '*'
-		echo tm: $argv[1]: invalid argument >&2
+		echo "tm: $argv[1]: invalid argument" >&2
+		return 1
 	end
 end
 
