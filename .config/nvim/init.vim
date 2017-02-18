@@ -25,6 +25,7 @@ Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'mk12/vim-lean', { 'for': 'lean' }
 Plug 'mk12/vim-llvm', { 'for': 'llvm' }
 Plug 'sheerun/vim-polyglot'
+Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
@@ -37,7 +38,7 @@ Plug 'vim-airline/vim-airline-themes'
 
 call plug#end()
 
-" =========== General ==========================================================
+" =========== General options ==================================================
 
 set cmdheight=2
 set cursorline
@@ -95,7 +96,7 @@ augroup comments
 	autocmd FileType sql setlocal commentstring=--\ %s
 augroup END
 
-" =========== Mappings =========================================================
+" =========== Basic mappings ===================================================
 
 nnoremap <Space> <Nop>
 
@@ -140,81 +141,151 @@ omap ac <Plug>GitGutterTextObjectOuterPending
 xmap ic <Plug>GitGutterTextObjectInnerVisual
 xmap ac <Plug>GitGutterTextObjectOuterVisual
 
-nnoremap <Leader>/ :Ag<CR>
-nnoremap <Leader>* :Ag <C-r><C-w><CR>
-xnoremap <Leader>* y:Ag <C-r>"<CR>
-nnoremap <Leader><Tab> :b#<CR>
-nnoremap <silent> <Leader><Leader> :call <SID>ProjectFiles()<CR>
+" =========== Shortcuts ========================================================
 
-nnoremap <Leader>c :Commentary<CR>
-xnoremap <Leader>c :Commentary<CR>
+Shortcut open shortcut menu
+	\ nnoremap <silent> <Leader>? :Shortcuts<CR>
+	\|nnoremap <silent> <Leader> :Shortcuts<CR>
 
-nnoremap <Leader>di vip=
-nnoremap <Leader>ds vip:sort<CR>
-xnoremap <Leader>da :EasyAlign<CR>
-xnoremap <Leader>ds :sort<CR>
+Shortcut go to file in project
+	\ nnoremap <silent> <Leader><Leader> :call ProjectFiles()<CR>
 
-nnoremap <Leader>ek :bdelete<CR>
-nnoremap <Leader>eK :bdelete!<CR>
-nnoremap <Leader>en :enew<CR>
-nnoremap <Leader>et :tabnew<CR>
-nnoremap <Leader>ev :edit $MYVIMRC<CR>
-nnoremap <Leader>er :edit!<CR>
-nnoremap <Leader>eR :source $MYVIMRC<CR>
+Shortcut switch to last buffer
+	\ nnoremap <Leader><Tab> :b#<CR>
 
-nnoremap <Leader>fr :execute 'Rooter'<CR>:pwd<CR>
-nnoremap <Leader>ff :cd %:h<CR>:pwd<CR>
-nnoremap <Leader>fp :pwd<CR>
+Shortcut project-wide search
+	\ nnoremap <Leader>/ :Ag<CR>
+Shortcut project-wide search with input
+	\ nnoremap <Leader>* :Ag <C-r><C-w><CR>
+	\|xnoremap <Leader>* y:Ag <C-r>"<CR>
 
-nnoremap <Leader>gb :Gblame<CR>
-nnoremap <Leader>gc :Gcommit<CR>
-nnoremap <Leader>gl :Gpull<CR>
-nnoremap <Leader>gp :Gpush<CR>
-nnoremap <Leader>gs :Gstatus<CR>
-nnoremap <Leader>gw :Gwrite<CR>
+Shortcut toggle comment
+	\ nnoremap <Leader>c :Commentary<CR>
+	\|xnoremap <Leader>c :Commentary<CR>
 
-nnoremap <Leader>h :call <SID>ToggleSourceHeader()<CR>
+Shortcut reindent lines
+	\ nnoremap <Leader>di vip=
+Shortcut align lines
+	\ nnoremap <Leader>da vip:EasyAlign<CR>
+	\|xnoremap <Leader>da :EasyAlign<CR>
+Shortcut sort lines
+	\ nnoremap <Leader>ds vip:sort<CR>
+	\|xnoremap <Leader>ds :sort<CR>
 
-nnoremap <Leader>l :nohlsearch<CR>
+Shortcut delete buffer
+	\ nnoremap <Leader>ek :bdelete<CR>
+Shortcut force delete buffer
+	\ nnoremap <Leader>eK :bdelete!<CR>
+Shortcut new buffer
+	\ nnoremap <Leader>en :enew<CR>
+Shortcut new tab
+	\ nnoremap <Leader>et :tabnew<CR>
+Shortcut reload current buffer
+	\ nnoremap <Leader>er :edit!<CR>
 
-nnoremap <Leader>pb :Buffers<CR>
-nnoremap <Leader>pc :Commits<CR>
-nnoremap <Leader>pf :Files<CR>
-nnoremap <Leader>pg :GFiles<CR>
-nnoremap <Leader>ph :Helptags<CR>
-nnoremap <Leader>pl :Lines<CR>
-nnoremap <Leader>pm :Marks<CR>
-nnoremap <Leader>pt :Tags<CR>
+Shortcut edit vimrc or init.vim
+	\ nnoremap <Leader>ev :edit $MYVIMRC<CR>
+Shortcut reload vimrc or init.vim
+	\ nnoremap <Leader>eR :source $MYVIMRC<CR>
 
-nnoremap <Leader>q :quit<CR>
-nnoremap <Leader>Q :quit!<CR>
+Shortcut cd to project root
+	\ nnoremap <Leader>fr :execute 'Rooter'<CR>:pwd<CR>
+Shortcut cd to current file directory
+	\ nnoremap <Leader>ff :cd %:h<CR>:pwd<CR>
+Shortcut print working directory
+	\ nnoremap <Leader>fp :pwd<CR>
 
-nnoremap <Leader>s :write<CR>
-nnoremap <Leader>S :write!<CR>
+Shortcut git blame
+	\ nnoremap <Leader>gb :Gblame<CR>
+Shortcut git commit
+	\ nnoremap <Leader>gc :Gcommit<CR>
+Shortcut git pull
+	\ nnoremap <Leader>gl :Gpull<CR>
+Shortcut git push
+	\ nnoremap <Leader>gp :Gpush<CR>
+Shortcut git status
+	\ nnoremap <Leader>gs :Gstatus<CR>
+Shortcut git write/add
+	\ nnoremap <Leader>gw :Gwrite<CR>
 
-nnoremap <Leader>t8 :call EightyColumns()<CR>
-nnoremap <Leader>ta :call AutoPairsToggle()<CR>
-nnoremap <Leader>tg :Goyo<CR>
-nnoremap <Leader>th :GitGutterLineHighlightsToggle<CR>
-nnoremap <Leader>tn :set number!<CR>
-nnoremap <Leader>to :Obsess!<CR>
-nnoremap <Leader>tp :set paste!<CR>
-nnoremap <Leader>tr :set relativenumber!<CR>
-nnoremap <Leader>ts :set spell!<CR>
-nnoremap <Leader>tu :UndotreeToggle<CR>
-nnoremap <Leader>tw :set list!<CR>
+Shortcut switch between header/source
+	\ nnoremap <Leader>h :call ToggleSourceHeader()<CR>
 
-nnoremap <Leader>w- :split<CR>
-nnoremap <Leader>w/ :vsplit<CR>
-nnoremap <Leader>wH <C-w>H
-nnoremap <Leader>wJ <C-w>J
-nnoremap <Leader>wK <C-w>K
-nnoremap <Leader>wL <C-w>L
-nnoremap <Leader>wh <C-w>h
-nnoremap <Leader>wj <C-w>j
-nnoremap <Leader>wk <C-w>k
-nnoremap <Leader>wl <C-w>l
-nnoremap <Leader>w= <C-w>=
+Shortcut remove search highlight
+	\ nnoremap <Leader>l :nohlsearch<CR>
+
+Shortcut view buffers
+	\ nnoremap <Leader>pb :Buffers<CR>
+Shortcut view git commits
+	\ nnoremap <Leader>pc :Commits<CR>
+Shortcut view files
+	\ nnoremap <Leader>pf :Files<CR>
+Shortcut view git files
+	\ nnoremap <Leader>pg :GFiles<CR>
+Shortcut view help tags
+	\ nnoremap <Leader>ph :Helptags<CR>
+Shortcut view all lines
+	\ nnoremap <Leader>pl :Lines<CR>
+Shortcut view marks
+	\ nnoremap <Leader>pm :Marks<CR>
+Shortcut view tags
+	\ nnoremap <Leader>pt :Tags<CR>
+
+Shortcut quit
+	\ nnoremap <Leader>q :quit<CR>
+Shortcut force quit
+	\ nnoremap <Leader>Q :quit!<CR>
+
+Shortcut save/write file
+	\ nnoremap <Leader>s :write<CR>
+Shortcut force save/write file
+	\ nnoremap <Leader>S :write!<CR>
+
+Shortcut toggle 80-column marker
+	\ nnoremap <Leader>t8 :call EightyColumns()<CR>
+Shortcut toggle auto-pairs
+	\ nnoremap <Leader>ta :call AutoPairsToggle()<CR>
+Shortcut toggle Goyo mode
+	\ nnoremap <Leader>tg :Goyo<CR>
+Shortcut toggle git line highlight
+	\ nnoremap <Leader>th :GitGutterLineHighlightsToggle<CR>
+Shortcut toggle line numbers
+	\ nnoremap <Leader>tn :set number!<CR>
+Shortcut toggle session tracking
+	\ nnoremap <Leader>to :Obsess!<CR>
+Shortcut toggle paste mode
+	\ nnoremap <Leader>tp :set paste!<CR>
+Shortcut toggle relative line numbers
+	\ nnoremap <Leader>tr :set relativenumber!<CR>
+Shortcut toggle spell checker
+	\ nnoremap <Leader>ts :set spell!<CR>
+Shortcut toggle undo tree
+	\ nnoremap <Leader>tu :UndotreeToggle<CR>
+Shortcut toggle list/whitespace mode
+	\ nnoremap <Leader>tw :set list!<CR>
+
+Shortcut new horizontal split
+	\ nnoremap <Leader>w- :split<CR>
+Shortcut new vertical split
+	\ nnoremap <Leader>w/ :vsplit<CR>
+Shortcut move window left
+	\ nnoremap <Leader>wH <C-w>H
+Shortcut move window down
+	\ nnoremap <Leader>wJ <C-w>J
+Shortcut move window up
+	\ nnoremap <Leader>wK <C-w>K
+Shortcut move window right
+	\ nnoremap <Leader>wL <C-w>L
+Shortcut go to left window
+	\ nnoremap <Leader>wh <C-w>h
+Shortcut go to down window
+	\ nnoremap <Leader>wj <C-w>j
+Shortcut go to up window
+	\ nnoremap <Leader>wk <C-w>k
+Shortcut go to right window
+	\ nnoremap <Leader>wl <C-w>l
+Shortcut resize windows equally
+	\ nnoremap <Leader>w= <C-w>=
 
 " =========== Colour ===========================================================
 
@@ -227,6 +298,9 @@ colorscheme solarized
 
 highlight clear NonText
 highlight link NonText Comment
+
+highlight clear Visual
+highlight Visual ctermbg=7
 
 " =========== Lines ============================================================
 
@@ -277,15 +351,15 @@ function! s:PrevBufOrTab()
 	endif
 endfunction
 
-function! s:ProjectFiles()
-	if exists('b:git_dir') && getcwd() . '/.git' == b:git_dir
+function! ProjectFiles()
+	if !empty(glob('.git'))
 		GitFiles
 	else
 		Files
 	endif
 endfunction
 
-function! s:ToggleSourceHeader()
+function! ToggleSourceHeader()
 	let l:extension = expand('%:e')
 	if l:extension == 'h' || l:extension == 'hpp'
 		echo expand('%:p:r.cpp')
