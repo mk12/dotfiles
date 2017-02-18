@@ -46,7 +46,7 @@ function cleanup --description "Frees up disk space"
 	end
 	if command -qv nvim
 		inform 'Cleaning neovim'
-		echo 'y' | nvim +PlugClean +qall
+		nvim +PlugClean +qall
 	end
 end
 
