@@ -3,7 +3,7 @@ function fish_prompt --description "Write out the prompt"
 	set_color $fish_color_cwd
 	echo -n (prompt_pwd)
 	set_color normal
-	echo -n '> '
+	echo -n "> "
 end
 
 function inform --description "Writes a pretty message"
@@ -14,27 +14,27 @@ end
 
 function upd --description "Updates homebrew, tmux, and neovim"
 	if command -qv brew
-		inform 'Updating homebrew'
+		inform "Updating homebrew"
 		brew update; and brew upgrade
 	end
 	if set -q TMUX
-		inform 'Updating tmux'
+		inform "Updating tmux"
 		~/.tmux/plugins/tpm/bin/clean_plugins
 		~/.tmux/plugins/tpm/bin/update_plugins all
 	end
 	if command -qv nvim
-		inform 'Updating neovim'
+		inform "Updating neovim"
 		nvim +PlugUpgrade +PlugUpdate +qall
 	end
 end
 
 function cleanup --description "Frees up disk space"
 	if command -qv brew
-		inform 'Cleaning homebrew'
+		inform "Cleaning homebrew"
 		brew cleanup -S --force; and brew prune
 	end
 	if set -q TMUX
-		inform 'Cleaning tmux'
+		inform "Cleaning tmux"
 		set last (readlink ~/.tmux/resurrect/last)
 		if test -n $last
 			for f in ~/.tmux/resurrect/*.txt
@@ -45,7 +45,7 @@ function cleanup --description "Frees up disk space"
 		end
 	end
 	if command -qv nvim
-		inform 'Cleaning neovim'
+		inform "Cleaning neovim"
 		nvim +PlugClean +qall
 	end
 end
@@ -56,6 +56,9 @@ function tm --description "Shortcut for tmux commands"
 		tmux new-session -d -s _start
 		tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh
 		tmux kill-session -t _start
+		if command -qv darklight.sh
+			tmux run-shell "darklight.sh -t"
+		end
 	end
 	if test (count $argv) -lt 2
 		tmux ls
@@ -129,7 +132,7 @@ set -x FZF_DEFAULT_OPTS "--no-bold \
 add_paths $gh/scripts $GOPATH/bin ~/.fzf/bin
 
 # OS-specific configuration
-set specific ~/.config/fish/(uname -s | tr '[A-Z]' '[a-z]').fish
+set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
 if test -e $specific
 	source $specific
 end
