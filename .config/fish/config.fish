@@ -87,9 +87,9 @@ end
 
 function fzf --description "Invokes FZF with proper color"
 	if test -f ~/.solarized_light
-		command fzf --color=fg+:10,bg+:7
+		command fzf --color=fg+:0,bg+:7
 	else
-		command fzf --color=fg+:14,bg+:0
+		command fzf --color=fg+:7,bg+:0
 	end
 end
 
@@ -129,7 +129,7 @@ set -x FZF_DEFAULT_OPTS "--no-bold \
 	--color=16,fg:-1,bg:-1,hl:4,hl+:4,info:2,prompt:4,pointer:9"
 
 # PATH
-add_paths $gh/scripts $GOPATH/bin ~/.fzf/bin
+add_paths $gh/scripts $GOPATH/bin
 
 # OS-specific configuration
 set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish

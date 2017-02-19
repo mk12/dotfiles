@@ -35,6 +35,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-tbone', { 'on': ['Tyank', 'Tput'] }
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'wincent/ferret', { 'on': 'Ack' }
 
 call plug#end()
 
@@ -54,11 +55,6 @@ let g:easy_align_delimiters = {
 	\ }
 \ }
 
-let g:fzf_colors = {
-	\ 'fg+': ['fg', 'StatusLine'],
-	\ 'bg+': ['bg', 'StatusLine'],
-	\ 'header': ['fg', 'Constant']
-\ }
 let g:fzf_tags_command = 'ctags -R'
 
 let g:gitgutter_map_keys = 0
@@ -315,7 +311,7 @@ augroup END
 
 augroup background
 	autocmd!
-	autocmd FocusGained * call s:FixBackground()
+	autocmd FocusGained * call <SID>FixBackground()
 augroup END
 
 " =========== Functions ========================================================
@@ -390,6 +386,8 @@ function! s:CurrentBackground()
 	return empty(glob('~/.solarized_light')) ? 'dark' : 'light'
 endfunction
 
+let s:fzf_default_opts = $FZF_DEFAULT_OPTS
+
 function! s:SetBackground(bg)
 	let &background = a:bg
 
@@ -401,6 +399,11 @@ function! s:SetBackground(bg)
 	call gitgutter#highlight#define_highlights()
 	if exists(':AirlineRefresh')
 		AirlineRefresh
+	endif
+	if &background == 'light'
+		let $FZF_DEFAULT_OPTS = s:fzf_default_opts . ',fg+:0,bg+:7'
+	else
+		let $FZF_DEFAULT_OPTS = s:fzf_default_opts . ',fg+:7,bg+:0'
 	endif
 endfunction
 
