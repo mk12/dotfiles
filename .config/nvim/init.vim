@@ -172,15 +172,17 @@ Shortcut toggle comment
 	\ nnoremap <Leader>c :Commentary<CR>
 	\|xnoremap <Leader>c :Commentary<CR>
 
-Shortcut reindent lines
-	\ nnoremap <Leader>di vip=
 Shortcut align lines
 	\ nnoremap <Leader>da vip:EasyAlign<CR>
 	\|xnoremap <Leader>da :EasyAlign<CR>
+Shortcut reindent lines
+	\ nnoremap <Leader>di vip=
 Shortcut sort lines
 	\ nnoremap <Leader>ds vip:sort<CR>
 	\|xnoremap <Leader>ds :sort<CR>
 
+Shortcut edit fish config
+	\ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
 Shortcut delete buffer
 	\ nnoremap <Leader>ek :bdelete<CR>
 Shortcut force delete buffer
@@ -189,20 +191,19 @@ Shortcut new buffer
 	\ nnoremap <Leader>en :enew<CR>
 Shortcut new tab
 	\ nnoremap <Leader>et :tabnew<CR>
-Shortcut reload current buffer
-	\ nnoremap <Leader>er :edit!<CR>
-
-Shortcut edit vimrc or init.vim
-	\ nnoremap <Leader>ev :edit $MYVIMRC<CR>
 Shortcut reload vimrc or init.vim
 	\ nnoremap <Leader>eR :source $MYVIMRC<CR>
+Shortcut reload current buffer
+	\ nnoremap <Leader>er :edit!<CR>
+Shortcut edit vimrc or init.vim
+	\ nnoremap <Leader>ev :edit $MYVIMRC<CR>
 
-Shortcut cd to project root
-	\ nnoremap <Leader>fr :Rooter<CR>:pwd<CR>
 Shortcut cd to current file directory
 	\ nnoremap <Leader>ff :cd %:h<CR>:pwd<CR>
 Shortcut print working directory
 	\ nnoremap <Leader>fp :pwd<CR>
+Shortcut cd to project root
+	\ nnoremap <Leader>fr :Rooter<CR>:pwd<CR>
 
 Shortcut git blame
 	\ nnoremap <Leader>gb :Gblame<CR>
@@ -240,15 +241,15 @@ Shortcut view marks
 Shortcut view tags
 	\ nnoremap <Leader>pt :Tags<CR>
 
-Shortcut quit
-	\ nnoremap <Leader>q :quit<CR>
 Shortcut force quit
 	\ nnoremap <Leader>Q :quit!<CR>
+Shortcut quit
+	\ nnoremap <Leader>q :quit<CR>
 
-Shortcut save/write file
-	\ nnoremap <Leader>s :write<CR>
 Shortcut force save/write file
 	\ nnoremap <Leader>S :write!<CR>
+Shortcut save/write file
+	\ nnoremap <Leader>s :write<CR>
 
 Shortcut toggle 80-column marker
 	\ nnoremap <Leader>t8 :call EightyColumns()<CR>
@@ -312,9 +313,9 @@ augroup columns
 	autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
 augroup END
 
-augroup colors
+augroup background
 	autocmd!
-	autocmd ColorScheme * call FixColorScheme()
+	autocmd FocusGained * call s:FixBackground()
 augroup END
 
 " =========== Functions ========================================================
@@ -389,23 +390,39 @@ function! s:CurrentBackground()
 	return empty(glob('~/.solarized_light')) ? 'dark' : 'light'
 endfunction
 
-function! ToggleBackground()
-	if &background == s:CurrentBackground()
-		silent !darklight.sh
-	endif
-	let &background = s:CurrentBackground()
-endfunction
+function! s:SetBackground(bg)
+	let &background = a:bg
 
-function! FixColorScheme()
 	highlight clear NonText
 	highlight link NonText Comment
-
 	highlight clear Visual
 	execute 'highlight Visual ctermbg=' . (&background == 'light' ? 0 : 7)
+	highlight clear SignColumn
+	call gitgutter#highlight#define_highlights()
+	if exists(':AirlineRefresh')
+		AirlineRefresh
+	endif
+endfunction
+
+function! s:FixBackground()
+	let l:bg = s:CurrentBackground()
+	if &background != l:bg
+		call s:SetBackground(l:bg)
+	endif
+endfunction
+
+function! ToggleBackground()
+	let l:bg = s:CurrentBackground()
+	if &background != l:bg
+		call s:SetBackground(l:bg)
+	else
+		silent !darklight.sh
+		call s:SetBackground(s:CurrentBackground())
+	endif
 endfunction
 
 " =========== Color scheme =====================================================
 
-let &background = s:CurrentBackground()
+call s:FixBackground()
 syntax enable
 colorscheme solarized
