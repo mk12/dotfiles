@@ -21,6 +21,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
+Plug 'matze/vim-move'
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'mk12/vim-lean', { 'for': 'lean' }
 Plug 'mk12/vim-llvm', { 'for': 'llvm' }
@@ -35,7 +36,6 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-tbone', { 'on': ['Tyank', 'Tput'] }
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'wincent/ferret', { 'on': 'Ack' }
 
 call plug#end()
 
@@ -63,6 +63,8 @@ let g:go_fmt_command = 'goimports'
 let g:go_doc_keywordprg_enabled = 0
 
 let g:lean_auto_replace = 1
+
+let g:move_key_modifier = 'C'
 
 let g:rooter_manual_only = 1
 
@@ -375,7 +377,8 @@ function! ToggleSourceHeader()
 endfunction
 
 function! EightyColumns(...)
-	if a:0 > 0 || &colorcolumn == '' || &colorcolumn == '0'
+	let l:on = a:0 > 0 ? a:1 : (&colorcolumn == '' || &colorcolumn == '0')
+	if l:on
 		setlocal textwidth=80 colorcolumn=+1
 	else
 		setlocal textwidth=0 colorcolumn=0
@@ -388,8 +391,8 @@ endfunction
 
 let s:fzf_default_opts = $FZF_DEFAULT_OPTS
 
-function! s:SetBackground(bg)
-	let &background = a:bg
+function! s:SetBackground(...)
+	let &background = a:0 > 0 ? a:1 : s:CurrentBackground()
 
 	highlight clear NonText
 	highlight link NonText Comment
@@ -420,12 +423,12 @@ function! ToggleBackground()
 		call s:SetBackground(l:bg)
 	else
 		silent !darklight.sh
-		call s:SetBackground(s:CurrentBackground())
+		call s:SetBackground()
 	endif
 endfunction
 
 " =========== Color scheme =====================================================
 
-call s:FixBackground()
+call s:SetBackground()
 syntax enable
 colorscheme solarized
