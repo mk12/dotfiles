@@ -82,6 +82,14 @@ function gg --description "Show git branches and status"
 	git branch; and git status --short
 end
 
+function fzf --description "Invokes FZF with proper color"
+	if test -f ~/.solarized_light
+		command fzf --color=fg+:10,bg+:7
+	else
+		command fzf --color=fg+:14,bg+:0
+	end
+end
+
 function be --description "Shortcut for bundle exec"
 	bundle exec $argv
 end
@@ -114,6 +122,8 @@ set -x LEDGER_FILE $gh/finance/journal.ledger
 set -x EDITOR nvim
 set -x VISUAL nvim
 set -x PAGER less
+set -x FZF_DEFAULT_OPTS "--no-bold \
+	--color=16,fg:-1,bg:-1,hl:4,hl+:4,info:2,prompt:4,pointer:9"
 
 # PATH
 add_paths $gh/scripts $GOPATH/bin ~/.fzf/bin
