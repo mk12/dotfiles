@@ -429,6 +429,6 @@ endfunction
 
 " =========== Color scheme =====================================================
 
-call s:SetBackground()
 syntax enable
 colorscheme solarized
+call s:SetBackground()
