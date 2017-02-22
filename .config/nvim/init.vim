@@ -64,7 +64,7 @@ let g:go_doc_keywordprg_enabled = 0
 
 let g:lean_auto_replace = 1
 
-let g:move_key_modifier = 'C'
+let g:move_map_keys = 0
 
 let g:rooter_manual_only = 1
 
@@ -136,6 +136,11 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
+
+nmap <C-n> <Plug>MoveLineDown
+nmap <C-m> <Plug>MoveLineUp
+xmap <C-n> <Plug>MoveBlockDown
+xmap <C-m> <Plug>MoveBlockUp
 
 " https://github.com/neovim/neovim/issues/2048
 nnoremap <BS> :<C-u>TmuxNavigateLeft<CR>
@@ -308,6 +313,7 @@ augroup END
 augroup columns
 	autocmd!
 	autocmd BufRead * call EightyColumns(1)
+	autocmd FileType markdown setlocal textwidth=0 colorcolumn=0
 	autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
 augroup END
 
