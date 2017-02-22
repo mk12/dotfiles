@@ -56,9 +56,6 @@ function tm --description "Shortcut for tmux commands"
 		tmux new-session -d -s _start
 		tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh
 		tmux kill-session -t _start
-		if command -qv darklight.sh
-			tmux run-shell "darklight.sh -t"
-		end
 	end
 	if test (count $argv) -lt 2
 		tmux ls
