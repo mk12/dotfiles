@@ -84,9 +84,9 @@ end
 
 function fzf --description "Invokes FZF with proper color"
 	if test -f ~/.solarized_light
-		command fzf --color=fg+:0,bg+:7
+		command ~/.fzf/bin/fzf --color=fg+:0,bg+:7
 	else
-		command fzf --color=fg+:7,bg+:0
+		command ~/.fzf/bin/fzf --color=fg+:7,bg+:0
 	end
 end
 
