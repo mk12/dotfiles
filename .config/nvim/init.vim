@@ -13,7 +13,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter', { 'on': 'Rooter' }
 Plug 'altercation/vim-colors-solarized'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
@@ -136,6 +135,9 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
+
+nnoremap <C-t> J
+xnoremap <C-t> J
 
 nmap <C-n> <Plug>MoveLineDown
 nmap <C-m> <Plug>MoveLineUp

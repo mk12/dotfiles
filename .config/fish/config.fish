@@ -33,17 +33,6 @@ function cleanup --description "Frees up disk space"
 		inform "Cleaning homebrew"
 		brew cleanup -S --force; and brew prune
 	end
-	if set -q TMUX
-		inform "Cleaning tmux"
-		set last (readlink ~/.tmux/resurrect/last)
-		if test -n $last
-			for f in ~/.tmux/resurrect/*.txt
-				if test (basename $f) != $last
-					rm $f
-				end
-			end
-		end
-	end
 	if command -qv nvim
 		inform "Cleaning neovim"
 		nvim +PlugClean +qall
