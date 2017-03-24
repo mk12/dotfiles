@@ -8,11 +8,14 @@ endif
 
 call plug#begin()
 
+Plug 'Rip-Rip/clang_complete', { 'for': [ 'c', 'cpp' ] }
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter', { 'on': 'Rooter' }
 Plug 'altercation/vim-colors-solarized'
+Plug 'artur-shaik/vim-javacomplete2', { 'for': 'java' }
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
@@ -20,7 +23,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
-Plug 'matze/vim-move'
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'mk12/vim-lean', { 'for': 'lean' }
 Plug 'mk12/vim-llvm', { 'for': 'llvm' }
@@ -32,7 +34,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession', { 'on': 'Obsess' }
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-tbone', { 'on': ['Tyank', 'Tput'] }
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -40,9 +41,12 @@ call plug#end()
 
 " =========== Plugin settings ==================================================
 
+let g:airline#extensions#default#layout = [ [ 'a', 'c' ], [ 'x', 'y' ] ]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_extensions = ['branch', 'tabline', 'whitespace']
+let g:airline_extensions = ['tabline']
 let g:airline_powerline_fonts = 1
+
+let g:clang_library_path='/usr/local/opt/llvm/lib'
 
 let g:deoplete#enable_at_startup = 1
 
@@ -61,9 +65,9 @@ let g:gitgutter_map_keys = 0
 let g:go_fmt_command = 'goimports'
 let g:go_doc_keywordprg_enabled = 0
 
-let g:lean_auto_replace = 1
+let g:JavaComplete_EnableDefaultMappings = 0
 
-let g:move_map_keys = 0
+let g:lean_auto_replace = 1
 
 let g:rooter_manual_only = 1
 
@@ -87,13 +91,13 @@ set listchars=eol:¬,tab:».,trail:~
 set mousefocus
 set nofoldenable
 set nojoinspaces
+set noshowmode
 set nostartofline
 set number
 set scrolloff=4
 set shiftround
 set shiftwidth=4
 set showcmd
-set showmode
 set smartcase
 set tabstop=4
 set undofile
@@ -138,11 +142,6 @@ nnoremap <C-l> <C-w>l
 
 nnoremap <C-t> J
 xnoremap <C-t> J
-
-nmap <C-n> <Plug>MoveLineDown
-nmap <C-m> <Plug>MoveLineUp
-xmap <C-n> <Plug>MoveBlockDown
-xmap <C-m> <Plug>MoveBlockUp
 
 " https://github.com/neovim/neovim/issues/2048
 nnoremap <BS> :<C-u>TmuxNavigateLeft<CR>
@@ -311,6 +310,8 @@ augroup custom
 
 	autocmd FileType c,cpp setlocal commentstring=//\ %s
 	autocmd FileType sql setlocal commentstring=--\ %s
+
+	autocmd FileType java setlocal omnifunc=javacomplete#Complete
 
 	autocmd BufRead * call EightyColumns(1)
 	autocmd FileType markdown setlocal textwidth=0 colorcolumn=0
