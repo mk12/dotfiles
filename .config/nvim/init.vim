@@ -120,9 +120,6 @@ inoremap kj <Esc>
 noremap ; :
 noremap : ;
 
-noremap 0 ^
-noremap ^ 0
-
 nnoremap Y y$
 
 nnoremap Q gqap
@@ -133,16 +130,6 @@ xnoremap <silent> <expr> p <SID>VisualReplace()
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 inoremap <silent> <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-
-nnoremap J <C-d>
-nnoremap K <C-u>
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
-
-nnoremap <C-t> J
-xnoremap <C-t> J
 
 " https://github.com/neovim/neovim/issues/2048
 nnoremap <BS> :<C-u>TmuxNavigateLeft<CR>
