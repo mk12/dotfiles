@@ -49,6 +49,7 @@ let g:airline_powerline_fonts = 1
 let g:clang_library_path='/usr/local/opt/llvm/lib'
 
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#max_menu_width = 0
 
 let g:easy_align_delimiters = {
 	\ '/': {

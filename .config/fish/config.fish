@@ -115,7 +115,7 @@ set -x FZF_DEFAULT_OPTS "--no-bold \
 	--color=16,fg:-1,bg:-1,hl:4,hl+:4,info:2,prompt:4,pointer:9"
 
 # PATH
-add_paths $gh/scripts $GOPATH/bin
+add_paths $gh/scripts $GOPATH/bin ~/.cargo/bin
 
 # OS-specific configuration
 set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
