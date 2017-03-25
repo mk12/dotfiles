@@ -22,6 +22,8 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
+Plug 'junegunn/vim-peekaboo'
+Plug 'junegunn/vim-slash'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'mk12/vim-lean', { 'for': 'lean' }
@@ -64,7 +66,6 @@ let g:fzf_tags_command = 'ctags -R'
 let g:gitgutter_map_keys = 0
 
 let g:go_fmt_command = 'goimports'
-let g:go_doc_keywordprg_enabled = 0
 
 let g:JavaComplete_EnableDefaultMappings = 0
 
@@ -122,11 +123,15 @@ noremap : ;
 
 nnoremap Y y$
 
+xnoremap > >gv
+xnoremap < <gv
+
 nnoremap Q gqap
 xnoremap Q gq
 
 xnoremap <silent> <expr> p <SID>VisualReplace()
 
+nnoremap <C-p> <Tab>
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 inoremap <silent> <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
@@ -213,25 +218,42 @@ Shortcut git write/add
 Shortcut switch between header/source
 	\ nnoremap <Leader>h :call ToggleSourceHeader()<CR>
 
-Shortcut remove search highlight
-	\ nnoremap <Leader>l :nohlsearch<CR>
-
 Shortcut view buffers
 	\ nnoremap <Leader>pb :Buffers<CR>
+Shortcut view buffers (full screen)
+	\ nnoremap <Leader>pB :Buffers!<CR>
 Shortcut view git commits
 	\ nnoremap <Leader>pc :Commits<CR>
+Shortcut view git commits (full screen)
+	\ nnoremap <Leader>pC :Commits!<CR>
 Shortcut view files
 	\ nnoremap <Leader>pf :Files<CR>
+Shortcut view files (full screen)
+	\ nnoremap <Leader>pF :Files!<CR>
 Shortcut view git files
 	\ nnoremap <Leader>pg :GFiles<CR>
+Shortcut view git files (full screen)
+	\ nnoremap <Leader>pG :GFiles!<CR>
 Shortcut view help tags
 	\ nnoremap <Leader>ph :Helptags<CR>
+Shortcut view help tags (full screen)
+	\ nnoremap <Leader>pH :Helptags!<CR>
 Shortcut view all lines
 	\ nnoremap <Leader>pl :Lines<CR>
+Shortcut view all lines (full screen)
+	\ nnoremap <Leader>pL :Lines!<CR>
 Shortcut view marks
 	\ nnoremap <Leader>pm :Marks<CR>
+Shortcut view marks (full screen)
+	\ nnoremap <Leader>pM :Marks!<CR>
+Shortcut view search results
+	\ nnoremap <Leader>ps :Ag<CR>
+Shortcut view search results (full screen)
+	\ nnoremap <Leader>pS :Ag!<CR>
 Shortcut view tags
 	\ nnoremap <Leader>pt :Tags<CR>
+Shortcut view tags (full screen)
+	\ nnoremap <Leader>pT :Tags!<CR>
 
 Shortcut force quit
 	\ nnoremap <Leader>Q :quit!<CR>
