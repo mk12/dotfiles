@@ -55,7 +55,6 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_extensions = ['tabline']
 let g:airline_powerline_fonts = 1
 
-let g:clang_library_path = '/usr/local/opt/llvm/lib'
 let g:clang_make_default_keymappings = 0
 
 let g:deoplete#enable_at_startup = 1
@@ -211,6 +210,8 @@ Shortcut git blame
 	\ nnoremap <Leader>gb :Gblame<CR>
 Shortcut git commit
 	\ nnoremap <Leader>gc :Gcommit<CR>
+Shortcut git diff
+	\ nnoremap <Leader>gd :Gdiff<CR>
 Shortcut git pull
 	\ nnoremap <Leader>gl :Gpull<CR>
 Shortcut git push
@@ -223,6 +224,10 @@ Shortcut git write/add
 Shortcut switch between header/source
 	\ nnoremap <Leader>h :call ToggleSourceHeader()<CR>
 
+Shortcut view ag search results
+	\ nnoremap <Leader>pa :Ag<CR>
+Shortcut view ag search results (full screen)
+	\ nnoremap <Leader>pA :Ag!<CR>
 Shortcut view buffers
 	\ nnoremap <Leader>pb :Buffers<CR>
 Shortcut view buffers (full screen)
@@ -251,10 +256,6 @@ Shortcut view marks
 	\ nnoremap <Leader>pm :Marks<CR>
 Shortcut view marks (full screen)
 	\ nnoremap <Leader>pM :Marks!<CR>
-Shortcut view search results
-	\ nnoremap <Leader>ps :Ag<CR>
-Shortcut view search results (full screen)
-	\ nnoremap <Leader>pS :Ag!<CR>
 Shortcut view tags
 	\ nnoremap <Leader>pt :Tags<CR>
 Shortcut view tags (full screen)
@@ -278,8 +279,10 @@ Shortcut toggle or fix dark/light background
 	\ nnoremap <Leader>tb :call ToggleBackground()<CR>
 Shortcut toggle Goyo mode
 	\ nnoremap <Leader>tg :Goyo<CR>
+Shortcut toggle highlight search
+	\ nnoremap <Leader>th :set hlsearch!<CR>
 Shortcut toggle git line highlight
-	\ nnoremap <Leader>th :GitGutterLineHighlightsToggle<CR>
+	\ nnoremap <Leader>tl :GitGutterLineHighlightsToggle<CR>
 Shortcut toggle line numbers
 	\ nnoremap <Leader>tn :set number!<CR>
 Shortcut toggle session tracking
@@ -445,6 +448,17 @@ function! ToggleBackground()
 		call s:SetBackground()
 	endif
 endfunction
+
+function! s:SetClangLibraryPath()
+	for l:path in [ '/usr/local/opt/llvm/lib', '/usr/local/lib', '/usr/lib' ]
+		if !empty(glob(l:path . '/libclang*'))
+			let g:clang_library_path = l:path
+			return
+		endif
+	endfor
+endfunction
+
+call s:SetClangLibraryPath()
 
 " =========== Color scheme =====================================================
 
