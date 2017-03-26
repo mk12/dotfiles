@@ -48,7 +48,6 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_extensions = ['tabline']
 let g:airline_powerline_fonts = 1
 
-let g:clang_library_path = '/usr/local/opt/llvm/lib'
 let g:clang_make_default_keymappings = 0
 
 let g:deoplete#enable_at_startup = 1
@@ -441,6 +440,17 @@ function! ToggleBackground()
 		call s:SetBackground()
 	endif
 endfunction
+
+function! s:SetClangLibraryPath()
+	for l:path in [ '/usr/local/opt/llvm/lib', '/usr/local/lib', '/usr/lib' ]
+		if !empty(glob(l:path . '/libclang*'))
+			let g:clang_library_path = l:path
+			return
+		endif
+	endfor
+endfunction
+
+call s:SetClangLibraryPath()
 
 " =========== Color scheme =====================================================
 
