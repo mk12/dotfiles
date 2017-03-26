@@ -1,117 +1,66 @@
 scriptencoding utf-8
 set nocompatible
 
-" ---------------- Plugins ------------------------------------------------ {{{1
+" =========== Plugins ==========================================================
 
 " Load vim-plug if it's not there.
-if empty(glob("~/.vim/autoload/plug.vim"))
-	execute '!curl -fLo ~/.vim/autoload/plug.vim --create-dirs'
-		\ 'https://raw.github.com/junegunn/vim-plug/master/plug.vim'
+if empty(glob('~/.vim/autoload/plug.vim'))
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
 
 call plug#begin()
 
+Plug 'tpope/vim-sensible'
+
+Plug 'Rip-Rip/clang_complete', { 'for': [ 'c', 'cpp' ] }
 Plug 'airblade/vim-gitgutter'
+Plug 'airblade/vim-rooter', { 'on': 'Rooter' }
 Plug 'altercation/vim-colors-solarized'
-Plug 'cespare/vim-toml', { 'for': 'toml' }
+Plug 'artur-shaik/vim-javacomplete2', { 'for': 'java' }
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'dag/vim-fish', { 'for': 'fish' }
-Plug 'dbakker/vim-projectroot'
-Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
-Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', { 'for': 'go' }
-Plug 'file-line'
-Plug 'guns/vim-clojure-static', { 'for': 'clojure' }
-Plug 'hkmix/vim-george', { 'for': 'george' }
+Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/rainbow_parentheses.vim'
-Plug 'junegunn/vim-easy-align'
-Plug 'kchmck/vim-coffee-script', { 'for': 'coffee' }
-Plug 'lambdatoast/elm.vim'
+Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
+Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
+Plug 'junegunn/vim-peekaboo'
+Plug 'junegunn/vim-slash'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
-Plug 'mk12/ag.vim'
+Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'mk12/vim-lean', { 'for': 'lean' }
-Plug 'repeat.vim'
-Plug 'scrooloose/syntastic'
-Plug 'surround.vim'
-Plug 'tComment'
+Plug 'mk12/vim-llvm', { 'for': 'llvm' }
+Plug 'sheerun/vim-polyglot'
+Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-rails', { 'for': 'ruby' }
-Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-obsession', { 'on': 'Obsess' }
 Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'wting/rust.vim', { 'for': 'rust' }
 
 filetype plugin indent on
 
 call plug#end()
 
-" ---------------- General ------------------------------------------------ {{{1
+" =========== Plugin settings ==================================================
 
-set guifont=mononoki             " current favourite mono font
-set number                       " show line numbers
-set numberwidth=4                " most files are in the hundreds
-set backspace=indent,eol,start   " allow backspace in insert mode
-set undolevels=100               " store lots of undo history
-set showcmd                      " show incomplete commands
-set showmode                     " show current mode
-set cmdheight=2                  " to avoid 'Enter to continue'
-set laststatus=2                 " required for airline to work properly
-set noerrorbells                 " no bells
-set visualbell t_vb=             " no sounds
-set autoread                     " reload files changed outside Vim
-set viminfo='100,%,f1            " save marks, buffer
-set encoding=utf-8               " assume UTF-8
-set guioptions-=r                " remove scrollbar
-set mouse=a                      " use mouse to select and drag
-set ttymouse=sgr                 " best tty mouse mode
-set mousefocus                   " let the mouse control splits
-set autochdir                    " cd to the file's directory
-set lazyredraw                   " don't redraw while executing macros
-set ttyfast                      " maybe this makes things smoother?
-set hidden                       " allow buffers in the background
-set tildeop                      " make ~ (case changer) an operator
-set spelllang=en_ca              " use Canadian English
-
-" ---------------- Plugin settings ---------------------------------------- {{{1
-
-" FZF
-let g:fzf_command_prefix = 'Fzf'
-
-" Ag
-let g:ag_working_path_mode='r'
-let g:ag_prg='ag --smart-case --column --ignore tags'
-
-" Airline
+let g:airline#extensions#default#layout = [ [ 'a', 'c' ], [ 'x', 'y' ] ]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline#extensions#tabline#enabled = 1
+let g:airline_extensions = ['tabline']
 let g:airline_powerline_fonts = 1
 
-" Ctags
-set tags+=tags;/
+let g:clang_library_path = '/usr/local/opt/llvm/lib'
+let g:clang_make_default_keymappings = 0
 
-" Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_ruby_checkers = ['rubocop']
-let g:syntastic_mode_map = { 'mode': 'passive' }
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#max_menu_width = 0
 
-" Go
-let g:go_fmt_command = 'goimports'
-let g:go_doc_keywordprg_enabled = 0
-
-" EasyAlign
 let g:easy_align_delimiters = {
 	\ '/': {
 		\ 'pattern': '//\+\|/\*\|\*/',
@@ -120,140 +69,290 @@ let g:easy_align_delimiters = {
 	\ }
 \ }
 
-" ---------------- Shortcuts ---------------------------------------------- {{{1
+let g:fzf_tags_command = 'ctags -R'
 
-" Comma is easier to reach than backslash (the default leader).
-let mapleader = ','
-let maplocalleader = '\\'
+let g:gitgutter_map_keys = 0
 
-" We'll never need to input jj.
-inoremap jj <esc>
+let g:go_fmt_command = 'goimports'
 
-" Swap ; and : so that you don't have to press shift for commands.
+let g:JavaComplete_EnableDefaultMappings = 0
+
+let g:lean_auto_replace = 1
+
+let g:rooter_manual_only = 1
+
+let g:solarized_termcolors = 16
+let g:solarized_termtrans = 1
+
+let g:undotree_SplitWidth = 35
+
+" =========== Options ==========================================================
+
+set backup
+set backupdir-=.
+set cmdheight=2
+set cursorline
+set gdefault
+set hidden
+set ignorecase
+set lazyredraw
+set linebreak
+set listchars=eol:¬,tab:».,trail:~
+set mousefocus
+set nofoldenable
+set nojoinspaces
+set noshowmode
+set nostartofline
+set number
+set scrolloff=4
+set shiftround
+set shiftwidth=4
+set showcmd
+set smartcase
+set tabstop=4
+set undofile
+set visualbell
+
+" =========== Mappings =========================================================
+
+nnoremap <Space> <Nop>
+
+let mapleader = "\<Space>"
+let maplocalleader = '\'
+
+inoremap jk <Esc>
+inoremap kj <Esc>
+
 noremap ; :
 noremap : ;
 
-" Swap ^ and 0 because ^ is more useful but 0 is easier to type.
-noremap 0 ^
-noremap ^ 0
-
-" Make Y behave like other capitals.
 nnoremap Y y$
 
-" Format a paragraph with one keystroke.
+xnoremap > >gv
+xnoremap < <gv
+
 nnoremap Q gqap
+xnoremap Q gq
 
-" Make navigation easier.
-nnoremap <space> <C-f>
-nnoremap <S-space> <C-b>
-nnoremap J <C-d>
-nnoremap K <C-u>
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
-nnoremap <silent> <tab> :call NextBufOrTab()<cr>
-nnoremap <silent> <S-tab> :call PrevBufOrTab()<cr>
-nnoremap <silent> <leader>d :bdel<cr>
-nnoremap <silent> <C-n> :tabnew<cr>
+xnoremap <silent> <expr> p <SID>VisualReplace()
 
-" These actions need quick access.
-nnoremap <silent> <leader>w :w<cr>
-nnoremap <silent> <leader>i g<C-g>
-nnoremap <silent> <leader>/ :silent :nohlsearch<cr>
-nnoremap <silent> <leader>l :setlocal list!<cr>
-nnoremap <silent> <leader>n :set relativenumber!<cr>
-nnoremap <silent> <leader>t :set paste!<cr>
+nnoremap <C-p> <Tab>
+nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
+nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
+inoremap <silent> <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 
-" This requires the tComment plugin.
-nnoremap <leader>c gcc
-vnoremap <leader>c gc
+" https://github.com/neovim/neovim/issues/2048
+nnoremap <BS> :<C-u>TmuxNavigateLeft<CR>
 
-" Thou shalt not cross 80 columns in thy file.
-nnoremap <leader>7 :call EightyColumns(0)<cr>
-nnoremap <leader>8 :call EightyColumns(1)<cr>
+nmap ]c <Plug>GitGutterNextHunk
+nmap [c <Plug>GitGutterPrevHunk
 
-" CTRL-U in insert mode deletes a lot. Use CTRL-G u to first break undo, so that
-" you can undo CTRL-U after inserting a line break.
-inoremap <C-u> <C-g>u<C-u>
+omap ic <Plug>GitGutterTextObjectInnerPending
+omap ac <Plug>GitGutterTextObjectOuterPending
+xmap ic <Plug>GitGutterTextObjectInnerVisual
+xmap ac <Plug>GitGutterTextObjectOuterVisual
 
-" I almost never want to replace the " register when pasting in visual mode.
-vnoremap <silent> <expr> p <sid>VisualReplace()
+" =========== Shortcuts ========================================================
 
-" FZF shortcuts
-nnoremap <silent> <leader>p :execute 'FzfFiles '.projectroot#guess()<cr>
-nnoremap <silent> <leader>b :FzfBuffers<cr>
+Shortcut open shortcut menu
+	\ nnoremap <silent> <Leader>? :Shortcuts<CR>
+	\|nnoremap <silent> <Leader> :Shortcuts<CR>
 
-" Search for the word under the cursor with Ag.
-nnoremap <leader>a :Ag "\b<C-r><C-w>\b"<cr>
-vnoremap <leader>a y:Ag "<C-r>""<cr>
+Shortcut go to file in project
+	\ nnoremap <silent> <Leader><Leader> :call ProjectFiles()<CR>
 
-" Toggle Syntastic
-nnoremap <silent> <leader>s :SyntasticToggleMode<cr>
+Shortcut switch to last buffer
+	\ nnoremap <Leader><Tab> :b#<CR>
 
-" Switch between header and source file
-nnoremap <silent> H :call ToggleSourceHeader()<cr>
+Shortcut project-wide search
+	\ nnoremap <Leader>/ :Ag<CR>
+Shortcut project-wide search with input
+	\ nnoremap <Leader>* :Ag <C-r><C-w><CR>
+	\|xnoremap <Leader>* y:Ag <C-r>"<CR>
 
-" Jump to next Git hunk
-nnoremap <silent> <C-f> :GitGutterNextHunk<cr>
+Shortcut toggle comment
+	\ nnoremap <Leader>c :Commentary<CR>
+	\|xnoremap <Leader>c :Commentary<CR>
 
-" Toggle Goyo (distraction-free mode).
-nnoremap <leader>g :Goyo<cr>
+Shortcut align lines
+	\ nnoremap <Leader>da vip:EasyAlign<CR>
+	\|xnoremap <Leader>da :EasyAlign<CR>
+Shortcut reindent lines
+	\ nnoremap <Leader>di vip=
+Shortcut sort lines
+	\ nnoremap <Leader>ds vip:sort<CR>
+	\|xnoremap <Leader>ds :sort<CR>
 
-" EasyAlign
-vnoremap ga :EasyAlign<cr>
+Shortcut edit fish config
+	\ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
+Shortcut delete buffer
+	\ nnoremap <Leader>ek :bdelete<CR>
+Shortcut force delete buffer
+	\ nnoremap <Leader>eK :bdelete!<CR>
+Shortcut new buffer
+	\ nnoremap <Leader>en :enew<CR>
+Shortcut new tab
+	\ nnoremap <Leader>et :tabnew<CR>
+Shortcut reload vimrc or init.vim
+	\ nnoremap <Leader>eR :source $MYVIMRC<CR>
+Shortcut reload current buffer
+	\ nnoremap <Leader>er :edit!<CR>
+Shortcut edit vimrc or init.vim
+	\ nnoremap <Leader>ev :edit $MYVIMRC<CR>
 
-" Filetype-specific shortcuts
-augroup shortcuts
+Shortcut cd to current file directory
+	\ nnoremap <Leader>ff :cd %:h<CR>:pwd<CR>
+Shortcut print working directory
+	\ nnoremap <Leader>fp :pwd<CR>
+Shortcut cd to project root
+	\ nnoremap <Leader>fr :Rooter<CR>:pwd<CR>
+
+Shortcut git blame
+	\ nnoremap <Leader>gb :Gblame<CR>
+Shortcut git commit
+	\ nnoremap <Leader>gc :Gcommit<CR>
+Shortcut git pull
+	\ nnoremap <Leader>gl :Gpull<CR>
+Shortcut git push
+	\ nnoremap <Leader>gp :Gpush<CR>
+Shortcut git status
+	\ nnoremap <Leader>gs :Gstatus<CR>
+Shortcut git write/add
+	\ nnoremap <Leader>gw :Gwrite<CR>
+
+Shortcut switch between header/source
+	\ nnoremap <Leader>h :call ToggleSourceHeader()<CR>
+
+Shortcut view buffers
+	\ nnoremap <Leader>pb :Buffers<CR>
+Shortcut view buffers (full screen)
+	\ nnoremap <Leader>pB :Buffers!<CR>
+Shortcut view git commits
+	\ nnoremap <Leader>pc :Commits<CR>
+Shortcut view git commits (full screen)
+	\ nnoremap <Leader>pC :Commits!<CR>
+Shortcut view files
+	\ nnoremap <Leader>pf :Files<CR>
+Shortcut view files (full screen)
+	\ nnoremap <Leader>pF :Files!<CR>
+Shortcut view git files
+	\ nnoremap <Leader>pg :GFiles<CR>
+Shortcut view git files (full screen)
+	\ nnoremap <Leader>pG :GFiles!<CR>
+Shortcut view help tags
+	\ nnoremap <Leader>ph :Helptags<CR>
+Shortcut view help tags (full screen)
+	\ nnoremap <Leader>pH :Helptags!<CR>
+Shortcut view all lines
+	\ nnoremap <Leader>pl :Lines<CR>
+Shortcut view all lines (full screen)
+	\ nnoremap <Leader>pL :Lines!<CR>
+Shortcut view marks
+	\ nnoremap <Leader>pm :Marks<CR>
+Shortcut view marks (full screen)
+	\ nnoremap <Leader>pM :Marks!<CR>
+Shortcut view search results
+	\ nnoremap <Leader>ps :Ag<CR>
+Shortcut view search results (full screen)
+	\ nnoremap <Leader>pS :Ag!<CR>
+Shortcut view tags
+	\ nnoremap <Leader>pt :Tags<CR>
+Shortcut view tags (full screen)
+	\ nnoremap <Leader>pT :Tags!<CR>
+
+Shortcut force quit
+	\ nnoremap <Leader>Q :quit!<CR>
+Shortcut quit
+	\ nnoremap <Leader>q :quit<CR>
+
+Shortcut force save/write file
+	\ nnoremap <Leader>S :write!<CR>
+Shortcut save/write file
+	\ nnoremap <Leader>s :write<CR>
+
+Shortcut toggle 80-column marker
+	\ nnoremap <Leader>t8 :call EightyColumns()<CR>
+Shortcut toggle auto-pairs
+	\ nnoremap <Leader>ta :call AutoPairsToggle()<CR>
+Shortcut toggle or fix dark/light background
+	\ nnoremap <Leader>tb :call ToggleBackground()<CR>
+Shortcut toggle Goyo mode
+	\ nnoremap <Leader>tg :Goyo<CR>
+Shortcut toggle git line highlight
+	\ nnoremap <Leader>th :GitGutterLineHighlightsToggle<CR>
+Shortcut toggle line numbers
+	\ nnoremap <Leader>tn :set number!<CR>
+Shortcut toggle session tracking
+	\ nnoremap <Leader>to :Obsess!<CR>
+Shortcut toggle paste mode
+	\ nnoremap <Leader>tp :set paste!<CR>
+Shortcut toggle relative line numbers
+	\ nnoremap <Leader>tr :set relativenumber!<CR>
+Shortcut toggle spell checker
+	\ nnoremap <Leader>ts :set spell!<CR>
+Shortcut toggle undo tree
+	\ nnoremap <Leader>tu :UndotreeToggle<CR>
+Shortcut toggle list/whitespace mode
+	\ nnoremap <Leader>tw :set list!<CR>
+
+Shortcut new horizontal split
+	\ nnoremap <Leader>w- :split<CR>
+Shortcut new vertical split
+	\ nnoremap <Leader>w/ :vsplit<CR>
+Shortcut move window left
+	\ nnoremap <Leader>wH <C-w>H
+Shortcut move window down
+	\ nnoremap <Leader>wJ <C-w>J
+Shortcut move window up
+	\ nnoremap <Leader>wK <C-w>K
+Shortcut move window right
+	\ nnoremap <Leader>wL <C-w>L
+Shortcut go to left window
+	\ nnoremap <Leader>wh <C-w>h
+Shortcut go to down window
+	\ nnoremap <Leader>wj <C-w>j
+Shortcut go to up window
+	\ nnoremap <Leader>wk <C-w>k
+Shortcut go to right window
+	\ nnoremap <Leader>wl <C-w>l
+Shortcut resize windows equally
+	\ nnoremap <Leader>w= <C-w>=
+
+" =========== Autocommands =====================================================
+
+augroup custom
 	autocmd!
-	autocmd filetype lean nnoremap <silent> <leader>m :LeanCheck<cr> | \
-		nnoremap <silent> <leader>r :LeanReplace<cr>
+
+	autocmd FileType c,cpp setlocal commentstring=//\ %s
+	autocmd FileType sql setlocal commentstring=--\ %s
+
+	autocmd FileType java setlocal omnifunc=javacomplete#Complete
+
+	autocmd BufRead * call EightyColumns(1)
+	autocmd FileType markdown setlocal textwidth=0 colorcolumn=0
+	autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
+
+	autocmd FocusGained * call <SID>FixBackground()
 augroup END
 
-" ---------------- Colour ------------------------------------------------- {{{1
+" =========== Functions ========================================================
 
-if !has("gui_running")
-	let g:solarized_termtrans = 1
-	let g:solarized_termcolors = 16
-endif
-
-syntax enable
-set background=dark
-colorscheme solarized
-
-" Toggle light/dark background
-command! DarkLight call ToggleBackground()
-
-" Make invisible characters less obtrusive.
-highlight clear NonText
-highlight link NonText Comment
-
-" Toggle the Terminal profile and the Vim background colour
-function! ToggleBackground()
-	silent !darklight.applescript
-	let &background=(&background == "light" ? "dark" : "light")
+function! s:VisualReplace()
+	let s:restore_reg = @"
+	return "p@=RestoreRegister()\<CR>"
 endfunction
 
-" Toggle the Terminal profile and the Vim background colour
-function! RestoreBackground()
-	if &background == "light"
-		call ToggleBackground()
-	endif
+function! RestoreRegister()
+	let @" = s:restore_reg
+	return ''
 endfunction
-
-augroup background
-	autocmd!
-	autocmd VimLeave * call RestoreBackground()
-augroup END
-
-" ---------------- Navigation --------------------------------------------- {{{1
 
 function! NextBufOrTab()
 	if tabpagenr('$') > 1
 		tabnext
 	else
 		bnext
-	end
+	endif
 endfunction
 
 function! PrevBufOrTab()
@@ -261,133 +360,102 @@ function! PrevBufOrTab()
 		tabprev
 	else
 		bprev
-	end
+	endif
+endfunction
+
+function! ProjectFiles()
+	if !empty(glob('.git'))
+		GitFiles
+	else
+		Files
+	endif
 endfunction
 
 function! ToggleSourceHeader()
-	let l:extension = expand("%:e")
-	if l:extension == "h" || l:extension == "hpp"
-		echo expand("%:p:r.cpp")
-		if filereadable(expand("%:p:r") . ".c")
-			execute "e " . expand("%:p:r") . ".c"
-		elseif filereadable(expand("%:p:r") . ".cpp")
-			execute "e " . expand("%:p:r") . ".cpp"
+	let l:extension = expand('%:e')
+	if l:extension == 'h' || l:extension == 'hpp'
+		echo expand('%:p:r.cpp')
+		if filereadable(expand('%:p:r') . '.c')
+			execute 'e ' . expand('%:p:r') . '.c'
+		elseif filereadable(expand('%:p:r') . '.cpp')
+			execute 'e ' . expand('%:p:r') . '.cpp'
 		else
-			echo "can't find source file"
+			echo "Can't find source file"
 		endif
-	elseif l:extension == "c" || l:extension == "cpp"
-		if filereadable(expand("%:p:r") . ".h")
-			execute "e " . expand("%:p:r") . ".h"
-		elseif filereadable(expand("%:p:r") . ".hpp")
-			execute "e " . expand("%:p:r") . ".hpp"
+	elseif l:extension == 'c' || l:extension == 'cpp'
+		if filereadable(expand('%:p:r') . '.h')
+			execute 'e ' . expand('%:p:r') . '.h'
+		elseif filereadable(expand('%:p:r') . '.hpp')
+			execute 'e ' . expand('%:p:r') . '.hpp'
 		else
-			echo "can't find header file"
+			echo "Can't find header file"
 		endif
 	else
-		echo "not a source file or header file"
-	end
+		echo "Not a source file or header file"
+	endif
 endfunction
 
-" ---------------- Lines -------------------------------------------------- {{{1
-
-set wrap              " do soft wrapping
-set textwidth=0       " no hard wrapping by default
-set wrapmargin=0      " don't hard wrap based on terminal width
-set linebreak         " wrap at spaces, not in the middle of words
-set display=lastline  " show part of really long lines (not @s)
-set nojoinspaces      " one space after period in join command
-set scrolloff=8       " start scrolling when 8 lines away from margins
-
-set listchars=eol:¬,tab:».,trail:~,extends:>,precedes:<
-
-function! EightyColumns(yes)
-	if a:yes
+function! EightyColumns(...)
+	let l:on = a:0 > 0 ? a:1 : (&colorcolumn == '' || &colorcolumn == '0')
+	if l:on
 		setlocal textwidth=80 colorcolumn=+1
 	else
 		setlocal textwidth=0 colorcolumn=0
 	endif
 endfunction
 
-" Make the eighty-column marker the default.
-augroup columns
-	autocmd!
-	autocmd BufWinEnter * call EightyColumns(1)
-	" Use markers for 60 and 80 columns in ledger journals.
-	autocmd FileType ledger setlocal tw=0 cc=61,81
-augroup END
-
-" ---------------- Registers ---------------------------------------------- {{{1
-
-function! RestoreRegister()
-	let @" = s:restore_reg
-	return ''
+function! s:CurrentBackground()
+	return empty(glob('~/.solarized_light')) ? 'dark' : 'light'
 endfunction
 
-function! s:VisualReplace()
-	let s:restore_reg = @"
-	return "p@=RestoreRegister()\<cr>"
-endfunction
+let s:fzf_default_opts = $FZF_DEFAULT_OPTS
 
-" ---------------- Indentation -------------------------------------------- {{{1
+function! s:SetBackground(...)
+	let &background = a:0 > 0 ? a:1 : s:CurrentBackground()
 
-set autoindent     " stay indented on new line
-set shiftround     " round indents to multiples of shiftwidth
-set ts=4 sw=4      " use 4-wide tabs for most files
-
-" ---------------- Folds -------------------------------------------------- {{{1
-
-set foldmethod=manual  " I would default to syntax, but it's slow
-set foldnestmax=3
-set nofoldenable
-
-" ---------------- Tab completion ----------------------------------------- {{{1
-
-" Use enhanced command completion.
-set wildmenu
-set wildmode=longest,full
-
-" Put SuperTab in longest mode as well.
-" asdfasdf
-set completeopt+=longest
-let g:SuperTabLongestEnhanced = 1
-
-" ---------------- Search ------------------------------------------------- {{{1
-
-set incsearch   " find the next match as we type the search
-set hlsearch    " highlight searches by default
-set ignorecase  " ignore case by default
-set smartcase   " don't ignore case if the search contains uppercase characters
-set gdefault    " use /g by default (match all occurences in the line)
-
-" ---------------- Cursor ------------------------------------------------- {{{1
-
-set ruler          " display row & column in status bar
-set cursorline     " highlight current line
-set nostartofline  " don't return to start of line after page down
-
-" Don't blink the block cursor in normal mode or in visual mode.
-set guicursor+=n-v:blinkon0
-
-" Remember the cursor position in a file between sessions.
-function! ResCur()
-	if line("'\"") <= line("$")
-		normal! g`"
-		return 1
+	highlight clear NonText
+	highlight link NonText Comment
+	highlight clear Visual
+	execute 'highlight Visual ctermbg=' . (&background == 'light' ? 0 : 7)
+	highlight clear SignColumn
+	call gitgutter#highlight#define_highlights()
+	if exists(':AirlineRefresh')
+		AirlineRefresh
+	endif
+	if &background == 'light'
+		let $FZF_DEFAULT_OPTS = s:fzf_default_opts . ',fg+:0,bg+:7'
+	else
+		let $FZF_DEFAULT_OPTS = s:fzf_default_opts . ',fg+:7,bg+:0'
 	endif
 endfunction
 
-augroup resCur
-	autocmd!
-	autocmd BufWinEnter * call ResCur()
-augroup END
+function! s:FixBackground()
+	let l:bg = s:CurrentBackground()
+	if &background != l:bg
+		call s:SetBackground(l:bg)
+	endif
+endfunction
 
-" ---------------- Encryption --------------------------------------------- {{{1
+function! ToggleBackground()
+	let l:bg = s:CurrentBackground()
+	if &background != l:bg
+		call s:SetBackground(l:bg)
+	else
+		silent !darklight.sh
+		call s:SetBackground()
+	endif
+endfunction
 
-" Blowfish is much more secure than the default (zip).
+" =========== Color scheme =====================================================
+
+syntax enable
+colorscheme solarized
+call s:SetBackground()
+
+" =========== Encryption =======================================================
+
 set cryptmethod=blowfish
 
-" Turn off viminfo when editing encrypted files. Vim handles the rest for us
-" (swap, undo, and backup files).
 function! DisableViminfo()
 	if !empty(&key)
 		set viminfo=
@@ -399,14 +467,12 @@ augroup encryption
 	autocmd BufRead * call DisableViminfo()
 augroup END
 
-" ---------------- Special files ------------------------------------------ {{{1
+" =========== Special files ====================================================
 
-" Create these directories is they don't already exist.
 silent !mkdir -p ~/.vim/backup > /dev/null 2>&1
 silent !mkdir -p ~/.vim/tmp > /dev/null 2>&1
 silent !mkdir -p ~/.vim/spell > /dev/null 2>&1
 
-" Don't clutter the working directory with swap files or backups.
 set directory=~/.vim/tmp,~/.tmp,/var/tmp,/tmp
 set backupdir=./.backup,~/.vim/backup
 set undodir=~/.vim/backup
