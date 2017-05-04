@@ -103,6 +103,10 @@ function add_paths --description "Adds to the PATH variable"
 	end
 end
 
+# Fish colors
+set -g fish_color_command brmagenta
+set -g fish_color_param blue
+
 # Environment variables
 set gh ~/GitHub
 set -x PRO_BASE $gh
