@@ -24,7 +24,11 @@ function upd --description "Updates homebrew, tmux, and neovim"
 	end
 	if command -qv nvim
 		inform "Updating neovim"
-		nvim +PlugUpgrade +PlugUpdate +qall
+		command nvim +PlugUpgrade +PlugUpdate +qall
+	end
+	if command -qv vim
+		inform "Updating vim"
+		command vim +PlugUpgrade +PlugUpdate +qall
 	end
 end
 
@@ -35,7 +39,11 @@ function cleanup --description "Frees up disk space"
 	end
 	if command -qv nvim
 		inform "Cleaning neovim"
-		nvim +PlugClean +qall
+		command nvim +PlugClean +qall
+	end
+	if command -qv vim
+		inform "Cleaning vim"
+		command vim +PlugClean +qall
 	end
 end
 

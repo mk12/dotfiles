@@ -22,7 +22,6 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
-Plug 'junegunn/vim-peekaboo'
 Plug 'junegunn/vim-slash'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
