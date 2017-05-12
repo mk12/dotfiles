@@ -73,7 +73,6 @@ let g:lean_auto_replace = 1
 let g:rooter_manual_only = 1
 
 let g:solarized_termcolors = 16
-let g:solarized_termtrans = 1
 
 let g:undotree_SplitWidth = 35
 
