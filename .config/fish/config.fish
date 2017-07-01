@@ -87,14 +87,6 @@ function fzf --description "Invokes FZF with proper color"
 	end
 end
 
-function be --description "Shortcut for bundle exec"
-	bundle exec $argv
-end
-
-function sz --description "Calculate the size of a directory"
-	du -sh $argv
-end
-
 function sudo --description "Execute a command as superuser"
 	if test "$argv" = !!
 		eval command sudo $history[1]

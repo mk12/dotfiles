@@ -13,7 +13,6 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter', { 'on': 'Rooter' }
 Plug 'altercation/vim-colors-solarized'
-Plug 'artur-shaik/vim-javacomplete2', { 'for': 'java' }
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
@@ -22,7 +21,6 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
-Plug 'junegunn/vim-slash'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'mk12/vim-lean', { 'for': 'lean' }
@@ -65,8 +63,6 @@ let g:fzf_tags_command = 'ctags -R'
 let g:gitgutter_map_keys = 0
 
 let g:go_fmt_command = 'goimports'
-
-let g:JavaComplete_EnableDefaultMappings = 0
 
 let g:lean_auto_replace = 1
 
@@ -322,8 +318,6 @@ augroup custom
 
 	autocmd FileType c,cpp setlocal commentstring=//\ %s
 	autocmd FileType sql setlocal commentstring=--\ %s
-
-	autocmd FileType java setlocal omnifunc=javacomplete#Complete
 
 	autocmd BufRead * call EightyColumns(1)
 	autocmd FileType markdown setlocal textwidth=0 colorcolumn=0
