@@ -117,6 +117,11 @@ set -x FZF_DEFAULT_OPTS "--no-bold \
 # PATH
 add_paths $gh/scripts $GOPATH/bin ~/.cargo/bin
 
+# LD_LIBRARY_PATH
+if command -qv rustc
+	set -x LD_LIBRARY_PATH (rustc --print sysroot)"/lib:$LD_LIBRARY_PATH"
+end
+
 # OS-specific configuration
 set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
 if test -e $specific
