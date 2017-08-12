@@ -8,13 +8,10 @@ endif
 
 call plug#begin()
 
-Plug 'Rip-Rip/clang_complete', { 'for': [ 'c', 'cpp' ] }
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter', { 'on': 'Rooter' }
 Plug 'altercation/vim-colors-solarized'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
@@ -24,7 +21,6 @@ Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'mk12/vim-lean', { 'for': 'lean' }
-Plug 'mk12/vim-llvm', { 'for': 'llvm' }
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
 Plug 'tpope/vim-commentary'
@@ -45,11 +41,6 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_extensions = ['tabline']
 let g:airline_powerline_fonts = 1
 
-let g:clang_make_default_keymappings = 0
-
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#max_menu_width = 0
-
 let g:easy_align_delimiters = {
 	\ '/': {
 		\ 'pattern': '//\+\|/\*\|\*/',
@@ -61,8 +52,6 @@ let g:easy_align_delimiters = {
 let g:fzf_tags_command = 'ctags -R'
 
 let g:gitgutter_map_keys = 0
-
-let g:go_fmt_command = 'goimports'
 
 let g:lean_auto_replace = 1
 
@@ -125,10 +114,8 @@ xnoremap Q gq
 
 xnoremap <silent> <expr> p <SID>VisualReplace()
 
-nnoremap <C-p> <Tab>
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
-inoremap <silent> <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 
 " https://github.com/neovim/neovim/issues/2048
 nnoremap <BS> :<C-u>TmuxNavigateLeft<CR>
@@ -436,17 +423,6 @@ function! ToggleBackground()
 		call s:SetBackground()
 	endif
 endfunction
-
-function! s:SetClangLibraryPath()
-	for l:path in [ '/usr/local/opt/llvm/lib', '/usr/local/lib', '/usr/lib' ]
-		if !empty(glob(l:path . '/libclang*'))
-			let g:clang_library_path = l:path
-			return
-		endif
-	endfor
-endfunction
-
-call s:SetClangLibraryPath()
 
 " =========== Color scheme =====================================================
 
