@@ -355,7 +355,7 @@ function! ToggleSourceHeader()
 	let l:source_extensions = ['c', 'cpp', 'cc']
 	if index(l:header_extensions, l:extension) >= 0
 		for l:c in l:source_extensions
-			let l:file = expand('%p:r') . '.' . l:c
+			let l:file = expand('%:p:r') . '.' . l:c
 			if filereadable(l:file)
 				execute 'e ' . l:file
 				return
@@ -364,7 +364,7 @@ function! ToggleSourceHeader()
 		echo "Can't find source file"
 	elseif index(l:source_extensions, l:extension) >= 0
 		for l:h in l:header_extensions
-			let l:file = expand('%p:r') . '.' . l:h
+			let l:file = expand('%:p:r') . '.' . l:h
 			if filereadable(l:file)
 				execute 'e ' . l:file
 				return
