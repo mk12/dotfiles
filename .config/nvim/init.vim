@@ -73,6 +73,7 @@ set ignorecase
 set lazyredraw
 set linebreak
 set listchars=eol:¬,tab:».,trail:~
+set mouse=a
 set mousefocus
 set nofoldenable
 set nojoinspaces
