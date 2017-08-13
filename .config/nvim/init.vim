@@ -154,11 +154,13 @@ Shortcut toggle comment
 Shortcut align lines
 	\ nnoremap <Leader>da vip:EasyAlign<CR>
 	\|xnoremap <Leader>da :EasyAlign<CR>
-Shortcut reindent lines
+Shortcut indent lines
 	\ nnoremap <Leader>di vip=
 Shortcut sort lines
 	\ nnoremap <Leader>ds vip:sort<CR>
 	\|xnoremap <Leader>ds :sort<CR>
+Shortcut remove trailing whitespace
+	\ nnoremap <Leader>dw :call RemoveWhitespace()<CR>
 
 Shortcut edit fish config
 	\ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
@@ -375,6 +377,12 @@ function! ToggleSourceHeader()
 	else
 		echo "Not a source file or header file"
 	endif
+endfunction
+
+function! RemoveWhitespace()
+	let l:save = winsaveview()
+	%s/\s\+$//e
+	call winrestview(l:save)
 endfunction
 
 function! EightyColumns(...)
