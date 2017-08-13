@@ -118,9 +118,6 @@ xnoremap <silent> <expr> p <SID>VisualReplace()
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 
-" https://github.com/neovim/neovim/issues/2048
-nnoremap <BS> :<C-u>TmuxNavigateLeft<CR>
-
 nmap ]c <Plug>GitGutterNextHunk
 nmap [c <Plug>GitGutterPrevHunk
 
