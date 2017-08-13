@@ -11,6 +11,6 @@ function blog --description "Start the Hugo server"
 	and hugo server -w
 end
 
-set -x BLOG ~/icloud/blog
+set -x BLOG ~/Dropbox/blog
 
 add_paths /usr/local/opt/git/share/git-core/contrib/diff-highlight
