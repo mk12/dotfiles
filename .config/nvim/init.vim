@@ -153,6 +153,8 @@ Shortcut align lines
 	\|xnoremap <Leader>da :EasyAlign<CR>
 Shortcut indent lines
 	\ nnoremap <Leader>di vip=
+Shortcut show number of search matches
+	\ nnoremap <Leader>dm :%s/<C-r>///n<CR>
 Shortcut sort lines
 	\ nnoremap <Leader>ds vip:sort<CR>
 	\|xnoremap <Leader>ds :sort<CR>
