@@ -13,4 +13,6 @@ end
 
 set -x BLOG ~/Dropbox/blog
 
-add_paths /usr/local/opt/git/share/git-core/contrib/diff-highlight
+add_paths \
+	/usr/local/opt/git/share/git-core/contrib/diff-highlight \
+	/Library/TeX/texbin
