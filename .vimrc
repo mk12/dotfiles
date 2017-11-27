@@ -3,36 +3,26 @@ set nocompatible
 
 " =========== Plugins ==========================================================
 
-" Load vim-plug if it's not there.
-if empty(glob('~/.vim/autoload/plug.vim'))
-	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+	silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
 		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
 
 call plug#begin()
 
-Plug 'tpope/vim-sensible'
-
-Plug 'Rip-Rip/clang_complete', { 'for': [ 'c', 'cpp' ] }
 Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter', { 'on': 'Rooter' }
 Plug 'altercation/vim-colors-solarized'
-Plug 'artur-shaik/vim-javacomplete2', { 'for': 'java' }
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
-Plug 'junegunn/vim-peekaboo'
-Plug 'junegunn/vim-slash'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
-Plug 'mk12/vim-lean', { 'for': 'lean' }
-Plug 'mk12/vim-llvm', { 'for': 'llvm' }
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
 Plug 'tpope/vim-commentary'
@@ -44,6 +34,7 @@ Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+Plug 'tpope/vim-sensible'
 filetype plugin indent on
 
 call plug#end()
@@ -54,11 +45,6 @@ let g:airline#extensions#default#layout = [ [ 'a', 'c' ], [ 'x', 'y' ] ]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_extensions = ['tabline']
 let g:airline_powerline_fonts = 1
-
-let g:clang_make_default_keymappings = 0
-
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#max_menu_width = 0
 
 let g:easy_align_delimiters = {
 	\ '/': {
@@ -72,16 +58,9 @@ let g:fzf_tags_command = 'ctags -R'
 
 let g:gitgutter_map_keys = 0
 
-let g:go_fmt_command = 'goimports'
-
-let g:JavaComplete_EnableDefaultMappings = 0
-
-let g:lean_auto_replace = 1
-
 let g:rooter_manual_only = 1
 
 let g:solarized_termcolors = 16
-let g:solarized_termtrans = 1
 
 let g:undotree_SplitWidth = 35
 
@@ -97,6 +76,7 @@ set ignorecase
 set lazyredraw
 set linebreak
 set listchars=eol:¬,tab:».,trail:~
+set mouse=a
 set mousefocus
 set nofoldenable
 set nojoinspaces
@@ -111,6 +91,13 @@ set smartcase
 set tabstop=4
 set undofile
 set visualbell
+
+set directory=~/.vim/tmp
+set backupdir=~/.vim/backup
+set undodir=~/.vim/backup
+
+execute 'silent !mkdir -p ' . &directory . ' > /dev/null 2>&1'
+execute 'silent !mkdir -p ' . &backupdir . ' > /dev/null 2>&1'
 
 " =========== Mappings =========================================================
 
@@ -135,10 +122,8 @@ xnoremap Q gq
 
 xnoremap <silent> <expr> p <SID>VisualReplace()
 
-nnoremap <C-p> <Tab>
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
-inoremap <silent> <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 
 " https://github.com/neovim/neovim/issues/2048
 nnoremap <BS> :<C-u>TmuxNavigateLeft<CR>
@@ -176,11 +161,15 @@ Shortcut toggle comment
 Shortcut align lines
 	\ nnoremap <Leader>da vip:EasyAlign<CR>
 	\|xnoremap <Leader>da :EasyAlign<CR>
-Shortcut reindent lines
+Shortcut indent lines
 	\ nnoremap <Leader>di vip=
+Shortcut show number of search matches
+	\ nnoremap <Leader>dm :%s/<C-r>///n<CR>
 Shortcut sort lines
 	\ nnoremap <Leader>ds vip:sort<CR>
 	\|xnoremap <Leader>ds :sort<CR>
+Shortcut remove trailing whitespace
+	\ nnoremap <Leader>dw :call RemoveWhitespace()<CR>
 
 Shortcut edit fish config
 	\ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
@@ -329,8 +318,6 @@ augroup custom
 	autocmd FileType c,cpp setlocal commentstring=//\ %s
 	autocmd FileType sql setlocal commentstring=--\ %s
 
-	autocmd FileType java setlocal omnifunc=javacomplete#Complete
-
 	autocmd BufRead * call EightyColumns(1)
 	autocmd FileType markdown setlocal textwidth=0 colorcolumn=0
 	autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
@@ -376,26 +363,35 @@ endfunction
 
 function! ToggleSourceHeader()
 	let l:extension = expand('%:e')
-	if l:extension == 'h' || l:extension == 'hpp'
-		echo expand('%:p:r.cpp')
-		if filereadable(expand('%:p:r') . '.c')
-			execute 'e ' . expand('%:p:r') . '.c'
-		elseif filereadable(expand('%:p:r') . '.cpp')
-			execute 'e ' . expand('%:p:r') . '.cpp'
-		else
-			echo "Can't find source file"
-		endif
-	elseif l:extension == 'c' || l:extension == 'cpp'
-		if filereadable(expand('%:p:r') . '.h')
-			execute 'e ' . expand('%:p:r') . '.h'
-		elseif filereadable(expand('%:p:r') . '.hpp')
-			execute 'e ' . expand('%:p:r') . '.hpp'
-		else
-			echo "Can't find header file"
-		endif
+	let l:header_extensions = ['h', 'hpp', 'hh']
+	let l:source_extensions = ['c', 'cpp', 'cc']
+	if index(l:header_extensions, l:extension) >= 0
+		for l:c in l:source_extensions
+			let l:file = expand('%:p:r') . '.' . l:c
+			if filereadable(l:file)
+				execute 'e ' . l:file
+				return
+			endif
+		endfor
+		echo "Can't find source file"
+	elseif index(l:source_extensions, l:extension) >= 0
+		for l:h in l:header_extensions
+			let l:file = expand('%:p:r') . '.' . l:h
+			if filereadable(l:file)
+				execute 'e ' . l:file
+				return
+			endif
+		endfor
+		echo "Can't find header file"
 	else
 		echo "Not a source file or header file"
 	endif
+endfunction
+
+function! RemoveWhitespace()
+	let l:save = winsaveview()
+	%s/\s\+$//e
+	call winrestview(l:save)
 endfunction
 
 function! EightyColumns(...)
@@ -449,17 +445,6 @@ function! ToggleBackground()
 	endif
 endfunction
 
-function! s:SetClangLibraryPath()
-	for l:path in [ '/usr/local/opt/llvm/lib', '/usr/local/lib', '/usr/lib' ]
-		if !empty(glob(l:path . '/libclang*'))
-			let g:clang_library_path = l:path
-			return
-		endif
-	endfor
-endfunction
-
-call s:SetClangLibraryPath()
-
 " =========== Color scheme =====================================================
 
 syntax enable
@@ -480,16 +465,3 @@ augroup encryption
 	autocmd!
 	autocmd BufRead * call DisableViminfo()
 augroup END
-
-" =========== Special files ====================================================
-
-silent !mkdir -p ~/.vim/backup > /dev/null 2>&1
-silent !mkdir -p ~/.vim/tmp > /dev/null 2>&1
-silent !mkdir -p ~/.vim/spell > /dev/null 2>&1
-
-set directory=~/.vim/tmp,~/.tmp,/var/tmp,/tmp
-set backupdir=./.backup,~/.vim/backup
-set undodir=~/.vim/backup
-set spellfile=~/.vim/spell/en.utf-8.add,en.utf-8.add
-set backup
-set undofile

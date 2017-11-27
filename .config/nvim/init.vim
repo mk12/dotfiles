@@ -20,7 +20,6 @@ Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
-Plug 'mk12/vim-lean', { 'for': 'lean' }
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
 Plug 'tpope/vim-commentary'
@@ -52,8 +51,6 @@ let g:easy_align_delimiters = {
 let g:fzf_tags_command = 'ctags -R'
 
 let g:gitgutter_map_keys = 0
-
-let g:lean_auto_replace = 1
 
 let g:rooter_manual_only = 1
 
