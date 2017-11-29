@@ -44,8 +44,7 @@ values."
      vimscript
      git
      markdown
-     (python :variables
-             python-shell-interpreter "python3")
+     python
      (org :variables
           org-latex-create-formula-image-program 'dvisvgm)
      (finance :variables
@@ -328,6 +327,9 @@ you should place your code here."
   ;; Make LaTeX formulas bigger.
   (with-eval-after-load 'org
     (plist-put org-format-latex-options :scale 1.5))
+  ;; Use Python 3 (not sure why I need eval after load).
+  (with-eval-after-load 'python
+    (setq python-shell-interpreter "python3"))
   ;; Fixes issue where it pastes stuff when you open a new file.
   (add-hook 'spacemacs-buffer-mode-hook
             (lambda ()
