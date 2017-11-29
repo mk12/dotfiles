@@ -39,8 +39,12 @@ export LESS='-MerX'
 export LESSHISTFILE='-'
 
 # Tab completion
-brew_completion=$(brew --prefix)/share/bash-completion/bash_completion
-[[ -f $brew_completion ]] && source $brew_completion
+if command -v brew &>/dev/null; then
+	brew_completion=$(brew --prefix)/share/bash-completion/bash_completion
+	[[ -f $brew_completion ]] && source $brew_completion
+fi
 
 # Connect to keychain
-eval $(keychain --eval --quiet --agents ssh id_rsa)
+if command -v keychain &>/dev/null; then
+	eval $(keychain --eval --quiet --agents ssh id_rsa)
+fi
