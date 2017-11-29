@@ -24,15 +24,12 @@
 [core]
 	editor = nvim
 	excludesfile = ~/.gitignore
-	pager = diff-highlight | less -RFX
 [diff]
 	tool = vimdiff
 	prompt = false
 	algorithm = minimal
 	compactionHeuristic = true
 	renames = true
-[interactive]
-	diffFilter = diff-highlight
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3

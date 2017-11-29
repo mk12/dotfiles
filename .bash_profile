@@ -1,2 +1,2 @@
-# Put all configuration in .bashrc!
+source ~/.profile
 [[ -f ~/.bashrc ]] && source ~/.bashrc

@@ -105,7 +105,6 @@ end
 
 # Environment variables
 set gh ~/GitHub
-set -x PRO_BASE $gh
 set -x GOPATH $gh/go
 set -x LEDGER_FILE $gh/finance/journal.ledger
 set -x EDITOR nvim
