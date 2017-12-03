@@ -8,7 +8,7 @@ for p in $GH/scripts $GH/go/bin ~/.cargo/bin; do
 done
 
 # Oh My Zsh
-export ZSH=/Users/mitchell/.oh-my-zsh
+export ZSH=~/.oh-my-zsh
 ZSH_THEME="robbyrussell"
 ENABLE_CORRECTION="true"
 HIST_STAMPS="yyyy-mm-dd"
@@ -19,7 +19,7 @@ source $ZSH/oh-my-zsh.sh
 
 # Prompt
 setopt promptsubst
-PROMPT='$ret_status%f%b%F{green}%c%f '
+PROMPT='$ret_status%f%b %F{green}%c%f '
 
 # Other env vars
 export LANG=en_US.UTF-8
