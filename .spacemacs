@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -50,6 +51,7 @@ values."
      (finance :variables
               ledger-post-amount-alignment-column 60)
      (shell :variables
+            shell-default-shell 'ansi-term
             shell-default-height 30
             shell-default-position 'bottom)
      (spell-checking :variables
@@ -321,6 +323,8 @@ you should place your code here."
   (setq-default
    ns-use-srgb-colorspace nil
    vc-follow-symlinks t)
+  ;; Key bindings.
+  (spacemacs/set-leader-keys "bq" 'kill-buffer-and-window)
   ;; Use aspell instead of ispell.
   (when-let ((aspell (executable-find "aspell")))
     (setq ispell-program-name aspell))
@@ -334,6 +338,13 @@ you should place your code here."
   (add-hook 'spacemacs-buffer-mode-hook
             (lambda ()
               (setq-local mouse-1-click-follows-link nil)))
+  ;; Send keys directly to the terminal (I use fd to exit terminal).
+  (add-hook 'term-mode-hook
+            (lambda ()
+              (dolist (key '("C-c" "C-a" "C-e"))
+                (evil-local-set-key 'insert (kbd key)
+                                    `(lambda () (interactive)
+                                       (term-send-raw-string ,(kbd key)))))))
   ;; Do magic so that SSH keys work.
   (keychain-refresh-environment))
 
@@ -348,7 +359,7 @@ you should place your code here."
  '(evil-want-Y-yank-to-eol nil)
  '(package-selected-packages
    (quote
-    (vimrc-mode dactyl-mode fuzzy company-statistics company-anaconda company auto-yasnippet yasnippet auto-complete flycheck-pos-tip pos-tip flycheck-ledger flycheck flyspell-correct-ivy flyspell-correct auto-dictionary xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl ledger-mode yapfify ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smex smeargle reveal-in-osx-finder restart-emacs request rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el pbcopy paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint launchctl keychain-environment ivy-hydra info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump cython-mode counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
+    (web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode haml-mode emmet-mode vimrc-mode dactyl-mode fuzzy company-statistics company-anaconda company auto-yasnippet yasnippet auto-complete flycheck-pos-tip pos-tip flycheck-ledger flycheck flyspell-correct-ivy flyspell-correct auto-dictionary xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl ledger-mode yapfify ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline smex smeargle reveal-in-osx-finder restart-emacs request rainbow-delimiters pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el pbcopy paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint launchctl keychain-environment ivy-hydra info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump cython-mode counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile anaconda-mode aggressive-indent adaptive-wrap ace-window ace-link))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
