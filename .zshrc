@@ -1,6 +1,9 @@
 # If not running interactively, don't do anything.
 [[ $- != *i* ]] && return
 
+# For Emacs.
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
+
 # Path
 GH=~/GitHub
 for p in $GH/scripts $GH/go/bin ~/.cargo/bin; do
