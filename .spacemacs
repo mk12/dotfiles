@@ -51,7 +51,7 @@ values."
      (finance :variables
               ledger-post-amount-alignment-column 60)
      (shell :variables
-            shell-default-shell 'ansi-term
+            shell-default-shell 'eshell
             shell-default-height 30
             shell-default-position 'bottom)
      (spell-checking :variables
@@ -338,13 +338,6 @@ you should place your code here."
   (add-hook 'spacemacs-buffer-mode-hook
             (lambda ()
               (setq-local mouse-1-click-follows-link nil)))
-  ;; Send keys directly to the terminal (I use fd to exit terminal).
-  (add-hook 'term-mode-hook
-            (lambda ()
-              (dolist (key '("C-c" "C-a" "C-e"))
-                (evil-local-set-key 'insert (kbd key)
-                                    `(lambda () (interactive)
-                                       (term-send-raw-string ,(kbd key)))))))
   ;; Do magic so that SSH keys work.
   (keychain-refresh-environment))
 
