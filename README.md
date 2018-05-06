@@ -2,11 +2,15 @@
 
 These are my humble dotfiles.
 
-Right now they only configure:
+Right now they configure:
 
-- Vim
-- Git
+- (Neo)vim
 - Bash
+- Fish
+- Git
+- Ledger
+- Spacemacs
+- Zsh
 
 ## Usage
 

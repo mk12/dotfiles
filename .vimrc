@@ -13,9 +13,7 @@ call plug#begin()
 
 Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter', { 'on': 'Rooter' }
-Plug 'altercation/vim-colors-solarized'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'gabesoft/vim-ags', { 'on': 'Ags' }
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
@@ -28,7 +26,6 @@ Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-obsession', { 'on': 'Obsess' }
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
@@ -44,6 +41,7 @@ call plug#end()
 let g:airline#extensions#default#layout = [ [ 'a', 'c' ], [ 'x', 'y' ] ]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_extensions = ['tabline']
+let g:airline_theme = 'papercolor'
 
 let g:easy_align_delimiters = {
 	\ '/': {
@@ -53,13 +51,9 @@ let g:easy_align_delimiters = {
 	\ }
 \ }
 
-let g:fzf_tags_command = 'ctags -R'
-
 let g:gitgutter_map_keys = 0
 
 let g:rooter_manual_only = 1
-
-let g:solarized_termcolors = 16
 
 let g:undotree_SplitWidth = 35
 
@@ -123,9 +117,6 @@ xnoremap <silent> <expr> p <SID>VisualReplace()
 
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
-
-" https://github.com/neovim/neovim/issues/2048
-nnoremap <BS> :<C-u>TmuxNavigateLeft<CR>
 
 nmap ]c <Plug>GitGutterNextHunk
 nmap [c <Plug>GitGutterPrevHunk
@@ -263,8 +254,6 @@ Shortcut toggle 80-column marker
 	\ nnoremap <Leader>t8 :call EightyColumns()<CR>
 Shortcut toggle auto-pairs
 	\ nnoremap <Leader>ta :call AutoPairsToggle()<CR>
-Shortcut toggle or fix dark/light background
-	\ nnoremap <Leader>tb :call ToggleBackground()<CR>
 Shortcut toggle Goyo mode
 	\ nnoremap <Leader>tg :Goyo<CR>
 Shortcut toggle highlight search
@@ -273,8 +262,6 @@ Shortcut toggle git line highlight
 	\ nnoremap <Leader>tl :GitGutterLineHighlightsToggle<CR>
 Shortcut toggle line numbers
 	\ nnoremap <Leader>tn :set number!<CR>
-Shortcut toggle session tracking
-	\ nnoremap <Leader>to :Obsess!<CR>
 Shortcut toggle paste mode
 	\ nnoremap <Leader>tp :set paste!<CR>
 Shortcut toggle relative line numbers
@@ -320,8 +307,6 @@ augroup custom
 	autocmd BufRead * call EightyColumns(1)
 	autocmd FileType markdown setlocal textwidth=0 colorcolumn=0
 	autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
-
-	autocmd FocusGained * call <SID>FixBackground()
 augroup END
 
 " =========== Functions ========================================================
@@ -402,53 +387,9 @@ function! EightyColumns(...)
 	endif
 endfunction
 
-function! s:CurrentBackground()
-	return empty(glob('~/.solarized_light')) ? 'dark' : 'light'
-endfunction
-
-let s:fzf_default_opts = $FZF_DEFAULT_OPTS
-
-function! s:SetBackground(...)
-	let &background = a:0 > 0 ? a:1 : s:CurrentBackground()
-
-	highlight clear NonText
-	highlight link NonText Comment
-	highlight clear Visual
-	execute 'highlight Visual ctermbg=' . (&background == 'light' ? 0 : 7)
-	highlight clear SignColumn
-	call gitgutter#highlight#define_highlights()
-	if exists(':AirlineRefresh')
-		AirlineRefresh
-	endif
-	if &background == 'light'
-		let $FZF_DEFAULT_OPTS = s:fzf_default_opts . ',fg+:0,bg+:7'
-	else
-		let $FZF_DEFAULT_OPTS = s:fzf_default_opts . ',fg+:7,bg+:0'
-	endif
-endfunction
-
-function! s:FixBackground()
-	let l:bg = s:CurrentBackground()
-	if &background != l:bg
-		call s:SetBackground(l:bg)
-	endif
-endfunction
-
-function! ToggleBackground()
-	let l:bg = s:CurrentBackground()
-	if &background != l:bg
-		call s:SetBackground(l:bg)
-	else
-		silent !darklight.sh
-		call s:SetBackground()
-	endif
-endfunction
-
 " =========== Color scheme =====================================================
 
 syntax enable
-colorscheme solarized
-call s:SetBackground()
 
 " =========== Encryption =======================================================
 

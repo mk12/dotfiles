@@ -22,7 +22,7 @@
 [color]
 	ui = auto
 [core]
-	editor = nvim
+	editor = vim
 	excludesfile = ~/.gitignore
 [diff]
 	tool = vimdiff
@@ -34,7 +34,7 @@
 	tool = vimdiff
 	conflictstyle = diff3
 [mergetool "vimdiff"]
-	path = nvim
+	path = vim
 [push]
 	default = simple
 [pull]

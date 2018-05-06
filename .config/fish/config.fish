@@ -79,22 +79,6 @@ function gg --description "Show git branches and status"
 	git branch; and git status --short
 end
 
-function fzf --description "Invokes FZF with proper color"
-	if test -f ~/.solarized_light
-		command ~/.fzf/bin/fzf --color=fg+:0,bg+:7
-	else
-		command ~/.fzf/bin/fzf --color=fg+:7,bg+:0
-	end
-end
-
-function sudo --description "Execute a command as superuser"
-	if test "$argv" = !!
-		eval command sudo $history[1]
-	else
-		command sudo $argv
-	end
-end
-
 function add_paths --description "Adds to the PATH variable"
 	for dir in $argv
 		if not contains $dir $PATH; and test -d $dir
@@ -110,8 +94,6 @@ set -x LEDGER_FILE $gh/finance/journal.ledger
 set -x EDITOR nvim
 set -x VISUAL nvim
 set -x PAGER less
-set -x FZF_DEFAULT_OPTS "--no-bold \
-	--color=16,fg:-1,bg:-1,hl:4,hl+:4,info:2,prompt:4,pointer:9"
 
 # PATH
 add_paths $gh/scripts $GOPATH/bin ~/.cargo/bin
