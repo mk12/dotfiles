@@ -46,5 +46,5 @@ fi
 
 # Connect to keychain
 if command -v keychain &>/dev/null; then
-	eval $(keychain --eval --quiet --agents ssh id_rsa)
+	eval $(SHELL=bash keychain --eval --quiet --agents ssh id_rsa)
 fi

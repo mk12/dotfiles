@@ -10,16 +10,6 @@ for p in $GH/scripts $GH/go/bin ~/.cargo/bin; do
   [[ $PATH != *$p* && -d $p ]] && PATH=$PATH:$p
 done
 
-# Oh My Zsh
-export ZSH=~/.oh-my-zsh
-ZSH_THEME="robbyrussell"
-ENABLE_CORRECTION="true"
-HIST_STAMPS="yyyy-mm-dd"
-plugins=(
-  zsh-autosuggestions
-)
-source $ZSH/oh-my-zsh.sh
-
 # Prompt
 setopt promptsubst
 PROMPT='$ret_status%f%b %F{green}%c%f '
@@ -35,7 +25,7 @@ alias vim='nvim'
 
 # Connect to keychain
 if command -v keychain &>/dev/null; then
-  eval $(keychain --eval --quiet --agents ssh id_rsa)
+  eval $(SHELL=zsh keychain --eval --quiet --agents ssh id_rsa)
 fi
 
 # Tab completion

@@ -1,4 +1,7 @@
 function fish_prompt --description "Write out the prompt"
+	if test $status -ne 0
+		set_color $fish_color_error
+	end
 	echo -n "$USER:"
 	set_color $fish_color_cwd
 	echo -n (prompt_pwd)

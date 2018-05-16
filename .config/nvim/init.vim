@@ -8,6 +8,7 @@ endif
 
 call plug#begin()
 
+Plug 'NLKNguyen/papercolor-theme'
 Plug 'airblade/vim-gitgutter'
 Plug 'airblade/vim-rooter', { 'on': 'Rooter' }
 Plug 'christoomey/vim-tmux-navigator'
@@ -35,7 +36,6 @@ call plug#end()
 let g:airline#extensions#default#layout = [ [ 'a', 'c' ], [ 'x', 'y' ] ]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_extensions = ['tabline']
-let g:airline_theme = 'papercolor'
 
 let g:easy_align_delimiters = {
 	\ '/': {
@@ -294,7 +294,6 @@ augroup custom
 	autocmd FileType c,cpp setlocal commentstring=//\ %s
 	autocmd FileType sql setlocal commentstring=--\ %s
 
-	autocmd BufRead * call EightyColumns(1)
 	autocmd FileType markdown setlocal textwidth=0 colorcolumn=0
 	autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
 augroup END
@@ -379,4 +378,6 @@ endfunction
 
 " =========== Color scheme =====================================================
 
+set background=light
 syntax enable
+colorscheme PaperColor
