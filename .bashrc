@@ -5,46 +5,30 @@
 shopt -s checkwinsize
 shopt -s histappend
 
-# Prompt
-export PS1="\u:\[\033[32m\]\W\[\033[0m\]\\$ \[$(tput sgr0)\]"
-
 # Aliases
-alias gg='git branch && git status --short'
-alias ll='ls -lahF'
-alias mkdir='mkdir -p'
-alias vi='nvim'
-alias vim='nvim'
+alias vi=nvim
+alias vim=nvim
 
-# Path
-dev=~/GitHub
-for p in $dev/scripts $dev/go/bin ~/.cargo/bin; do
+# Environment variables
+gh=~/GitHub
+export CLICOLOR=true
+export EDITOR=nvim
+export GREP_OPTIONS='--color=auto'
+export HISTCONTROL=ignoredups:ignorespace
+export HISTFILESIZE=2000
+export HISTSIZE=1000
+export LEDGER_FILE=$gh/finance/journal.ledger
+export LESS='-MerX'
+export LESSHISTFILE='-'
+export PAGER=less
+export VISUAL=nvim
+
+# PATH
+for p in $gh/scripts ~/.cargo/bin ~/.fzf/bin; do
 	[[ $PATH != *$p* && -d $p ]] && PATH=$PATH:$p
 done
 
-# History
-HISTCONTROL=ignoredups:ignorespace
-HISTFILESIZE=2000
-HISTSIZE=1000
-
-# Editor
-export EDITOR=vim
-export VISUAL=vim
-export PAGER=less
-
-# Other env vars
-export CLICOLOR=true
-export GREP_OPTIONS='--color=auto'
-export LEDGER_FILE=$dev/finance/journal.ledger
-export LESS='-MerX'
-export LESSHISTFILE='-'
-
-# Tab completion
-if command -v brew &>/dev/null; then
-	brew_completion=$(brew --prefix)/share/bash-completion/bash_completion
-	[[ -f $brew_completion ]] && source $brew_completion
-fi
-
 # Connect to keychain
-if command -v keychain &>/dev/null; then
-	eval $(SHELL=bash keychain --eval --quiet --agents ssh id_rsa)
+if command -v keychain &> /dev/null && ! pgrep -qx ssh-agent; then
+	eval $(keychain --eval --quiet --agents ssh id_rsa)
 fi

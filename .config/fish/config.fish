@@ -1,76 +1,43 @@
-function fish_prompt --description "Write out the prompt"
-	if test $status -ne 0
-		set_color $fish_color_error
-	end
-	echo -n "$USER:"
-	set_color $fish_color_cwd
-	echo -n (prompt_pwd)
-	set_color normal
-	echo -n "> "
+# Install fisher if it isn't already installed.
+if not functions -q fisher
+	set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
+	curl https://git.io/fisher --create-dirs -sLo \
+		$XDG_CONFIG_HOME/fish/functions/fisher.fish
+	fish -c fisher
 end
 
-function inform --description "Writes a pretty message"
-	set_color purple
-	echo $argv...
-	set_color normal
-end
-
-function upd --description "Updates homebrew, tmux, and neovim"
+function upd --description "Update software"
 	if command -qv brew
-		inform "Updating homebrew"
+		echo "Updating homebrew"
 		brew update; and brew upgrade
 	end
 	if set -q TMUX
-		inform "Updating tmux"
+		echo "Updating tmux"
 		~/.tmux/plugins/tpm/bin/clean_plugins
 		~/.tmux/plugins/tpm/bin/update_plugins all
 	end
 	if command -qv nvim
-		inform "Updating neovim"
+		echo "Updating neovim"
 		command nvim +PlugUpgrade +PlugUpdate +qall
 	end
 	if command -qv vim
-		inform "Updating vim"
+		echo "Updating vim"
 		command vim +PlugUpgrade +PlugUpdate +qall
 	end
 end
 
-function cleanup --description "Frees up disk space"
+function cleanup --description "Free up disk space"
 	if command -qv brew
-		inform "Cleaning homebrew"
-		brew cleanup -S --force; and brew prune
+		echo "Cleaning homebrew"
+		brew cleanup -s --force; and brew prune
 	end
 	if command -qv nvim
-		inform "Cleaning neovim"
+		echo "Cleaning neovim"
 		command nvim +PlugClean +qall
 	end
 	if command -qv vim
-		inform "Cleaning vim"
+		echo "Cleaning vim"
 		command vim +PlugClean +qall
-	end
-end
-
-function tm --description "Shortcut for tmux commands"
-	# Start the server if it's not running (tmux-continuum will auto-restore).
-	if not tmux ls > /dev/null ^&1
-		tmux new-session -d -s _start
-		tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh
-		tmux kill-session -t _start
-	end
-	if test (count $argv) -lt 2
-		tmux ls
-		return
-	end
-	switch $argv[1]
-	case 'n' 'N'
-		tmux new -s $argv[2..-1]
-	case 'a' 'A'
-		tmux attach -t $argv[2..-1]
-	case 'k' 'K'
-		tmux kill-session -t $argv[2..-1]
-	case '*'
-		echo "tm: $argv[1]: invalid argument" >&2
-		return 1
 	end
 end
 
@@ -82,7 +49,7 @@ function gg --description "Show git branches and status"
 	git branch; and git status --short
 end
 
-function add_paths --description "Adds to the PATH variable"
+function add_paths --description "Add to the PATH"
 	for dir in $argv
 		if not contains $dir $PATH; and test -d $dir
 			set PATH $PATH $dir
@@ -92,19 +59,13 @@ end
 
 # Environment variables
 set gh ~/GitHub
-set -x GOPATH $gh/go
 set -x LEDGER_FILE $gh/finance/journal.ledger
 set -x EDITOR nvim
 set -x VISUAL nvim
 set -x PAGER less
 
 # PATH
-add_paths $gh/scripts $GOPATH/bin ~/.cargo/bin
-
-# LD_LIBRARY_PATH
-if command -qv rustc
-	set -x LD_LIBRARY_PATH (rustc --print sysroot)"/lib:$LD_LIBRARY_PATH"
-end
+add_paths $gh/scripts ~/.cargo/bin ~/.fzf/bin
 
 # OS-specific configuration
 set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
@@ -116,4 +77,9 @@ end
 set secret ~/.config/fish/secret.fish
 if test -e $secret
 	source $secret
+end
+
+# Connect to keychain
+if command -v keychain > /dev/null; and not pgrep -qx ssh-agent
+	eval (keychain --eval --quiet --agents ssh id_rsa)
 end
