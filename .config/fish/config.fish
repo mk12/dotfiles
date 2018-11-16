@@ -67,6 +67,27 @@ set -x PAGER less
 # PATH
 add_paths $gh/scripts ~/.cargo/bin ~/.fzf/bin
 
+# Colors
+set fish_color_autosuggestion brblack
+set fish_color_cancel --reverse
+set fish_color_command blue
+set fish_color_comment brblack
+set fish_color_end magenta
+set fish_color_error red
+set fish_color_escape red
+set fish_color_history_current --bold
+set fish_color_normal normal
+set fish_color_operator yellow
+set fish_color_param normal
+set fish_color_quote green
+set fish_color_redirection cyan
+set fish_color_selection white --bold --background=brblack
+set fish_color_valid_path --underline
+set fish_pager_color_completion normal
+set fish_pager_color_description green
+set fish_pager_color_prefix white --bold --underline
+set fish_pager_color_progress brwhite --background=cyan
+
 # OS-specific configuration
 set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
 if test -e $specific
