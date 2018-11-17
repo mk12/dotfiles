@@ -41,6 +41,14 @@ function cleanup --description "Free up disk space"
 	end
 end
 
+function l --description "Shortcut for exa"
+	command exa $argv
+end
+
+function ll --description "Shortcut for exa -l"
+	command exa -l $argv
+end
+
 function vim --description "Remap vim to nvim"
 	command nvim $argv
 end
