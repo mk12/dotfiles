@@ -29,7 +29,7 @@ end
 function cleanup --description "Free up disk space"
 	if command -qv brew
 		echo "Cleaning homebrew"
-		brew cleanup -s --force; and brew prune
+		brew cleanup -s; and brew prune
 	end
 	if command -qv nvim
 		echo "Cleaning neovim"
