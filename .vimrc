@@ -297,6 +297,10 @@ Shortcut go to right window
 Shortcut resize windows equally
 	\ nnoremap <Leader>w= <C-w>=
 
+Shortcut yank to system clipboard
+	\ nnoremap <Leader>y :%y*<BAR>call YankToSystemClipboard(@*)<CR>
+	\|xnoremap <Leader>y "*y:call YankToSystemClipboard(@*)<CR>
+
 " =========== Autocommands =====================================================
 
 augroup custom
@@ -384,6 +388,16 @@ function! EightyColumns(...)
 		setlocal textwidth=80 colorcolumn=+1
 	else
 		setlocal textwidth=0 colorcolumn=0
+	endif
+endfunction
+
+" https://sunaku.github.io/tmux-yank-osc52.html
+function! YankToSystemClipboard(text)
+	let l:escape = system('yank', a:text)
+	if v:shell_error
+		echoerr l:escape
+	else
+		call writefile([l:escape], '/dev/tty', 'b')
 	endif
 endfunction
 
