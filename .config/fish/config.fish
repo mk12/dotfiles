@@ -101,6 +101,7 @@ if test -e $secret
 end
 
 # Connect to keychain
-if command -v keychain > /dev/null; and not pgrep -qx ssh-agent
-	eval (keychain --eval --quiet --agents ssh id_rsa)
+if command -v keychain > /dev/null
+	# Do it in the background because it's slow.
+	eval (keychain --eval --quiet --agents ssh id_rsa) &
 end
