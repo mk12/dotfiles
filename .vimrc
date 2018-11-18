@@ -1,6 +1,6 @@
 scriptencoding utf-8
 set nocompatible
-set shell=bash
+set shell=sh
 
 " =========== Plugins ==========================================================
 
