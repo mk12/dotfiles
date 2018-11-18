@@ -6,7 +6,6 @@ shopt -s checkwinsize
 shopt -s histappend
 
 # Aliases
-alias vi=nvim
 alias vim=nvim
 
 # Environment variables
@@ -27,8 +26,3 @@ export VISUAL=nvim
 for p in $gh/scripts ~/.cargo/bin ~/.fzf/bin; do
 	[[ $PATH != *$p* && -d $p ]] && PATH=$PATH:$p
 done
-
-# Connect to keychain
-if command -v keychain &> /dev/null && ! pgrep -qx ssh-agent; then
-	eval $(keychain --eval --quiet --agents ssh id_rsa)
-fi

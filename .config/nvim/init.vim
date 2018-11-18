@@ -1,3 +1,5 @@
+set shell=bash
+
 " =========== Plugins ==========================================================
 
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
@@ -36,6 +38,7 @@ call plug#end()
 let g:airline#extensions#default#layout = [ [ 'a', 'c' ], [ 'x', 'y' ] ]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_extensions = ['tabline']
+let g:airline_highlighting_cache = 1
 let g:airline_theme = 'onedark'
 
 let g:easy_align_delimiters = {

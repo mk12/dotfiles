@@ -6,6 +6,22 @@ if not functions -q fisher
 	fish -c fisher
 end
 
+function l --description "Shortcut for exa"
+	command exa $argv
+end
+
+function ll --description "Shortcut for exa -l"
+	command exa -l $argv
+end
+
+function vim --description "Remap vim to nvim"
+	command nvim $argv
+end
+
+function gg --description "Show git branches and status"
+	git branch; and git status --short
+end
+
 function upd --description "Update software"
 	if command -qv brew
 		echo "Updating homebrew"
@@ -41,25 +57,9 @@ function cleanup --description "Free up disk space"
 	end
 end
 
-function l --description "Shortcut for exa"
-	command exa $argv
-end
-
-function ll --description "Shortcut for exa -l"
-	command exa -l $argv
-end
-
-function vim --description "Remap vim to nvim"
-	command nvim $argv
-end
-
-function gg --description "Show git branches and status"
-	git branch; and git status --short
-end
-
 function add_paths --description "Add to the PATH"
 	for dir in $argv
-		if not contains $dir $PATH; and test -d $dir
+		if begin; not contains $dir $PATH; and test -d $dir; end
 			set PATH $PATH $dir
 		end
 	end
@@ -106,10 +106,4 @@ end
 set secret ~/.config/fish/secret.fish
 if test -e $secret
 	source $secret
-end
-
-# Connect to keychain
-if command -v keychain > /dev/null
-	# Do it in the background because it's slow.
-	eval (keychain --eval --quiet --agents ssh id_rsa) &
 end
