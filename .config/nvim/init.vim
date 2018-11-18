@@ -21,7 +21,7 @@ Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
-Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-commentary', { 'on': 'Commentary' }
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sleuth'
@@ -55,7 +55,6 @@ let g:undotree_SplitWidth = 35
 " =========== Options ==========================================================
 
 set backup
-set backupdir-=.
 set cmdheight=2
 set cursorline
 set gdefault
@@ -80,8 +79,8 @@ set tabstop=4
 set undofile
 set visualbell
 
-call assert_equal(-1, stridx(&backupdir, ','), 'multiple backup directories')
-execute 'silent !mkdir -p ' . &backupdir . ' > /dev/null 2>&1'
+let &backupdir = $HOME . '/.local/share/nvim/backup'
+call mkdir(&backupdir, 'p')
 
 " =========== Mappings =========================================================
 
