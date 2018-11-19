@@ -6,6 +6,10 @@ if not functions -q fisher
 	fish -c fisher
 end
 
+function ls
+	echo "You forgot to use l!"
+end
+
 function l --description "Shortcut for exa"
 	command exa $argv
 end
