@@ -143,6 +143,7 @@ xmap ac <Plug>GitGutterTextObjectOuterVisual
 " S - save
 " T - toggle
 " W - window
+" X - exit
 
 Shortcut open shortcut menu
 	\ nnoremap <silent> <Leader>? :Shortcuts<CR>
@@ -319,6 +320,9 @@ Shortcut go to right window
 	\ nnoremap <Leader>wl <C-w>l
 Shortcut resize windows equally
 	\ nnoremap <Leader>w= <C-w>=
+
+Shortcut save and exit
+	\ nnoremap <Leader>x :exit<CR>
 
 " =========== Autocommands =====================================================
 
