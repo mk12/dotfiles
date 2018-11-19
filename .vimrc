@@ -131,6 +131,19 @@ xmap ac <Plug>GitGutterTextObjectOuterVisual
 
 " =========== Shortcuts ========================================================
 
+" Mnemonics:
+" C - comment
+" D - do
+" E - edit
+" F - folder
+" G - git
+" H - header
+" P - pick
+" Q - quit
+" S - save
+" T - toggle
+" W - window
+
 Shortcut open shortcut menu
 	\ nnoremap <silent> <Leader>? :Shortcuts<CR>
 	\|nnoremap <silent> <Leader> :Shortcuts<CR>
@@ -156,16 +169,24 @@ Shortcut align lines
 	\|xnoremap <Leader>da :EasyAlign<CR>
 Shortcut indent lines
 	\ nnoremap <Leader>di vip=
+	\|xnoremap <Leader>di =
 Shortcut show number of search matches
 	\ nnoremap <Leader>dm :%s/<C-r>///n<CR>
+	\|xnoremap <Leader>dm y:/%s/<C-r>///n<CR>
 Shortcut sort lines
 	\ nnoremap <Leader>ds vip:sort<CR>
 	\|xnoremap <Leader>ds :sort<CR>
 Shortcut remove trailing whitespace
-	\ nnoremap <Leader>dw :call RemoveWhitespace()<CR>
+	\ nnoremap <Leader>dw :%s/\s\+$//e<CR>''
+	\|xnoremap <Leader>dw :s/\s\+$//e<CR>
+Shortcut yank to system clipboard
+	\ nnoremap <Leader>dy :%y*<BAR>call YankToSystemClipboard(@*)<CR>
+	\|xnoremap <Leader>dy "*y:call YankToSystemClipboard(@*)<CR>
 
 Shortcut edit fish config
 	\ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
+Shortcut edit journal file
+	\ nnoremap <Leader>ej :edit ~/ia/Journal/Journal.txt<CR>
 Shortcut delete buffer
 	\ nnoremap <Leader>ek :bdelete<CR>
 Shortcut force delete buffer
@@ -299,10 +320,6 @@ Shortcut go to right window
 Shortcut resize windows equally
 	\ nnoremap <Leader>w= <C-w>=
 
-Shortcut yank to system clipboard
-	\ nnoremap <Leader>y :%y*<BAR>call YankToSystemClipboard(@*)<CR>
-	\|xnoremap <Leader>y "*y:call YankToSystemClipboard(@*)<CR>
-
 " =========== Autocommands =====================================================
 
 augroup custom
@@ -313,6 +330,9 @@ augroup custom
 
 	autocmd FileType markdown setlocal textwidth=0 colorcolumn=0
 	autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
+
+	" By default GitGutter waits for &updatetime ms before updating.
+	autocmd BufWritePost * GitGutter
 augroup END
 
 " =========== Functions ========================================================
@@ -376,12 +396,6 @@ function! ToggleSourceHeader()
 	else
 		echo "Not a source file or header file"
 	endif
-endfunction
-
-function! RemoveWhitespace()
-	let l:save = winsaveview()
-	%s/\s\+$//e
-	call winrestview(l:save)
 endfunction
 
 function! EightyColumns(...)
