@@ -6,26 +6,6 @@ if not functions -q fisher
 	fish -c fisher
 end
 
-function ls
-	echo "You forgot to use l!"
-end
-
-function l --description "Shortcut for exa"
-	command exa $argv
-end
-
-function ll --description "Shortcut for exa -l"
-	command exa -l $argv
-end
-
-function vim --description "Remap vim to nvim"
-	command nvim $argv
-end
-
-function gg --description "Show git branches and status"
-	git branch; and git status --short
-end
-
 function upd --description "Update software"
 	if command -qv brew
 		echo "Updating homebrew"
@@ -68,6 +48,15 @@ function add_paths --description "Add to the PATH"
 		end
 	end
 end
+
+# Aliases
+alias ls "echo 'You forgot to use l!'"
+alias l "exa"
+alias ll "exa -l"
+alias la "exa -la"
+alias vi "nvim"
+alias vim "nvim"
+alias gg "git branch; and git status -s"
 
 # Environment variables
 set gh ~/GitHub
