@@ -156,10 +156,10 @@ Shortcut switch to last buffer
 	\ nnoremap <Leader><Tab> :b#<CR>
 
 Shortcut project-wide search
-	\ nnoremap <Leader>/ :Ag<CR>
+	\ nnoremap <Leader>/ :Rg<CR>
 Shortcut project-wide search with input
-	\ nnoremap <Leader>* :Ag <C-r><C-w><CR>
-	\|xnoremap <Leader>* y:Ag <C-r>"<CR>
+	\ nnoremap <Leader>* :Rg <C-r><C-w><CR>
+	\|xnoremap <Leader>* y:Rg <C-r>"<CR>
 
 Shortcut toggle comment
 	\ nnoremap <Leader>c :Commentary<CR>
@@ -228,10 +228,6 @@ Shortcut git write/add
 Shortcut switch between header/source
 	\ nnoremap <Leader>h :call ToggleSourceHeader()<CR>
 
-Shortcut view ag search results
-	\ nnoremap <Leader>pa :Ag<CR>
-Shortcut view ag search results (full screen)
-	\ nnoremap <Leader>pA :Ag!<CR>
 Shortcut view buffers
 	\ nnoremap <Leader>pb :Buffers<CR>
 Shortcut view buffers (full screen)
@@ -260,6 +256,10 @@ Shortcut view marks
 	\ nnoremap <Leader>pm :Marks<CR>
 Shortcut view marks (full screen)
 	\ nnoremap <Leader>pM :Marks!<CR>
+Shortcut view search results
+	\ nnoremap <Leader>ps :Rg<CR>
+Shortcut view search results (full screen)
+	\ nnoremap <Leader>pS :Rg!<CR>
 Shortcut view tags
 	\ nnoremap <Leader>pt :Tags<CR>
 Shortcut view tags (full screen)
@@ -281,8 +281,9 @@ Shortcut toggle auto-pairs
 	\ nnoremap <Leader>ta :call AutoPairsToggle()<CR>
 Shortcut toggle Goyo mode
 	\ nnoremap <Leader>tg :Goyo<CR>
-Shortcut toggle highlight search
-	\ nnoremap <Leader>th :set hlsearch!<CR>
+Shortcut toggle highlight last search
+	\ nnoremap <Leader>th
+		\ :if v:hlsearch<BAR>noh<BAR>else<BAR>set hls<BAR>endif<CR>
 Shortcut toggle git line highlight
 	\ nnoremap <Leader>tl :GitGutterLineHighlightsToggle<CR>
 Shortcut toggle line numbers
@@ -321,7 +322,7 @@ Shortcut go to right window
 Shortcut resize windows equally
 	\ nnoremap <Leader>w= <C-w>=
 
-Shortcut save and exit
+Shortcut save/write and exit
 	\ nnoremap <Leader>x :exit<CR>
 
 " =========== Autocommands =====================================================

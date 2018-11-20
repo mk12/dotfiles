@@ -271,8 +271,9 @@ Shortcut toggle auto-pairs
 	\ nnoremap <Leader>ta :call AutoPairsToggle()<CR>
 Shortcut toggle Goyo mode
 	\ nnoremap <Leader>tg :Goyo<CR>
-Shortcut toggle highlight search
-	\ nnoremap <Leader>th :set hlsearch!<CR>
+Shortcut toggle highlight last search
+	\ nnoremap <Leader>th
+		\ :if v:hlsearch<BAR>noh<BAR>else<BAR>set hls<BAR>endif<CR>
 Shortcut toggle git line highlight
 	\ nnoremap <Leader>tl :GitGutterLineHighlightsToggle<CR>
 Shortcut toggle line numbers
@@ -311,7 +312,7 @@ Shortcut go to right window
 Shortcut resize windows equally
 	\ nnoremap <Leader>w= <C-w>=
 
-Shortcut save and exit
+Shortcut save/write and exit
 	\ nnoremap <Leader>x :exit<CR>
 
 " =========== Autocommands =====================================================
