@@ -49,24 +49,35 @@ function add_paths --description "Add to the PATH"
 	end
 end
 
-# Aliases
 alias ls "echo 'You forgot to use l!'"
-alias l "exa"
-alias ll "exa -l"
-alias la "exa -la"
-alias vi "nvim"
-alias vim "nvim"
+if command -qv exa
+	alias l "exa"
+	alias ll "exa -l"
+	alias la "exa -la"
+else
+	alias l "command ls -G"
+	alias ll "command ls -Ghl"
+	alias la "command ls -Ghla"
+end
+
+if command -qv nvim
+	alias vi "nvim"
+	alias vim "nvim"
+	set -x EDITOR nvim
+	set -x VISUAL nvim
+else
+	alias vi "vim"
+	set -x EDITOR vim
+	set -x VISUAL vim
+end
+
+if command -qv rg
+	set -x FZF_DEFAULT_COMMAND "rg --files"
+end
+
 alias gg "git branch; and git status -s"
 
-# Environment variables
-set gh ~/GitHub
-set -x LEDGER_FILE $gh/finance/journal.ledger
-set -x EDITOR nvim
-set -x VISUAL nvim
 set -x PAGER less
-
-# PATH
-add_paths $gh/scripts ~/.cargo/bin ~/.fzf/bin
 
 # Colors
 set fish_color_autosuggestion brblack
@@ -100,3 +111,12 @@ set secret ~/.config/fish/secret.fish
 if test -e $secret
 	source $secret
 end
+
+# Allow the other configs to override PROJECTS
+if test -z $PROJECTS
+	set -x PROJECTS ~/GitHub
+end
+
+set -x LEDGER_FILE $PROJECTS/finance/journal.ledger
+
+add_paths $PROJECTS/scripts ~/.fzf.bin ~/.cargo/bin
