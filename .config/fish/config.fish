@@ -119,4 +119,4 @@ end
 
 set -x LEDGER_FILE $PROJECTS/finance/journal.ledger
 
-add_paths $PROJECTS/scripts ~/.fzf.bin ~/.cargo/bin
+add_paths $PROJECTS/scripts ~/.fzf/bin ~/.cargo/bin
