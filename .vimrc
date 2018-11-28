@@ -166,6 +166,9 @@ Shortcut project-wide search with input
 	\ nnoremap <Leader>* :Rg <C-r><C-w><CR>
 	\|xnoremap <Leader>* y:Rg <C-r>"<CR>
 
+Shortcut auto-format
+	\ nnoremap <Leader>a :w<BAR>silent !clang-format -i %<CR>:e<CR>
+
 Shortcut toggle comment
 	\ nnoremap <Leader>c :Commentary<CR>
 	\|xnoremap <Leader>c :Commentary<CR>
