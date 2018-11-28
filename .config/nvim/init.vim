@@ -35,7 +35,7 @@ call plug#end()
 
 " =========== Plugin settings ==================================================
 
-let g:airline#extensions#default#layout = [['a', 'c'], ['x', 'y' ]]
+let g:airline#extensions#default#layout = [['a', 'c'], ['x', 'y']]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_extensions = ['tabline']
 let g:airline_highlighting_cache = 1
@@ -151,7 +151,7 @@ Shortcut switch to last buffer
 	\ nnoremap <Leader><Tab> :b#<CR>
 
 Shortcut project-wide search
-	\ nnoremap <Leader>/ :Rg<CR>
+	\ nnoremap <Leader>/ :call SearchProject()<CR>
 Shortcut project-wide search with input
 	\ nnoremap <Leader>* :Rg <C-r><C-w><CR>
 	\|xnoremap <Leader>* y:Rg <C-r>"<CR>
@@ -362,6 +362,22 @@ function! ProjectFiles()
 		GitFiles
 	else
 		Files
+	endif
+endfunction
+
+function! SearchProject()
+	let l:term = input("Search: ")
+	if l:term != ''
+		let l:items = split(l:term)
+		if isdirectory(l:items[-1])
+			let l:cwd = getcwd()
+			execute 'cd ' . l:items[-1]
+			call remove(l:items, -1)
+			execute 'Rg ' . join(l:items)
+			execute 'cd ' . l:cwd
+		else
+			execute 'Rg ' . l:term
+		endif
 	endif
 endfunction
 
