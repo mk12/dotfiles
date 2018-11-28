@@ -62,6 +62,7 @@ let g:undotree_SplitWidth = 35
 
 set backup
 set cmdheight=2
+set colorcolumn=+1
 set cursorline
 set gdefault
 set hidden
@@ -82,6 +83,7 @@ set shiftwidth=4
 set showcmd
 set smartcase
 set tabstop=4
+set textwidth=80
 set undofile
 set visualbell
 
