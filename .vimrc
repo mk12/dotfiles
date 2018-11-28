@@ -197,9 +197,9 @@ Shortcut edit fish config
 Shortcut edit journal file
 	\ nnoremap <Leader>ej :edit ~/ia/Journal/Journal.txt<CR>
 Shortcut delete buffer
-	\ nnoremap <Leader>ek :bdelete<CR>
+	\ nnoremap <Leader>ek :b#<BAR>bdelete #<CR>
 Shortcut force delete buffer
-	\ nnoremap <Leader>eK :bdelete!<CR>
+	\ nnoremap <Leader>eK :b#<BAR>bdelete! #<CR>
 Shortcut new buffer
 	\ nnoremap <Leader>en :enew<CR>
 Shortcut new tab
