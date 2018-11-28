@@ -226,42 +226,30 @@ Shortcut git write/add
 Shortcut switch between header/source
 	\ nnoremap <Leader>h :call ToggleSourceHeader()<CR>
 
+Shortcut view file types
+	\ nnoremap <Leader>p. :Filetypes<CR>
 Shortcut view buffers
 	\ nnoremap <Leader>pb :Buffers<CR>
-Shortcut view buffers (full screen)
-	\ nnoremap <Leader>pB :Buffers!<CR>
 Shortcut view git commits
 	\ nnoremap <Leader>pc :Commits<CR>
-Shortcut view git commits (full screen)
-	\ nnoremap <Leader>pC :Commits!<CR>
 Shortcut view files
 	\ nnoremap <Leader>pf :Files<CR>
-Shortcut view files (full screen)
-	\ nnoremap <Leader>pF :Files!<CR>
 Shortcut view git files
 	\ nnoremap <Leader>pg :GFiles<CR>
-Shortcut view git files (full screen)
-	\ nnoremap <Leader>pG :GFiles!<CR>
 Shortcut view help tags
 	\ nnoremap <Leader>ph :Helptags<CR>
-Shortcut view help tags (full screen)
-	\ nnoremap <Leader>pH :Helptags!<CR>
-Shortcut view all lines
-	\ nnoremap <Leader>pl :Lines<CR>
-Shortcut view all lines (full screen)
-	\ nnoremap <Leader>pL :Lines!<CR>
+Shortcut view lines in buffer
+	\ nnoremap <Leader>pl :BLines<CR>
+Shortcut view lines in all buffers
+	\ nnoremap <Leader>pL :Lines<CR>
 Shortcut view marks
 	\ nnoremap <Leader>pm :Marks<CR>
-Shortcut view marks (full screen)
-	\ nnoremap <Leader>pM :Marks!<CR>
 Shortcut view search results
 	\ nnoremap <Leader>ps :Rg<CR>
-Shortcut view search results (full screen)
-	\ nnoremap <Leader>pS :Rg!<CR>
-Shortcut view tags
-	\ nnoremap <Leader>pt :Tags<CR>
-Shortcut view tags (full screen)
-	\ nnoremap <Leader>pT :Tags!<CR>
+Shortcut view tags in buffer
+	\ nnoremap <Leader>pt :BTags<CR>
+Shortcut view tags in project
+	\ nnoremap <Leader>pT :Tags<CR>
 
 Shortcut force quit
 	\ nnoremap <Leader>Q :quit!<CR>
@@ -330,6 +318,9 @@ augroup custom
 
 	autocmd FileType c,cpp setlocal commentstring=//\ %s
 	autocmd FileType sql setlocal commentstring=--\ %s
+
+	" Recognize Doxygen comments.
+	autocmd Filetype c,cpp setlocal comments^=:///
 
 	autocmd FileType markdown setlocal textwidth=0 colorcolumn=0
 	autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
