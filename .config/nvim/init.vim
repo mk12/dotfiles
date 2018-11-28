@@ -35,11 +35,14 @@ call plug#end()
 
 " =========== Plugin settings ==================================================
 
-let g:airline#extensions#default#layout = [ [ 'a', 'c' ], [ 'x', 'y' ] ]
+let g:airline#extensions#default#layout = [['a', 'c'], ['x', 'y' ]]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_extensions = ['tabline']
 let g:airline_highlighting_cache = 1
 let g:airline_theme = 'onedark'
+
+let g:AutoPairsMultilineClose = 0
+let g:AutoPairsShortcutToggle = ''
 
 let g:easy_align_delimiters = {
 	\ '/': {
