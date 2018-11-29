@@ -349,7 +349,7 @@ endfunction
 
 function! SearchProject(...)
 	let l:term = input("Search: ", a:0 > 0 ? a:1 : "")
-	if l:term ==# ''
+	if empty(l:term)
 		return
 	endif
 	let l:old_dir = getcwd()
@@ -420,7 +420,7 @@ function! ToggleSourceHeader()
 endfunction
 
 function! KillBuffer(bang)
-	if &mod == 1 && a:bang ==# ''
+	if &mod == 1 && empty(a:bang)
 		bdelete
 		return
 	endif
@@ -433,8 +433,44 @@ function! KillBuffer(bang)
 	execute 'bdelete' . a:bang . ' '. l:target
 endfunction
 
+" http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window#Script
+function! KillBuffer(bang)
+	if &modified == 1 && empty(a:bang)
+		bdelete
+		return
+	endif
+	let l:btarget = bufnr('%')
+	let l:wnums = filter(range(1, winnr('$')), 'winbufnr(v:val) == l:btarget')
+	let l:wcurrent = winnr()
+	for l:w in l:wnums
+		execute l:w . 'wincmd w'
+		let l:bprev = bufnr('#')
+		if l:bprev > 0 && buflisted(l:bprev) && l:bprev != l:w
+			buffer #
+		else
+			bprevious
+		endif
+		if bufnr('%') == l:btarget
+			" Listed buffers that are not the target.
+			let l:blisted = filter(range(1, bufnr('$')),
+				\ 'buflisted(v:val) && v:val != l:btarget')
+			" Listed buffers that are not the target and not displayed.
+			let l:bhidden = filter(copy(l:blisted), 'bufwinnr(v:val) < 0')
+			" Take the first buffer, if any (could be more intelligent).
+			let l:bjump = (l:bhidden + l:blisted + [-1])[0]
+			if l:bjump > 0
+				execute 'buffer '. l:bjump
+			else
+				execute 'enew' . a:bang
+			endif
+		endif
+	endfor
+	execute 'bdelete' . a:bang . ' ' . l:btarget
+	execute l:wcurrent . 'wincmd w'
+endfunction
+
 function! EightyColumns(...)
-	let l:on = a:0 > 0 ? a:1 : (&colorcolumn ==# '' || &colorcolumn ==# '0')
+	let l:on = a:0 > 0 ? a:1 : (empty(&colorcolumn) || &colorcolumn == 0)
 	if l:on
 		setlocal textwidth=80 colorcolumn=+1
 	else
