@@ -201,10 +201,9 @@ Shortcut switch between header/source
 	\ nnoremap <Leader>h :call ToggleSourceHeader()<CR>
 
 Shortcut kill/delete buffer
-	\ nnoremap <Leader>k
-		\ :if &mod<BAR>bdelete<BAR>else<BAR>b#<BAR>bdelete #<BAR>endif<CR>
+	\ nnoremap <leader>k :call KillBuffer('')<CR>
 Shortcut force kill/delete buffer
-	\ nnoremap <Leader>K :b#<BAR>bdelete! #<CR>
+	\ nnoremap <Leader>K :call KillBuffer('!')<CR>
 
 Shortcut stop highlighting the search
 	\ nnoremap <Leader>n :nohlsearch<CR>
@@ -418,6 +417,20 @@ function! ToggleSourceHeader()
 	echohl ErrorMsg
 	echo l:err_msg
 	echohl None
+endfunction
+
+function! KillBuffer(bang)
+	if &mod == 1 && a:bang ==# ''
+		bdelete
+		return
+	endif
+	let l:target = bufnr('%')
+	if buflisted(bufnr('#')) == 1
+		b#
+	else
+		bprevious
+	endif
+	execute 'bdelete' . a:bang . ' '. l:target
 endfunction
 
 function! EightyColumns(...)
