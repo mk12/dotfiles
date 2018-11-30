@@ -119,9 +119,9 @@ xnoremap Q gq
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 
-nnoremap <C-]> :set noic<CR><C-]>:set ic<CR>
-nnoremap _ :call CycleTags('tprevious', 'tlast')<CR>
-nnoremap - :call CycleTags('tnext', 'tfirst')<CR>
+nnoremap <silent> <C-]> :set noic<CR><C-]>:set ic<CR>
+nnoremap <C-p> :call CycleTags('tprevious', 'tlast')<CR>
+nnoremap <C-n> :call CycleTags('tnext', 'tfirst')<CR>
 
 nmap ]c <Plug>GitGutterNextHunk
 nmap [c <Plug>GitGutterPrevHunk
@@ -136,6 +136,7 @@ Shortcut go to file in project
 	\ nnoremap <silent> <Leader><Leader> :call ProjectFiles()<CR>
 Shortcut go to open buffer
 	\ nnoremap <silent> <Leader>. :Buffers<CR>
+
 Shortcut switch to last buffer
 	\ nnoremap <Leader><Tab> :b#<CR>
 
@@ -255,9 +256,9 @@ Shortcut toggle list/whitespace mode
 	\ nnoremap <Leader>tw :set list!<CR>
 
 Shortcut new horizontal split
-	\ nnoremap <Leader>w- :split<CR>
+	\ nnoremap <Leader>w- <C-w>s
 Shortcut new vertical split
-	\ nnoremap <Leader>w/ :vsplit<CR>
+	\ nnoremap <Leader>w/ <C-w>v
 Shortcut resize windows equally
 	\ nnoremap <Leader>w= <C-w>=
 Shortcut go to left window
