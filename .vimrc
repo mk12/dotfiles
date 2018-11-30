@@ -13,7 +13,6 @@ endif
 call plug#begin()
 
 Plug 'airblade/vim-gitgutter'
-Plug 'airblade/vim-rooter', { 'on': 'Rooter' }
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
@@ -21,7 +20,6 @@ Plug 'joshdick/onedark.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
-Plug 'junegunn/vim-easy-align', { 'on': 'EasyAlign' }
 Plug 'kana/vim-textobj-user'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
@@ -51,17 +49,7 @@ let g:airline_theme = 'onedark'
 let g:AutoPairsMultilineClose = 0
 let g:AutoPairsShortcutToggle = ''
 
-let g:easy_align_delimiters = {
-	\ '/': {
-		\ 'pattern': '//\+\|/\*\|\*/',
-		\ 'delimiter_align': 'l',
-		\ 'ignore_groups': ['!Comment']
-	\ }
-\ }
-
 let g:gitgutter_map_keys = 0
-
-let g:rooter_manual_only = 1
 
 let g:undotree_SplitWidth = 35
 
@@ -131,6 +119,10 @@ xnoremap Q gq
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 
+nnoremap <C-]> :set noic<CR><C-]>:set ic<CR>
+nnoremap _ :call CycleTags('tprevious', 'tlast')<CR>
+nnoremap - :call CycleTags('tnext', 'tfirst')<CR>
+
 nmap ]c <Plug>GitGutterNextHunk
 nmap [c <Plug>GitGutterPrevHunk
 
@@ -143,7 +135,7 @@ Shortcut open shortcut menu
 Shortcut go to file in project
 	\ nnoremap <silent> <Leader><Leader> :call ProjectFiles()<CR>
 Shortcut go to open buffer
-	\ nnoremap <Leader>, :Buffers<CR>
+	\ nnoremap <silent> <Leader>. :Buffers<CR>
 Shortcut switch to last buffer
 	\ nnoremap <Leader><Tab> :b#<CR>
 
@@ -157,12 +149,6 @@ Shortcut toggle comment
 	\ nnoremap <Leader>c :Commentary<CR>
 	\|xnoremap <Leader>c :Commentary<CR>
 
-Shortcut align lines
-	\ nnoremap <Leader>da vip:EasyAlign<CR>
-	\|xnoremap <Leader>da :EasyAlign<CR>
-Shortcut indent lines
-	\ nnoremap <Leader>di vip=
-	\|xnoremap <Leader>di =
 Shortcut show number of search matches
 	\ nnoremap <Leader>dm :%s/<C-r>///n<CR>
 	\|xnoremap <Leader>dm y:%s/<C-r>"//n<CR>
@@ -238,9 +224,9 @@ Shortcut view tags in project
 	\ nnoremap <Leader>pT :Tags<CR>
 
 Shortcut quit
-	\ nnoremap <Leader>q :quit<CR>
-Shortcut force quit
-	\ nnoremap <Leader>Q :quit!<CR>
+	\ nnoremap <Leader>q :call ClosePreviewOrQuit('')<CR>
+	Shortcut force quit
+	\ nnoremap <Leader>Q :call ClosePreviewOrQuit('!')<CR>
 
 Shortcut save/write file
 	\ nnoremap <Leader>s :write<CR>
@@ -300,10 +286,14 @@ Shortcut save/write all and exit
 
 " =========== Autocommands =====================================================
 
+command! -nargs=1 CaseSensitivePtag :set noic | ptag <args> | set ic
+
 augroup custom
 	autocmd!
 
-	autocmd FileType c,cpp setlocal commentstring=//\ %s comments^=:///
+	autocmd FileType c,cpp
+		\ setlocal commentstring=//\ %s comments^=:///
+		\ keywordprg=:CaseSensitivePtag
 	autocmd FileType sql setlocal commentstring=--\ %s
 
 	autocmd FileType text,markdown setlocal textwidth=0 colorcolumn=0
@@ -343,10 +333,32 @@ endfunction
 
 function! PrevBufOrTab()
 	if tabpagenr('$') > 1
-		tabprev
+		tabprevious
 	else
-		bprev
+		bprevious
 	endif
+endfunction
+
+function! CycleTags(next, first)
+	let l:prefix = ''
+	for l:w in range(1, winnr('$'))
+		if getwinvar(l:w, "&pvw") == 1
+			let l:prefix = 'p'
+			break
+		endif
+	endfor
+	try
+		execute l:prefix . a:next
+	catch
+		try
+			execute l:prefix . a:first
+		catch
+			echohl ErrorMsg
+			echo "No tag stack"
+			echohl Normal
+			return
+		endtry
+	endtry
 endfunction
 
 function! ProjectFiles()
@@ -429,20 +441,6 @@ function! ToggleSourceHeader()
 	echohl None
 endfunction
 
-function! KillBuffer(bang)
-	if &mod == 1 && empty(a:bang)
-		bdelete
-		return
-	endif
-	let l:target = bufnr('%')
-	if buflisted(bufnr('#')) == 1
-		b#
-	else
-		bprevious
-	endif
-	execute 'bdelete' . a:bang . ' '. l:target
-endfunction
-
 " http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window#Script
 function! KillBuffer(bang)
 	if &modified == 1 && empty(a:bang)
@@ -477,6 +475,17 @@ function! KillBuffer(bang)
 	endfor
 	execute 'bdelete' . a:bang . ' ' . l:btarget
 	execute l:wcurrent . 'wincmd w'
+endfunction
+
+function! ClosePreviewOrQuit(bang)
+	let l:num = winnr('$')
+	let l:cmd = 'pclose' . a:bang
+	execute l:cmd
+	if winnr('$') == l:num
+		let l:cmd = 'quit' . a:bang
+		execute l:cmd
+	endif
+	echo ':' . l:cmd
 endfunction
 
 function! EightyColumns(...)
