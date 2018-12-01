@@ -40,18 +40,17 @@ call plug#end()
 
 " =========== Plugin settings ==================================================
 
+let g:AutoPairsMultilineClose = 0
+let g:AutoPairsShortcutToggle = ''
+
 let g:airline#extensions#default#layout = [['a', 'c'], ['x', 'y']]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_extensions = ['tabline']
 let g:airline_highlighting_cache = 1
 let g:airline_theme = 'onedark'
 
-let g:AutoPairsMultilineClose = 0
-let g:AutoPairsShortcutToggle = ''
-
 let g:gitgutter_map_keys = 0
-
-let g:undotree_SplitWidth = 35
+let g:gitgutter_realtime = 0
 
 " =========== Options ==========================================================
 
@@ -119,9 +118,12 @@ xnoremap Q gq
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 
-nnoremap <silent> <C-]> :set noic<CR><C-]>:set ic<CR>
-nnoremap <C-p> :call CycleTags('tprevious', 'tlast')<CR>
-nnoremap <C-n> :call CycleTags('tnext', 'tfirst')<CR>
+" Since <Tab> and <C-i> are the same, I need a new mapping for <C-i>.
+nnoremap <C-q> <C-i>
+
+nnoremap <silent> <C-]> :call CaseSensitiveTagJump('tag', expand('<cword>'))<CR>
+nnoremap <silent> <C-p> :call CycleTags('tprevious', 'tlast')<CR>
+nnoremap <silent> <C-n> :call CycleTags('tnext', 'tfirst')<CR>
 
 nmap ]c <Plug>GitGutterNextHunk
 nmap [c <Plug>GitGutterPrevHunk
@@ -135,10 +137,7 @@ Shortcut open shortcut menu
 Shortcut go to file in project
 	\ nnoremap <silent> <Leader><Leader> :call ProjectFiles()<CR>
 Shortcut go to open buffer
-	\ nnoremap <silent> <Leader>. :Buffers<CR>
-
-Shortcut switch to last buffer
-	\ nnoremap <Leader><Tab> :b#<CR>
+	\ nnoremap <silent> <Leader><Tab> :Buffers<CR>
 
 Shortcut project-wide search
 	\ nnoremap <Leader>/ :call SearchProject()<CR>
@@ -150,6 +149,9 @@ Shortcut toggle comment
 	\ nnoremap <Leader>c :Commentary<CR>
 	\|xnoremap <Leader>c :Commentary<CR>
 
+Shortcut indent lines
+	\ nnoremap <Leader>di =ip
+	\|xnoremap <Leader>di =
 Shortcut show number of search matches
 	\ nnoremap <Leader>dm :%s/<C-r>///n<CR>
 	\|xnoremap <Leader>dm y:%s/<C-r>"//n<CR>
@@ -287,14 +289,14 @@ Shortcut save/write all and exit
 
 " =========== Autocommands =====================================================
 
-command! -nargs=1 CaseSensitivePtag :set noic | ptag <args> | set ic
+command! -nargs=1 PtagKeywordPrg :call CaseSensitiveTagJump('ptag', <f-args>)
 
 augroup custom
 	autocmd!
 
 	autocmd FileType c,cpp
 		\ setlocal commentstring=//\ %s comments^=:///
-		\ keywordprg=:CaseSensitivePtag
+		\ keywordprg=:PtagKeywordPrg
 	autocmd FileType sql setlocal commentstring=--\ %s
 
 	autocmd FileType text,markdown setlocal textwidth=0 colorcolumn=0
@@ -305,6 +307,18 @@ augroup custom
 augroup END
 
 " =========== Functions ========================================================
+
+function! s:Error(msg)
+	echohl ErrorMSg
+	echomsg a:msg
+	echohl Normal
+endfunction
+
+function! s:Warning(msg)
+	echohl WarningMsg
+	echomsg a:msg
+	echohl Normal
+endfunction
 
 function! VisualReplace()
 	let s:restore_reg = @"
@@ -340,25 +354,46 @@ function! PrevBufOrTab()
 	endif
 endfunction
 
+function! CaseSensitiveTagJump(cmd, tag)
+	let l:save_ic = &ignorecase
+	set noignorecase
+	try
+		execute a:cmd . ' ' . a:tag
+	catch
+		call s:Error(substitute(v:exception, '^Vim.\{-}:', '', ''))
+	finally
+		let &ignorecase = l:save_ic
+	endtry
+endfunction
+
 function! CycleTags(next, first)
 	let l:prefix = ''
+	let l:win_id = win_getid()
 	for l:w in range(1, winnr('$'))
 		if getwinvar(l:w, "&pvw") == 1
 			let l:prefix = 'p'
+			let l:win_id = win_getid(l:w)
 			break
 		endif
 	endfor
 	try
 		execute l:prefix . a:next
 	catch
+		let l:old_info = getwininfo(l:win_id)
 		try
+			redir => l:output
 			execute l:prefix . a:first
+			redir END
 		catch
-			echohl ErrorMsg
-			echo "No tag stack"
-			echohl Normal
+			call s:Error("No tag stack")
 			return
 		endtry
+		if getwininfo(l:win_id) == l:old_info
+			call s:Warning("No other matches")
+		else
+			call s:Warning(
+				\ get(split(l:output, "\n"), -1, "") . " (wrapping around)")
+		endif
 	endtry
 endfunction
 
@@ -407,9 +442,7 @@ function! FormatCode()
 		silent !clang-format -i %
 		edit
 	else
-		echohl ErrorMsg
-		echo "Unable to format " . &filetype . " file"
-		echohl None
+		call s:Error("Unable to format " . &filetype . " file")
 	endif
 endfunction
 
@@ -424,7 +457,7 @@ function! ToggleSourceHeader()
 				return
 			endif
 		endfor
-		let l:err_msg = "Can't find source file"
+		call s:Error("Can't find source file")
 	elseif index(l:source_extensions, expand('%:e')) >= 0
 		for l:h in l:header_extensions
 			let l:file = expand('%:p:r') . '.' . l:h
@@ -433,13 +466,10 @@ function! ToggleSourceHeader()
 				return
 			endif
 		endfor
-		let l:err_msg = "Can't find header file"
+		call s:Error("Can't find header file")
 	else
-		let l:err_msg = "Not a source file or header file"
+		call s:Error("Not a source file or header file")
 	endif
-	echohl ErrorMsg
-	echo l:err_msg
-	echohl None
 endfunction
 
 " http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window#Script
@@ -502,7 +532,6 @@ endfunction
 
 set termguicolors
 set background=dark
-syntax enable
 colorscheme onedark
 
 " =========== Encryption =======================================================
