@@ -138,6 +138,8 @@ Shortcut go to file in project
 	\ nnoremap <silent> <Leader><Leader> :call ProjectFiles()<CR>
 Shortcut go to open buffer
 	\ nnoremap <silent> <Leader><Tab> :Buffers<CR>
+Shortcut go to file in same directory
+	\ nnoremap <silent> <Leader>. :Files %:h<CR>
 
 Shortcut project-wide search
 	\ nnoremap <silent> <Leader>/ :call SearchProject()<CR>
@@ -452,7 +454,7 @@ function! ToggleSourceHeader()
 	let l:source_extensions = ['c', 'cpp', 'cc']
 	if index(l:header_extensions, expand('%:e')) >= 0
 		for l:c in l:source_extensions
-			let l:file = expand('%:p:r') . '.' . l:c
+			let l:file = expand('%:r') . '.' . l:c
 			if filereadable(l:file)
 				execute 'e ' . l:file
 				return
@@ -461,7 +463,7 @@ function! ToggleSourceHeader()
 		call s:Error("Can't find source file")
 	elseif index(l:source_extensions, expand('%:e')) >= 0
 		for l:h in l:header_extensions
-			let l:file = expand('%:p:r') . '.' . l:h
+			let l:file = expand('%:r') . '.' . l:h
 			if filereadable(l:file)
 				execute 'e ' . l:file
 				return
