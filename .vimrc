@@ -385,6 +385,7 @@ function! CycleTags(next, first)
 			execute l:prefix . a:first
 			redir END
 		catch
+			redir END
 			call s:Error("No tag stack")
 			return
 		endtry
