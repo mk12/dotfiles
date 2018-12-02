@@ -45,7 +45,6 @@ let g:airline_highlighting_cache = 1
 let g:airline_theme = 'onedark'
 
 let g:gitgutter_map_keys = 0
-let g:gitgutter_realtime = 0
 
 " =========== Options ==========================================================
 
@@ -154,7 +153,7 @@ Shortcut remove trailing whitespace
 	\ nnoremap <Leader>dw :%s/\s\+$//e<CR>''
 	\|xnoremap <Leader>dw :s/\s\+$//e<CR>
 Shortcut yank to system clipboard
-	\ nnoremap <Leader>dy :%y*<BAR>call YankToSystemClipboard(@*)<CR>
+	\ nnoremap <Leader>dy :%y*<Bar>call YankToSystemClipboard(@*)<CR>
 	\|xnoremap <Leader>dy "*y:call YankToSystemClipboard(@*)<CR>
 
 Shortcut edit fish config
