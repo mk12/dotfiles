@@ -140,10 +140,10 @@ Shortcut go to open buffer
 	\ nnoremap <silent> <Leader><Tab> :Buffers<CR>
 
 Shortcut project-wide search
-	\ nnoremap <Leader>/ :call SearchProject()<CR>
+	\ nnoremap <silent> <Leader>/ :call SearchProject()<CR>
 Shortcut project-wide search with input
-	\ nnoremap <Leader>* :call SearchProject(expand('<cword>'))<CR>
-	\|xnoremap <Leader>* y:call SearchProject(@")<CR>
+	\ nnoremap <silent> <Leader>* :call SearchProject(expand('<cword>'))<CR>
+	\|xnoremap <silent> <Leader>* y:call SearchProject(@")<CR>
 
 Shortcut toggle comment
 	\ nnoremap <Leader>c :Commentary<CR>
@@ -200,9 +200,9 @@ Shortcut switch between header/source
 	\ nnoremap <Leader>h :call ToggleSourceHeader()<CR>
 
 Shortcut kill/delete buffer
-	\ nnoremap <leader>k :call KillBuffer('')<CR>
+	\ nnoremap <silent> <leader>k :call KillBuffer('')<CR>
 Shortcut force kill/delete buffer
-	\ nnoremap <Leader>K :call KillBuffer('!')<CR>
+	\ nnoremap <silent> <Leader>K :call KillBuffer('!')<CR>
 
 Shortcut stop highlighting the search
 	\ nnoremap <Leader>n :nohlsearch<CR>
@@ -227,9 +227,9 @@ Shortcut view tags in project
 	\ nnoremap <Leader>pT :Tags<CR>
 
 Shortcut quit
-	\ nnoremap <Leader>q :call ClosePreviewOrQuit('')<CR>
+	\ nnoremap <silent> <Leader>q :call ClosePreviewOrQuit('')<CR>
 	Shortcut force quit
-	\ nnoremap <Leader>Q :call ClosePreviewOrQuit('!')<CR>
+	\ nnoremap <silent> <Leader>Q :call ClosePreviewOrQuit('!')<CR>
 
 Shortcut save/write file
 	\ nnoremap <Leader>s :write<CR>
