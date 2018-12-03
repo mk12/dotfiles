@@ -1,78 +1,78 @@
 # Install fisher if it isn't already installed.
 if not functions -q fisher
-	set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
-	curl https://git.io/fisher --create-dirs -sLo \
-		$XDG_CONFIG_HOME/fish/functions/fisher.fish
-	fish -c fisher
+    set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
+    curl https://git.io/fisher --create-dirs -sLo \
+        $XDG_CONFIG_HOME/fish/functions/fisher.fish
+    fish -c fisher
 end
 
 function upd --description "Update software"
-	if command -qv brew
-		echo "Updating homebrew"
-		brew update; and brew upgrade
-	end
-	if set -q TMUX
-		echo "Updating tmux"
-		~/.tmux/plugins/tpm/bin/clean_plugins
-		~/.tmux/plugins/tpm/bin/update_plugins all
-	end
-	if command -qv nvim
-		echo "Updating neovim"
-		command nvim +PlugUpgrade +PlugUpdate +qall
-	end
-	if command -qv vim
-		echo "Updating vim"
-		command vim +PlugUpgrade +PlugUpdate +qall
-	end
+    if command -qv brew
+        echo "Updating homebrew"
+        brew update; and brew upgrade
+    end
+    if set -q TMUX
+        echo "Updating tmux"
+        ~/.tmux/plugins/tpm/bin/clean_plugins
+        ~/.tmux/plugins/tpm/bin/update_plugins all
+    end
+    if command -qv nvim
+        echo "Updating neovim"
+        command nvim +PlugUpgrade +PlugUpdate +qall
+    end
+    if command -qv vim
+        echo "Updating vim"
+        command vim +PlugUpgrade +PlugUpdate +qall
+    end
 end
 
 function cleanup --description "Free up disk space"
-	if command -qv brew
-		echo "Cleaning homebrew"
-		brew cleanup -s; and brew prune
-	end
-	if command -qv nvim
-		echo "Cleaning neovim"
-		command nvim +PlugClean +qall
-	end
-	if command -qv vim
-		echo "Cleaning vim"
-		command vim +PlugClean +qall
-	end
+    if command -qv brew
+        echo "Cleaning homebrew"
+        brew cleanup -s; and brew prune
+    end
+    if command -qv nvim
+        echo "Cleaning neovim"
+        command nvim +PlugClean +qall
+    end
+    if command -qv vim
+        echo "Cleaning vim"
+        command vim +PlugClean +qall
+    end
 end
 
 function add_paths --description "Add to the PATH"
-	for dir in $argv
-		if begin; not contains $dir $PATH; and test -d $dir; end
-			set PATH $PATH $dir
-		end
-	end
+    for dir in $argv
+        if begin; not contains $dir $PATH; and test -d $dir; end
+            set PATH $PATH $dir
+        end
+    end
 end
 
 alias ls "echo 'You forgot to use l!'"
 if command -qv exa
-	alias l "exa"
-	alias ll "exa -l"
-	alias la "exa -la"
+    alias l "exa"
+    alias ll "exa -l"
+    alias la "exa -la"
 else
-	alias l "command ls -G"
-	alias ll "command ls -Ghl"
-	alias la "command ls -Ghla"
+    alias l "command ls -G"
+    alias ll "command ls -Ghl"
+    alias la "command ls -Ghla"
 end
 
 if command -qv nvim
-	alias vi "nvim"
-	alias vim "nvim"
-	set -x EDITOR nvim
-	set -x VISUAL nvim
+    alias vi "nvim"
+    alias vim "nvim"
+    set -x EDITOR nvim
+    set -x VISUAL nvim
 else
-	alias vi "vim"
-	set -x EDITOR vim
-	set -x VISUAL vim
+    alias vi "vim"
+    set -x EDITOR vim
+    set -x VISUAL vim
 end
 
 if command -qv rg
-	set -x FZF_DEFAULT_COMMAND "rg --files"
+    set -x FZF_DEFAULT_COMMAND "rg --files"
 end
 
 alias gg "git branch; and git status -s"
@@ -103,18 +103,18 @@ set fish_pager_color_progress brwhite --background=cyan
 # OS-specific configuration
 set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
 if test -e $specific
-	source $specific
+    source $specific
 end
 
 # Secret information
 set secret ~/.config/fish/secret.fish
 if test -e $secret
-	source $secret
+    source $secret
 end
 
 # Allow the other configs to override PROJECTS
 if test -z $PROJECTS
-	set -x PROJECTS ~/GitHub
+    set -x PROJECTS ~/GitHub
 end
 
 set -x LEDGER_FILE $PROJECTS/finance/journal.ledger

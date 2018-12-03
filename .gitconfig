@@ -1,43 +1,43 @@
 [user]
-	name = Mitchell Kember
-	email = mk12360@gmail.com
+    name = Mitchell Kember
+    email = mk12360@gmail.com
 [alias]
-	s = status -s
-	b = branch
-	c = checkout
-	d = diff
-	dc = diff --cached
-	a = add
-	ap = add --patch
-	cm = commit
-	cmv = commit --verbose
-	cma = commit --amend
-	fx = commit --amend --reuse-message=HEAD
-	rb = rebase
-	cp = cherry-pick
-	sh = stash
-	unstage = reset HEAD --
-	last = log -1 HEAD
-	lol = log --pretty=oneline --abbrev-commit --graph --decorate
+    s = status -s
+    b = branch
+    c = checkout
+    d = diff
+    dc = diff --cached
+    a = add
+    ap = add --patch
+    cm = commit
+    cmv = commit --verbose
+    cma = commit --amend
+    fx = commit --amend --reuse-message=HEAD
+    rb = rebase
+    cp = cherry-pick
+    sh = stash
+    unstage = reset HEAD --
+    last = log -1 HEAD
+    lol = log --pretty=oneline --abbrev-commit --graph --decorate
 [color]
-	ui = auto
+    ui = auto
 [core]
-	editor = vim
-	excludesfile = ~/.gitignore
+    editor = vim
+    excludesfile = ~/.gitignore
 [diff]
-	tool = vimdiff
-	prompt = false
-	algorithm = minimal
-	compactionHeuristic = true
-	renames = true
+    tool = vimdiff
+    prompt = false
+    algorithm = minimal
+    compactionHeuristic = true
+    renames = true
 [merge]
-	tool = vimdiff
-	conflictstyle = diff3
+    tool = vimdiff
+    conflictstyle = diff3
 [mergetool "vimdiff"]
-	path = vim
+    path = vim
 [push]
-	default = simple
+    default = simple
 [pull]
-	rebase = true
+    rebase = true
 [apply]
-	whitespace = fix
+    whitespace = fix

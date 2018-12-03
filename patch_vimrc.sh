@@ -3,7 +3,7 @@
 set -xeufo pipefail
 
 if [[ "$(git status -s uno)" != 'M  .config/nvim/init.vim' ]]; then
-	exit 1
+    exit 1
 fi
 
 git diff -- .config/nvim/init.vim > v.patch
