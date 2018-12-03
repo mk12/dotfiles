@@ -109,7 +109,7 @@ nnoremap Y y$
 xnoremap > >gv
 xnoremap < <gv
 
-xnoremap <silent> <expr> p VisualReplace()
+xnoremap <silent> <expr> p VisualReplaceExpr()
 
 nnoremap <silent> Q :call ReflowText()<CR>
 xnoremap Q gq
@@ -228,9 +228,9 @@ Shortcut view tags in project
     \ nnoremap <Leader>pT :Tags<CR>
 
 Shortcut quit
-    \ nnoremap <silent> <Leader>q :call ClosePreviewOrQuit('')<CR>
+    \ nnoremap <expr> <Leader>q ClosePreviewOrQuitExpr('')
     Shortcut force quit
-    \ nnoremap <silent> <Leader>Q :call ClosePreviewOrQuit('!')<CR>
+    \ nnoremap <expr> <Leader>Q ClosePreviewOrQuitExpr('!')
 
 Shortcut save/write file
     \ nnoremap <Leader>s :write<CR>
@@ -321,7 +321,7 @@ function! s:Warning(msg)
     echohl Normal
 endfunction
 
-function! VisualReplace()
+function! VisualReplaceExpr()
     let s:restore_reg = @"
     return "p@=RestoreRegister()\<CR>"
 endfunction
@@ -510,15 +510,13 @@ function! KillBuffer(bang)
     execute l:wcurrent . 'wincmd w'
 endfunction
 
-function! ClosePreviewOrQuit(bang)
-    let l:num = winnr('$')
-    let l:cmd = 'pclose' . a:bang
-    execute l:cmd
-    if winnr('$') == l:num
-        let l:cmd = 'quit' . a:bang
-        execute l:cmd
-    endif
-    echo ':' . l:cmd
+function! ClosePreviewOrQuitExpr(bang)
+    for l:w in range(1, winnr('$'))
+        if getwinvar(l:w, "&pvw") == 1
+            return ':pclose' . a:bang . "\<CR>"
+        endif
+    endfor
+    return ':quit' . a:bang . "\<CR>"
 endfunction
 
 function! EightyColumns(...)
