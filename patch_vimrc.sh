@@ -2,7 +2,7 @@
 
 set -xeufo pipefail
 
-if [[ "$(git status -s uno)" != 'M  .config/nvim/init.vim' ]]; then
+if [[ "$(git status -s -uno)" != *' M .config/nvim/init.vim'* ]]; then
     exit 1
 fi
 
