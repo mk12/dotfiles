@@ -311,6 +311,10 @@ function! s:Warning(msg)
     echohl Normal
 endfunction
 
+function! s:EchoException()
+    call s:Error(substitute(v:exception, '^Vim.\{-}:', '', ''))
+endfunction
+
 function! VisualReplaceExpr()
     let s:restore_reg = @"
     return "p@=RestoreRegister()\<CR>"
@@ -351,7 +355,7 @@ function! CaseSensitiveTagJump(cmd, tag)
     try
         execute a:cmd . ' ' . a:tag
     catch
-        call s:Error(substitute(v:exception, '^Vim.\{-}:', '', ''))
+        call s:EchoException()
     finally
         let &ignorecase = l:save_ic
     endtry
@@ -467,7 +471,11 @@ endfunction
 " http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window#Script
 function! KillBuffer(bang)
     if &modified == 1 && empty(a:bang)
-        bdelete
+        try
+            bdelete
+        catch
+            call s:EchoException()
+        endtry
         return
     endif
     let l:btarget = bufnr('%')
