@@ -483,8 +483,8 @@ function! KillBuffer(bang)
     let l:wcurrent = winnr()
     for l:w in l:wnums
         execute l:w . 'wincmd w'
-        let l:bprev = bufnr('#')
-        if l:bprev > 0 && buflisted(l:bprev) && l:bprev != l:w
+        let l:balt = bufnr('#')
+        if l:balt > 0 && buflisted(l:balt) && l:balt != l:btarget
             buffer #
         else
             bprevious
