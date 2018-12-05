@@ -23,6 +23,7 @@ Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'kana/vim-textobj-user'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
+Plug 'mk12/vim-cppman'
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
 Plug 'tpope/vim-commentary', { 'on': 'Commentary' }
@@ -106,13 +107,13 @@ noremap : ;
 
 nnoremap Y y$
 
-xnoremap > >gv
-xnoremap < <gv
+vnoremap > >gv
+vnoremap < <gv
 
-xnoremap <silent> <expr> p VisualReplaceExpr()
+vnoremap <silent> <expr> p VisualReplaceExpr()
 
 nnoremap <silent> Q :call ReflowText()<CR>
-xnoremap Q gq
+vnoremap Q gq
 
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
@@ -139,32 +140,40 @@ Shortcut go to open buffer
     \ nnoremap <silent> <Leader><Tab> :Buffers<CR>
 Shortcut go to file in same directory
     \ nnoremap <silent> <Leader>. :Files %:h<CR>
+Shortcut go to last buffer
+    \ nnoremap <silent> <Leader><BS> :buffer #<CR>
 
 Shortcut project-wide search
     \ nnoremap <silent> <Leader>/ :call SearchProject()<CR>
 Shortcut project-wide search with input
     \ nnoremap <silent> <Leader>* :call SearchProject(expand('<cword>'))<CR>
-    \|xnoremap <silent> <Leader>* y:call SearchProject(@")<CR>
+    \|vnoremap <silent> <Leader>* y:call SearchProject(@")<CR>
+
+Shortcut show tag in preview window
+    \ nnoremap <silent> <Leader>]
+        \ :call CaseSensitiveTagJump('ptag', expand('<cword>'))<CR>
+    \|vnoremap <silent> <Leader>]
+        \ y:call CaseSensitiveTagJump('ptag', @")<CR>
 
 Shortcut toggle comment
     \ nnoremap <Leader>c :Commentary<CR>
-    \|xnoremap <Leader>c :Commentary<CR>
+    \|vnoremap <Leader>c :Commentary<CR>
 
 Shortcut indent lines
     \ nnoremap <Leader>di =ip
-    \|xnoremap <Leader>di =
+    \|vnoremap <Leader>di =
 Shortcut show number of search matches
     \ nnoremap <Leader>dm :%s/<C-r>///n<CR>
-    \|xnoremap <Leader>dm y:%s/<C-r>"//n<CR>
+    \|vnoremap <Leader>dm y:%s/<C-r>"//n<CR>
 Shortcut sort lines
     \ nnoremap <Leader>ds vip:sort<CR>
-    \|xnoremap <Leader>ds :sort<CR>
+    \|vnoremap <Leader>ds :sort<CR>
 Shortcut remove trailing whitespace
-    \ nnoremap <Leader>dw :%s/\s\+$//e<CR>''
-    \|xnoremap <Leader>dw :s/\s\+$//e<CR>
+    \ nnoremap <Leader>dw :%s/\s\+$//e<CR><C-o>
+    \|vnoremap <Leader>dw :s/\s\+$//e<CR>
 Shortcut yank to system clipboard
     \ nnoremap <Leader>dy :%y*<Bar>call YankToSystemClipboard(@*)<CR>
-    \|xnoremap <Leader>dy "*y:call YankToSystemClipboard(@*)<CR>
+    \|vnoremap <Leader>dy "*y:call YankToSystemClipboard(@*)<CR>
 
 Shortcut edit fish config
     \ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
@@ -199,6 +208,9 @@ Shortcut git write/add
 
 Shortcut switch between header/source
     \ nnoremap <Leader>h :call ToggleSourceHeader()<CR>
+
+Shortcut just keep visible buffers
+    \ nnoremap <Leader>j :call DeleteHiddenBuffers()<CR>
 
 Shortcut kill/delete buffer
     \ nnoremap <silent> <leader>k :call KillBuffer('')<CR>
@@ -262,6 +274,10 @@ Shortcut new horizontal split
     \ nnoremap <Leader>w- <C-w>s
 Shortcut new vertical split
     \ nnoremap <Leader>w/ <C-w>v
+Shortcut use 2-up vertical split
+    \ nnoremap <Leader>w2 <C-w>o<C-w>v
+Shortcut use 3-up vertical split
+    \ nnoremap <Leader>w3 <C-w>o<C-w>v<C-w>v
 Shortcut resize windows equally
     \ nnoremap <Leader>w= <C-w>=
 Shortcut go to left window
@@ -280,6 +296,8 @@ Shortcut go to right window
     \ nnoremap <Leader>wl <C-w>l
 Shortcut move window right
     \ nnoremap <Leader>wL <C-w>L
+Shortcut close all other windows
+    \ nnoremap <Leader>wo <C-w>o
 Shortcut new tab
     \ nnoremap <Leader>wt :tabnew %<CR>
 
@@ -290,14 +308,10 @@ Shortcut save/write all and exit
 
 " =========== Autocommands =====================================================
 
-command! -nargs=1 PtagKeywordPrg :call CaseSensitiveTagJump('ptag', <f-args>)
-
 augroup custom
     autocmd!
 
-    autocmd FileType c,cpp
-        \ setlocal commentstring=//\ %s comments^=:///
-        \ keywordprg=:PtagKeywordPrg
+    autocmd FileType c,cpp setlocal commentstring=//\ %s comments^=:///
     autocmd FileType sql setlocal commentstring=--\ %s
 
     autocmd FileType text,markdown setlocal textwidth=0 colorcolumn=0
@@ -337,9 +351,9 @@ endfunction
 
 function! ReflowText()
     if synIDattr(synID(line('.'), col('.'), 1), 'name') =~? 'comment'
-        normal gqac
+        normal! gqac
     else
-        normal gqap
+        normal! gqap
     endif
 endfunction
 
@@ -363,7 +377,7 @@ function! CaseSensitiveTagJump(cmd, tag)
     let l:save_ic = &ignorecase
     set noignorecase
     try
-        execute a:cmd . ' ' . a:tag
+        execute a:cmd a:tag
     catch
         call s:EchoException()
     finally
@@ -375,7 +389,7 @@ function! CycleTags(next, first)
     let l:prefix = ''
     let l:win_id = win_getid()
     for l:w in range(1, winnr('$'))
-        if getwinvar(l:w, "&pvw") == 1
+        if getwinvar(l:w, '&pvw') == 1
             let l:prefix = 'p'
             let l:win_id = win_getid(l:w)
             break
@@ -398,7 +412,7 @@ function! CycleTags(next, first)
             call s:Warning("No other matches")
         else
             call s:Warning(
-                \ get(split(l:output, "\n"), -1, "") . " (wrapping around)")
+                \ get(split(l:output, "\n"), -1, '') . " (wrapping around)")
         endif
     endtry
 endfunction
@@ -412,7 +426,7 @@ function! ProjectFiles()
 endfunction
 
 function! SearchProject(...)
-    let l:term = input("Search: ", a:0 > 0 ? a:1 : "")
+    let l:term = input("Search: ", a:0 > 0 ? a:1 : '')
     if empty(l:term)
         return
     endif
@@ -420,14 +434,14 @@ function! SearchProject(...)
     let l:dir = input("From dir: ", l:old_dir . '/', 'dir')
     if l:dir !=# ''
         try
-            execute 'cd ' . l:dir
+            silent execute 'cd' l:dir
         catch
             return
         endtry
     endif
-    execute 'Rg ' . l:term
+    silent execute 'Rg' l:term
     if l:dir !=# ''
-        execute 'cd ' . l:old_dir
+        silent execute 'cd' l:old_dir
     endif
     let @/ = l:term
 endfunction
@@ -459,7 +473,7 @@ function! ToggleSourceHeader()
         for l:c in l:source_extensions
             let l:file = expand('%:r') . '.' . l:c
             if filereadable(l:file)
-                execute 'e ' . l:file
+                execute 'e' l:file
                 return
             endif
         endfor
@@ -468,7 +482,7 @@ function! ToggleSourceHeader()
         for l:h in l:header_extensions
             let l:file = expand('%:r') . '.' . l:h
             if filereadable(l:file)
-                execute 'e ' . l:file
+                execute 'e' l:file
                 return
             endif
         endfor
@@ -492,7 +506,7 @@ function! KillBuffer(bang)
     let l:wnums = filter(range(1, winnr('$')), 'winbufnr(v:val) == l:btarget')
     let l:wcurrent = winnr()
     for l:w in l:wnums
-        execute l:w . 'wincmd w'
+        silent execute l:w 'wincmd w'
         let l:balt = bufnr('#')
         if l:balt > 0 && buflisted(l:balt) && l:balt != l:btarget
             buffer #
@@ -508,19 +522,19 @@ function! KillBuffer(bang)
             " Take the first buffer, if any (could be more intelligent).
             let l:bjump = (l:bhidden + l:blisted + [-1])[0]
             if l:bjump > 0
-                execute 'buffer '. l:bjump
+                silent execute 'buffer' l:bjump
             else
-                execute 'enew' . a:bang
+                silent execute 'enew' . a:bang
             endif
         endif
     endfor
-    execute 'bdelete' . a:bang . ' ' . l:btarget
-    execute l:wcurrent . 'wincmd w'
+    silent execute 'bdelete' . a:bang l:btarget
+    silent execute l:wcurrent 'wincmd w'
 endfunction
 
 function! ClosePreviewOrQuitExpr(bang)
     for l:w in range(1, winnr('$'))
-        if getwinvar(l:w, "&pvw") == 1
+        if getwinvar(l:w, '&pvw') == 1
             return ':pclose' . a:bang . "\<CR>"
         endif
     endfor
@@ -528,12 +542,26 @@ function! ClosePreviewOrQuitExpr(bang)
 endfunction
 
 function! EightyColumns(...)
-    let l:on = a:0 > 0 ? a:1 : (empty(&colorcolumn) || &colorcolumn == 0)
+    let l:on = a:0 > 0 ? a:1 : (empty(&colorcolumn) || &colorcolumn ==# '0')
     if l:on
         setlocal textwidth=80 colorcolumn=+1
     else
         setlocal textwidth=0 colorcolumn=0
     endif
+endfunction
+
+function! DeleteHiddenBuffers()
+    let l:tpbl = []
+    let l:closed = 0
+    call map(range(1, tabpagenr('$')), 'extend(l:tpbl, tabpagebuflist(v:val))')
+    let l:filter = 'buflisted(v:val) && index(l:tpbl, v:val) == -1'
+    for buf in filter(range(1, bufnr('$')), l:filter)
+        if getbufvar(buf, '&mod') == 0
+            silent execute 'bdelete' buf
+            let l:closed += 1
+        endif
+    endfor
+    echo "Deleted " . l:closed . " hidden buffers"
 endfunction
 
 " =========== Color scheme =====================================================
