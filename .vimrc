@@ -23,11 +23,11 @@ Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'kana/vim-textobj-user'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
-Plug 'mk12/vim-cppman'
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
 Plug 'tpope/vim-commentary', { 'on': 'Commentary' }
 Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
@@ -58,6 +58,7 @@ set backup
 set cmdheight=2
 set colorcolumn=+1
 set cursorline
+set exrc
 set gdefault
 set hidden
 set ignorecase
@@ -72,6 +73,7 @@ set noshowmode
 set nostartofline
 set number
 set scrolloff=4
+set secure
 set shiftround
 set showcmd
 set smartcase
@@ -121,12 +123,23 @@ nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 " Since <Tab> and <C-i> are the same, I need a new mapping for <C-i>.
 nnoremap <C-q> <C-i>
 
-nnoremap <silent> <C-]> :call CaseSensitiveTagJump('tag', expand('<cword>'))<CR>
-nnoremap <silent> <C-p> :call CycleTags('tprevious', 'tlast')<CR>
-nnoremap <silent> <C-n> :call CycleTags('tnext', 'tfirst')<CR>
+nnoremap <silent> <C-]> :call CaseSensitiveTagJump()<CR>
+nnoremap <silent> <C-w>] <C-w>s:call CaseSensitiveTagJump()<CR>
+nnoremap <silent> <C-w><C-]> <C-w>s:call CaseSensitiveTagJump()<CR>
 
-nmap ]c <Plug>GitGutterNextHunk
+nnoremap <silent> [t :call CycleTags('tprevious', 'tlast')<CR>
+nnoremap <silent> ]t :call cycletags('tnext', 'tfirst')<cr>
+
+nnoremap <silent> <expr> [e ':<C-u>m-' . (v:count1 + 1) . '<CR>=='
+nnoremap <silent> <expr> ]e ':<C-u>m+' . v:count1 . '<CR>=='
+vnoremap <silent> <expr> [e ":m'<-" . (v:count1 + 1) . '<CR>gv=gv'
+vnoremap <silent> <expr> ]e ":m'>+" . v:count1 . '<CR>gv=gv'
+
+nnoremap <expr> [<Space> 'mv' . v:count1 . 'O<Esc>`v'
+nnoremap <expr> ]<Space> 'mv' . v:count1 . 'o<Esc>`v'
+
 nmap [c <Plug>GitGutterPrevHunk
+nmap ]c <Plug>GitGutterNextHunk
 
 " =========== Shortcuts ========================================================
 
@@ -147,13 +160,7 @@ Shortcut project-wide search
     \ nnoremap <silent> <Leader>/ :call SearchProject()<CR>
 Shortcut project-wide search with input
     \ nnoremap <silent> <Leader>* :call SearchProject(expand('<cword>'))<CR>
-    \|vnoremap <silent> <Leader>* y:call SearchProject(@")<CR>
-
-Shortcut show tag in preview window
-    \ nnoremap <silent> <Leader>]
-        \ :call CaseSensitiveTagJump('ptag', expand('<cword>'))<CR>
-    \|vnoremap <silent> <Leader>]
-        \ y:call CaseSensitiveTagJump('ptag', @")<CR>
+    \|vnoremap <silent> <Leader>* "vy:call SearchProject(@v)<CR>
 
 Shortcut toggle comment
     \ nnoremap <Leader>c :Commentary<CR>
@@ -164,7 +171,7 @@ Shortcut indent lines
     \|vnoremap <Leader>di =
 Shortcut show number of search matches
     \ nnoremap <Leader>dm :%s/<C-r>///n<CR>
-    \|vnoremap <Leader>dm y:%s/<C-r>"//n<CR>
+    \|vnoremap <Leader>dm "vy:%s/<C-r>v//n<CR>
 Shortcut sort lines
     \ nnoremap <Leader>ds vip:sort<CR>
     \|vnoremap <Leader>ds :sort<CR>
@@ -240,9 +247,9 @@ Shortcut view tags in project
     \ nnoremap <Leader>pT :Tags<CR>
 
 Shortcut quit
-    \ nnoremap <expr> <Leader>q ClosePreviewOrQuitExpr('')
+    \ nnoremap <Leader>q :quit<CR>
     Shortcut force quit
-    \ nnoremap <expr> <Leader>Q ClosePreviewOrQuitExpr('!')
+    \ nnoremap <Leader>Q :quit!<CR>
 
 Shortcut save/write file
     \ nnoremap <Leader>s :write<CR>
@@ -373,11 +380,11 @@ function! PrevBufOrTab()
     endif
 endfunction
 
-function! CaseSensitiveTagJump(cmd, tag)
+function! CaseSensitiveTagJump()
     let l:save_ic = &ignorecase
     set noignorecase
     try
-        execute a:cmd a:tag
+        execute 'tag' expand('<cword>')
     catch
         call s:EchoException()
     finally
@@ -386,22 +393,14 @@ function! CaseSensitiveTagJump(cmd, tag)
 endfunction
 
 function! CycleTags(next, first)
-    let l:prefix = ''
-    let l:win_id = win_getid()
-    for l:w in range(1, winnr('$'))
-        if getwinvar(l:w, '&pvw') == 1
-            let l:prefix = 'p'
-            let l:win_id = win_getid(l:w)
-            break
-        endif
-    endfor
     try
-        execute l:prefix . a:next
+        execute a:next
     catch
+        let l:win_id = win_getid()
         let l:old_info = getwininfo(l:win_id)
         try
             redir => l:output
-            execute l:prefix . a:first
+            execute a:first
             redir END
         catch
             redir END
@@ -460,7 +459,6 @@ function! FormatCode()
     if &filetype ==# 'c' || &filetype ==# 'cpp'
         write
         silent !clang-format -i %
-        edit
     else
         call s:Error("Unable to format " . &filetype . " file")
     endif
@@ -473,7 +471,7 @@ function! ToggleSourceHeader()
         for l:c in l:source_extensions
             let l:file = expand('%:r') . '.' . l:c
             if filereadable(l:file)
-                execute 'e' l:file
+                silent execute 'e' l:file
                 return
             endif
         endfor
@@ -482,7 +480,7 @@ function! ToggleSourceHeader()
         for l:h in l:header_extensions
             let l:file = expand('%:r') . '.' . l:h
             if filereadable(l:file)
-                execute 'e' l:file
+                silent execute 'e' l:file
                 return
             endif
         endfor
@@ -530,15 +528,6 @@ function! KillBuffer(bang)
     endfor
     silent execute 'bdelete' . a:bang l:btarget
     silent execute l:wcurrent 'wincmd w'
-endfunction
-
-function! ClosePreviewOrQuitExpr(bang)
-    for l:w in range(1, winnr('$'))
-        if getwinvar(l:w, '&pvw') == 1
-            return ':pclose' . a:bang . "\<CR>"
-        endif
-    endfor
-    return ':quit' . a:bang . "\<CR>"
 endfunction
 
 function! EightyColumns(...)
