@@ -560,6 +560,8 @@ endfunction
 set termguicolors
 set background=dark
 colorscheme onedark
+highlight clear NonText
+highlight link NonText Comment
 
 " =========== Encryption =======================================================
 
