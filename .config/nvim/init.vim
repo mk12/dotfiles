@@ -27,6 +27,7 @@ Plug 'tpope/vim-commentary', { 'on': 'Commentary' }
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
@@ -128,6 +129,9 @@ vnoremap <silent> <expr> ]e ":m'>+" . v:count1 . '<CR>gv=gv'
 nnoremap <expr> [<Space> 'mv' . v:count1 . 'O<Esc>`v'
 nnoremap <expr> ]<Space> 'mv' . v:count1 . 'o<Esc>`v'
 
+nnoremap <silent> [n :call search('^[<=><Bar>]\{7}', 'bW')<CR>
+nnoremap <silent> ]n :call search('^[<=><Bar>]\{7}', 'W')<CR>
+
 nmap [c <Plug>GitGutterPrevHunk
 nmap ]c <Plug>GitGutterNextHunk
 
@@ -174,6 +178,8 @@ Shortcut yank to system clipboard
 
 Shortcut edit fish config
     \ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
+Shortcut delete hidden buffers
+    \ nnoremap <Leader>eh :call DeleteHiddenBuffers()<CR>
 Shortcut edit journal file
     \ nnoremap <Leader>ej :edit ~/ia/Journal/Journal.txt<CR>
 Shortcut edit new buffer
@@ -208,9 +214,6 @@ Shortcut git write/add
 Shortcut switch between header/source
     \ nnoremap <Leader>h :call ToggleSourceHeader()<CR>
 
-Shortcut just keep visible buffers
-    \ nnoremap <Leader>j :call DeleteHiddenBuffers()<CR>
-
 Shortcut kill/delete buffer
     \ nnoremap <silent> <leader>k :call KillBuffer('')<CR>
 Shortcut force kill/delete buffer
@@ -223,7 +226,9 @@ Shortcut view buffers
     \ nnoremap <Leader>pb :Buffers<CR>
 Shortcut view git commits
     \ nnoremap <Leader>pc :Commits<CR>
-Shortcut view files
+Shortcut view files in a directory
+    \ nnoremap <expr> <Leader>pd ':Files ' . InputDirectory() . '<CR>'
+Shortcut view files in working directory
     \ nnoremap <Leader>pf :Files<CR>
 Shortcut view git files
     \ nnoremap <Leader>pg :GFiles<CR>
@@ -258,6 +263,8 @@ Shortcut toggle git line highlight
     \ nnoremap <Leader>tl :GitGutterLineHighlightsToggle<CR>
 Shortcut toggle line numbers
     \ nnoremap <Leader>tn :set number!<CR>
+Shortcut toggle obsess/session tracking
+    \ nnoremap <Leader>to :Obsess!<CR>
 Shortcut toggle paste mode
     \ nnoremap <Leader>tp :set paste!<CR>
 Shortcut toggle relative line numbers
@@ -336,6 +343,10 @@ endfunction
 
 function! s:EchoException()
     call s:Error(substitute(v:exception, '^Vim.\{-}:', '', ''))
+endfunction
+
+function! InputDirectory()
+    return input("From dir: ", getcwd() . '/', 'dir')
 endfunction
 
 function! VisualReplaceExpr()
@@ -422,7 +433,7 @@ function! SearchProject(...)
         return
     endif
     let l:old_dir = getcwd()
-    let l:dir = input("From dir: ", l:old_dir . '/', 'dir')
+    let l:dir = InputDirectory()
     if l:dir !=# ''
         try
             silent execute 'cd' l:dir

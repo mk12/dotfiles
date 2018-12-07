@@ -49,6 +49,14 @@ function add_paths --description "Add to the PATH"
     end
 end
 
+function open_editor --description "Open EDITOR (with Session.vim if present)"
+    if test (count $argv) -eq 0 -a -f Session.vim
+        env $EDITOR -S Session.vim
+    else
+        env $EDITOR $argv
+    end
+end
+
 alias ls "echo 'You forgot to use l!'"
 if command -qv exa
     alias l "exa"
@@ -60,13 +68,13 @@ else
     alias la "command ls -Ghla"
 end
 
+alias vi open_editor
+alias vim open_editor
+alias nvim open_editor
 if command -qv nvim
-    alias vi "nvim"
-    alias vim "nvim"
     set -x EDITOR nvim
     set -x VISUAL nvim
 else
-    alias vi "vim"
     set -x EDITOR vim
     set -x VISUAL vim
 end
