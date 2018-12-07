@@ -208,6 +208,8 @@ Shortcut git pull
     \ nnoremap <Leader>gl :Gpull<CR>
 Shortcut git push
     \ nnoremap <Leader>gp :Gpush<CR>
+Shortcut git read/checkout
+    \ nnoremap <Leader>gr :Gread<CR>
 Shortcut git status
     \ nnoremap <Leader>gs :Gstatus<CR>
 Shortcut git write/add
