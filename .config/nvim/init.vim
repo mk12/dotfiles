@@ -494,7 +494,7 @@ function! FormatCode() abort
         silent write
         let l:view = winsaveview()
         silent !clang-format -i %
-        winrestview(l:view)
+        call winrestview(l:view)
     else
         call s:Error("Unable to format " . &filetype . " file")
     endif
