@@ -25,13 +25,19 @@ Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
+Plug 'tpope/vim-apathy'
 Plug 'tpope/vim-commentary', { 'on': 'Commentary' }
+Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
+Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-vinegar'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -59,7 +65,6 @@ set backup
 set cmdheight=2
 set colorcolumn=+1
 set cursorline
-set exrc
 set gdefault
 set hidden
 set ignorecase
@@ -74,10 +79,10 @@ set noshowmode
 set nostartofline
 set number
 set scrolloff=4
-set secure
 set shiftround
 set showcmd
 set smartcase
+set suffixes-=.h
 set textwidth=80
 set undofile
 set visualbell
@@ -110,13 +115,13 @@ noremap : ;
 
 nnoremap Y y$
 
-vnoremap > >gv
-vnoremap < <gv
+xnoremap < <gv
+xnoremap > >gv
 
-vnoremap <silent> <expr> p VisualReplaceExpr()
+xnoremap <silent> <expr> p VisualReplaceExpr()
 
 nnoremap <silent> Q :call ReflowText()<CR>
-vnoremap Q gq
+xnoremap Q gq
 
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
@@ -128,22 +133,12 @@ nnoremap <silent> <C-]> :call CaseSensitiveTagJump()<CR>
 nnoremap <silent> <C-w>] <C-w>s:call CaseSensitiveTagJump()<CR>
 nnoremap <silent> <C-w><C-]> <C-w>s:call CaseSensitiveTagJump()<CR>
 
-nnoremap <silent> [t :call CycleTags('tprevious', 'tlast')<CR>
-nnoremap <silent> ]t :call cycletags('tnext', 'tfirst')<cr>
-
-nnoremap <silent> <expr> [e ':<C-u>m-' . (v:count1 + 1) . '<CR>=='
-nnoremap <silent> <expr> ]e ':<C-u>m+' . v:count1 . '<CR>=='
-vnoremap <silent> <expr> [e ":m'<-" . (v:count1 + 1) . '<CR>gv=gv'
-vnoremap <silent> <expr> ]e ":m'>+" . v:count1 . '<CR>gv=gv'
-
-nnoremap <expr> [<Space> 'mv' . v:count1 . 'O<Esc>`v'
-nnoremap <expr> ]<Space> 'mv' . v:count1 . 'o<Esc>`v'
-
-nnoremap <silent> [n :call search('^[<=><Bar>]\{7}', 'bW')<CR>
-nnoremap <silent> ]n :call search('^[<=><Bar>]\{7}', 'W')<CR>
-
-nmap [c <Plug>GitGutterPrevHunk
-nmap ]c <Plug>GitGutterNextHunk
+nmap [h <Plug>GitGutterPrevHunk
+nmap ]h <Plug>GitGutterNextHunk
+omap ih <Plug>GitGutterTextObjectInnerPending
+omap ah <Plug>GitGutterTextObjectOuterPending
+xmap ih <Plug>GitGutterTextObjectInnerVisual
+xmap ah <Plug>GitGutterTextObjectOuterVisual
 
 " =========== Shortcuts ========================================================
 
@@ -164,27 +159,30 @@ Shortcut project-wide search
     \ nnoremap <silent> <Leader>/ :call SearchProject()<CR>
 Shortcut project-wide search with input
     \ nnoremap <silent> <Leader>* :call SearchProject(expand('<cword>'))<CR>
-    \|vnoremap <silent> <Leader>* "vy:call SearchProject(@v)<CR>
+    \|xnoremap <silent> <Leader>* "vy:call SearchProject(@v)<CR>
+
+Shortcut go to alternate file
+    \ nnoremap <silent> <Leader>a :call AlternateFile()<CR>
 
 Shortcut toggle comment
     \ nnoremap <Leader>c :Commentary<CR>
-    \|vnoremap <Leader>c :Commentary<CR>
+    \|xnoremap <Leader>c :Commentary<CR>
 
 Shortcut indent lines
     \ nnoremap <Leader>di =ip
-    \|vnoremap <Leader>di =
+    \|xnoremap <Leader>di =
 Shortcut show number of search matches
     \ nnoremap <Leader>dm :%s/<C-r>///n<CR>
-    \|vnoremap <Leader>dm "vy:%s/<C-r>v//n<CR>
+    \|xnoremap <Leader>dm "vy:%s/<C-r>v//n<CR>
 Shortcut sort lines
     \ nnoremap <Leader>ds vip:sort<CR>
-    \|vnoremap <Leader>ds :sort<CR>
+    \|xnoremap <Leader>ds :sort<CR>
 Shortcut remove trailing whitespace
     \ nnoremap <Leader>dw :%s/\s\+$//e<CR><C-o>
-    \|vnoremap <Leader>dw :s/\s\+$//e<CR>
+    \|xnoremap <Leader>dw :s/\s\+$//e<CR>
 Shortcut yank to system clipboard
     \ nnoremap <Leader>dy :%y*<Bar>call YankToSystemClipboard(@*)<CR>
-    \|vnoremap <Leader>dy "*y:call YankToSystemClipboard(@*)<CR>
+    \|xnoremap <Leader>dy "*y:call YankToSystemClipboard(@*)<CR>
 
 Shortcut edit fish config
     \ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
@@ -216,42 +214,70 @@ Shortcut git push
     \ nnoremap <Leader>gp :Gpush<CR>
 Shortcut git read/checkout
     \ nnoremap <Leader>gr :Gread<CR>
+Shortcut git read/checkout hunk
+    \ nmap <Leader>gR <Plug>GitGutterUndoHunk
 Shortcut git status
     \ nnoremap <Leader>gs :Gstatus<CR>
 Shortcut git write/add
     \ nnoremap <Leader>gw :Gwrite<CR>
+Shortcut git write/add hunk
+    \ nmap <Leader>gW <Plug>GitGutterStageHunk
 
-Shortcut switch between header/source
-    \ nnoremap <Leader>h :call ToggleSourceHeader()<CR>
+Shortcut get help
+    \ nnoremap <Leader>h :Helptags<CR>
+
+Shortcut jump to line in any buffer
+    \ nnoremap <Leader>ja :Lines<CR>
+Shortcut jump to git commit
+    \ nnoremap <Leader>jc :Commits<CR>
+Shortcut jump to file in a directory
+    \ nnoremap <expr> <Leader>jd ':Files ' . InputDirectory() . '<CR>'
+Shortcut jump to file in working directory
+    \ nnoremap <Leader>jf :Files<CR>
+Shortcut jump to git file
+    \ nnoremap <Leader>jg :GFiles<CR>
+Shortcut jump to line in buffer
+    \ nnoremap <Leader>jl :BLines<CR>
+Shortcut jump to symbol/tag in buffer
+    \ nnoremap <Leader>js :BTags<CR>
+Shortcut jump to tag in project
+    \ nnoremap <Leader>jt :Tags<CR>
 
 Shortcut kill/delete buffer
     \ nnoremap <silent> <leader>k :call KillBuffer('')<CR>
 Shortcut force kill/delete buffer
     \ nnoremap <silent> <Leader>K :call KillBuffer('!')<CR>
 
+Shortcut open console
+    \ nnoremap <Leader>mc :Console<CR>
+Shortcut open console in background
+    \ nnoremap <Leader>mC :Console!<CR>
+Shortcut dispatch default task
+    \ nnoremap <Leader>md :Dispatch<CR>
+Shortcut dispatch default task in background
+    \ nnoremap <Leader>mD :Dispatch!<CR>
+Shortcut make/build project
+    \ nnoremap <Leader>mm :Make<CR>
+Shortcut make/build project in background
+    \ nnoremap <Leader>mM :Make!<CR>
+Shortcut open build results
+    \ nnoremap <Leader>mo :Copen<CR>
+Shortcut open catch-all build results
+    \ nnoremap <Leader>mO :Copen!<CR>
+Shortcut start project
+    \ nnoremap <Leader>ms :Start<CR>
+Shortcut start project in background
+    \ nnoremap <Leader>mS :Start!<CR>
+
 Shortcut stop highlighting the search
     \ nnoremap <Leader>n :nohlsearch<CR>
 
-Shortcut view buffers
-    \ nnoremap <Leader>pb :Buffers<CR>
-Shortcut view git commits
-    \ nnoremap <Leader>pc :Commits<CR>
-Shortcut view files in a directory
-    \ nnoremap <expr> <Leader>pd ':Files ' . InputDirectory() . '<CR>'
-Shortcut view files in working directory
-    \ nnoremap <Leader>pf :Files<CR>
-Shortcut view git files
-    \ nnoremap <Leader>pg :GFiles<CR>
-Shortcut view help tags
-    \ nnoremap <Leader>ph :Helptags<CR>
-Shortcut view lines in buffer
-    \ nnoremap <Leader>pl :BLines<CR>
-Shortcut view lines in all buffers
-    \ nnoremap <Leader>pL :Lines<CR>
-Shortcut view tags in buffer
-    \ nnoremap <Leader>pt :BTags<CR>
-Shortcut view tags in project
-    \ nnoremap <Leader>pT :Tags<CR>
+Shortcut clean plugins
+    \ nnoremap <Leader>pc :PlugClean<CR>
+Shortcut install plugins
+    \ nnoremap <Leader>pi :PlugInstall<CR>
+Shortcut update plugins
+    \ nnoremap <Leader>pu :PlugUpdate<CR>
 
 Shortcut quit
     \ nnoremap <Leader>q :quit<CR>
@@ -339,37 +365,37 @@ augroup END
 
 " =========== Functions ========================================================
 
-function! s:Error(msg)
+function! s:Error(msg) abort
     echohl ErrorMSg
     echomsg a:msg
     echohl Normal
 endfunction
 
-function! s:Warning(msg)
+function! s:Warning(msg) abort
     echohl WarningMsg
     echomsg a:msg
     echohl Normal
 endfunction
 
-function! s:EchoException()
+function! s:EchoException() abort
     call s:Error(substitute(v:exception, '^Vim.\{-}:', '', ''))
 endfunction
 
-function! InputDirectory()
+function! InputDirectory() abort
     return input("From dir: ", getcwd() . '/', 'dir')
 endfunction
 
-function! VisualReplaceExpr()
+function! VisualReplaceExpr() abort
     let s:restore_reg = @"
     return "p@=RestoreRegister()\<CR>"
 endfunction
 
-function! RestoreRegister()
+function! RestoreRegister() abort
     let @" = s:restore_reg
     return ''
 endfunction
 
-function! ReflowText()
+function! ReflowText() abort
     if synIDattr(synID(line('.'), col('.'), 1), 'name') =~? 'comment'
         normal! gqac
     else
@@ -377,7 +403,7 @@ function! ReflowText()
     endif
 endfunction
 
-function! NextBufOrTab()
+function! NextBufOrTab() abort
     if tabpagenr('$') > 1
         tabnext
     else
@@ -385,7 +411,7 @@ function! NextBufOrTab()
     endif
 endfunction
 
-function! PrevBufOrTab()
+function! PrevBufOrTab() abort
     if tabpagenr('$') > 1
         tabprevious
     else
@@ -393,7 +419,7 @@ function! PrevBufOrTab()
     endif
 endfunction
 
-function! CaseSensitiveTagJump()
+function! CaseSensitiveTagJump() abort
     let l:save_ic = &ignorecase
     set noignorecase
     try
@@ -405,31 +431,7 @@ function! CaseSensitiveTagJump()
     endtry
 endfunction
 
-function! CycleTags(next, first)
-    try
-        execute a:next
-    catch
-        let l:win_id = win_getid()
-        let l:old_info = getwininfo(l:win_id)
-        try
-            redir => l:output
-            execute a:first
-            redir END
-        catch
-            redir END
-            call s:Error("No tag stack")
-            return
-        endtry
-        if getwininfo(l:win_id) == l:old_info
-            call s:Warning("No other matches")
-        else
-            call s:Warning(
-                \ get(split(l:output, "\n"), -1, '') . " (wrapping around)")
-        endif
-    endtry
-endfunction
-
-function! ProjectFiles()
+function! ProjectFiles() abort
     if !empty(glob('.git'))
         GitFiles
     else
@@ -437,7 +439,7 @@ function! ProjectFiles()
     endif
 endfunction
 
-function! SearchProject(...)
+function! SearchProject(...) abort
     let l:term = input("Search: ", a:0 > 0 ? a:1 : '')
     if empty(l:term)
         return
@@ -458,8 +460,37 @@ function! SearchProject(...)
     let @/ = l:term
 endfunction
 
+function! AlternateFile() abort
+    let l:header_extensions = ['h', 'hpp', 'hh']
+    let l:source_extensions = ['c', 'cpp', 'cc']
+    if index(l:header_extensions, expand('%:e')) >= 0
+        for l:c in l:source_extensions
+            let l:file = expand('%:r') . '.' . l:c
+            if filereadable(l:file)
+                silent execute 'edit' l:file
+                echo l:file
+                return
+            endif
+        endfor
+    elseif index(l:source_extensions, expand('%:e')) >= 0
+        for l:h in l:header_extensions
+            let l:file = expand('%:r') . '.' . l:h
+            if filereadable(l:file)
+                silent execute 'edit' l:file
+                echo l:file
+                return
+            endif
+        endfor
+    endif
+    try
+        A
+    catch
+        call s:EchoException()
+    endtry
+endfunction
+
 " https://sunaku.github.io/tmux-yank-osc52.html
-function! YankToSystemClipboard(text)
+function! YankToSystemClipboard(text) abort
     let l:escape = system('yank', a:text)
     if v:shell_error
         echoerr l:escape
@@ -468,43 +499,19 @@ function! YankToSystemClipboard(text)
     endif
 endfunction
 
-function! FormatCode()
+function! FormatCode() abort
     if &filetype ==# 'c' || &filetype ==# 'cpp'
-        write
+        silent write
+        let l:view = winsaveview()
         silent !clang-format -i %
+        winrestview(l:view)
     else
         call s:Error("Unable to format " . &filetype . " file")
     endif
 endfunction
 
-function! ToggleSourceHeader()
-    let l:header_extensions = ['h', 'hpp', 'hh']
-    let l:source_extensions = ['c', 'cpp', 'cc']
-    if index(l:header_extensions, expand('%:e')) >= 0
-        for l:c in l:source_extensions
-            let l:file = expand('%:r') . '.' . l:c
-            if filereadable(l:file)
-                silent execute 'e' l:file
-                return
-            endif
-        endfor
-        call s:Error("Can't find source file")
-    elseif index(l:source_extensions, expand('%:e')) >= 0
-        for l:h in l:header_extensions
-            let l:file = expand('%:r') . '.' . l:h
-            if filereadable(l:file)
-                silent execute 'e' l:file
-                return
-            endif
-        endfor
-        call s:Error("Can't find header file")
-    else
-        call s:Error("Not a source file or header file")
-    endif
-endfunction
-
 " http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window#Script
-function! KillBuffer(bang)
+function! KillBuffer(bang) abort
     if &modified == 1 && empty(a:bang)
         try
             bdelete
@@ -539,11 +546,14 @@ function! KillBuffer(bang)
             endif
         endif
     endfor
-    silent execute 'bdelete' . a:bang l:btarget
+    " Might have been auto-deleted, for example if it was a FZF buffer.
+    if buflisted(l:btarget)
+        silent execute 'bdelete' . a:bang l:btarget
+    endif
     silent execute l:wcurrent 'wincmd w'
 endfunction
 
-function! EightyColumns(...)
+function! EightyColumns(...) abort
     let l:on = a:0 > 0 ? a:1 : (empty(&colorcolumn) || &colorcolumn ==# '0')
     if l:on
         setlocal textwidth=80 colorcolumn=+1
@@ -552,7 +562,7 @@ function! EightyColumns(...)
     endif
 endfunction
 
-function! DeleteHiddenBuffers()
+function! DeleteHiddenBuffers() abort
     let l:tpbl = []
     let l:closed = 0
     call map(range(1, tabpagenr('$')), 'extend(l:tpbl, tabpagebuflist(v:val))')
