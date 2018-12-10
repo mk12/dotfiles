@@ -4,14 +4,20 @@
 shopt -s checkwinsize
 shopt -s histappend
 
+os=$(uname -s | tr "[A-Z]" "[a-z]")
+
 if command -v exa &> /dev/null; then
     alias l=exa
     alias ll='exa -l'
     alias la='exa -la'
-else
+elif [[ "$os" == darwin ]]; then
     alias l=ls
     alias ll='ls -Ghl'
     alias la='ls -Ghla'
+else
+    alias l=ls
+    alias ll='ls --color=auto -hl'
+    alias la='ls --color=auto -hla'
 fi
 
 if command -v nvim &> /dev/null; then

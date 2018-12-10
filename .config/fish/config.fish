@@ -57,15 +57,18 @@ function open_editor --description "Open EDITOR (with Session.vim if present)"
     end
 end
 
-alias ls "echo 'You forgot to use l!'"
 if command -qv exa
     alias l "exa"
     alias ll "exa -l"
     alias la "exa -la"
-else
+else if test (uname -s | tr "[A-Z]" "[a-z]") = darwin
     alias l "command ls -G"
     alias ll "command ls -Ghl"
     alias la "command ls -Ghla"
+else
+    alias l "command ls --color=auto"
+    alias ll "command ls --color=auto -hl"
+    alias la "command ls --color=auto -hla"
 end
 
 alias vi open_editor
