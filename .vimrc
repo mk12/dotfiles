@@ -13,13 +13,14 @@ endif
 call plug#begin()
 
 Plug 'airblade/vim-gitgutter'
+Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
-Plug 'joshdick/onedark.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
+Plug 'justinmk/vim-dirvish'
 Plug 'kana/vim-textobj-user'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
@@ -37,7 +38,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-vinegar'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -55,7 +55,11 @@ let g:airline#extensions#default#layout = [['a', 'c'], ['x', 'y']]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_extensions = ['tabline']
 let g:airline_highlighting_cache = 1
-let g:airline_theme = 'onedark'
+let g:airline_theme = 'base16'
+
+let g:dispatch_no_maps = 1
+let g:dispatch_quickfix_height = 15
+let g:dispatch_tmux_height = 15
 
 let g:gitgutter_map_keys = 0
 
@@ -67,20 +71,24 @@ set colorcolumn=+1
 set cursorline
 set gdefault
 set hidden
+set hlsearch
 set ignorecase
 set lazyredraw
 set linebreak
 set listchars=eol:¬,tab:».,trail:~
 set mouse=a
 set mousefocus
+set noerrorbells
 set nofoldenable
 set nojoinspaces
+set noruler
 set noshowmode
 set nostartofline
 set number
-set scrolloff=4
+set scrolloff=1
 set shiftround
 set showcmd
+set sidescrolloff=5
 set smartcase
 set suffixes-=.h
 set textwidth=80
@@ -100,6 +108,11 @@ call mkdir(&directory, 'p')
 call mkdir(&backupdir, 'p')
 call mkdir(&undodir, 'p')
 
+" =========== Color scheme =====================================================
+
+set notermguicolors
+colorscheme base16-default-dark
+
 " =========== Mappings =========================================================
 
 nnoremap <Space> <Nop>
@@ -117,6 +130,13 @@ nnoremap Y y$
 
 xnoremap < <gv
 xnoremap > >gv
+
+nnoremap gV `[v`]
+
+nnoremap & :&&<CR>
+xnoremap & :&&<CR>
+
+inoremap <C-U> <C-G>u<C-U>
 
 xnoremap <silent> <expr> p VisualReplaceExpr()
 
@@ -178,11 +198,11 @@ Shortcut sort lines
     \ nnoremap <Leader>ds vip:sort<CR>
     \|xnoremap <Leader>ds :sort<CR>
 Shortcut remove trailing whitespace
-    \ nnoremap <Leader>dw :%s/\s\+$//e<CR><C-o>
+    \ nnoremap <Leader>dw :%s/\s\+$//e<CR>
     \|xnoremap <Leader>dw :s/\s\+$//e<CR>
 Shortcut yank to system clipboard
-    \ nnoremap <Leader>dy :%y*<Bar>call YankToSystemClipboard(@*)<CR>
-    \|xnoremap <Leader>dy "*y:call YankToSystemClipboard(@*)<CR>
+    \ nnoremap <Leader>dy :%y+<Bar>call YankToSystemClipboard(@+)<CR>
+    \|xnoremap <Leader>dy "+y:call YankToSystemClipboard(@+)<CR>
 
 Shortcut edit fish config
     \ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
@@ -223,7 +243,7 @@ Shortcut git write/add
 Shortcut git write/add hunk
     \ nmap <Leader>gW <Plug>GitGutterStageHunk
 
-Shortcut get help
+Shortcut find help
     \ nnoremap <Leader>h :Helptags<CR>
 
 Shortcut jump to line in any buffer
@@ -290,7 +310,7 @@ Shortcut force save/write file
     \ nnoremap <Leader>S :write!<CR>
 
 Shortcut toggle 80-column marker
-    \ nnoremap <Leader>t8 :call EightyColumns()<CR>
+    \ nnoremap <Leader>t8 :call ToggleColumnLimit()<CR>
 Shortcut toggle auto-pairs
     \ nnoremap <Leader>ta :call AutoPairsToggle()<CR>
 Shortcut toggle Goyo mode
@@ -361,6 +381,8 @@ augroup custom
 
     " By default GitGutter waits for 'updatetime' ms before updating.
     autocmd BufWritePost * GitGutter
+
+    autocmd User ProjectionistActivate call LoadCustomProjections()
 augroup END
 
 " =========== Functions ========================================================
@@ -499,15 +521,39 @@ function! YankToSystemClipboard(text) abort
     endif
 endfunction
 
+function! DeleteHiddenBuffers() abort
+    let l:tpbl = []
+    let l:closed = 0
+    call map(range(1, tabpagenr('$')), 'extend(l:tpbl, tabpagebuflist(v:val))')
+    let l:filter = 'buflisted(v:val) && index(l:tpbl, v:val) == -1'
+    for buf in filter(range(1, bufnr('$')), l:filter)
+        if getbufvar(buf, '&mod') == 0
+            silent execute 'bdelete' buf
+            let l:closed += 1
+        endif
+    endfor
+    echo "Deleted " . l:closed . " hidden buffers"
+endfunction
+
 function! FormatCode() abort
-    if &filetype ==# 'c' || &filetype ==# 'cpp'
-        silent write
-        let l:view = winsaveview()
-        silent !clang-format -i %
-        winrestview(l:view)
+    if exists('b:FormatCodePrg')
+        let l:cmd = b:FormatCodePrg
+    elseif &filetype ==# 'c' || &filetype ==# 'cpp'
+        let l:cmd = 'clang-format -i'
     else
         call s:Error("Unable to format " . &filetype . " file")
+        return
     endif
+    let l:first = split(l:cmd)[0]
+    if !executable(l:first)
+        call s:Error("Executable not found: " . l:first)
+        return
+    endif
+    silent write
+    let l:view = winsaveview()
+    silent execute '!' l:cmd '%'
+    silent edit
+    call winrestview(l:view)
 endfunction
 
 " http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window#Script
@@ -553,36 +599,26 @@ function! KillBuffer(bang) abort
     silent execute l:wcurrent 'wincmd w'
 endfunction
 
-function! EightyColumns(...) abort
-    let l:on = a:0 > 0 ? a:1 : (empty(&colorcolumn) || &colorcolumn ==# '0')
-    if l:on
-        setlocal textwidth=80 colorcolumn=+1
+function! ToggleColumnLimit() abort
+    if empty(&colorcolumn) || &colorcolumn ==# '0'
+        let &l:textwidth = get(b:, 'ColumnLimit', 80)
+        setlocal colorcolumn=+1
     else
         setlocal textwidth=0 colorcolumn=0
     endif
 endfunction
 
-function! DeleteHiddenBuffers() abort
-    let l:tpbl = []
-    let l:closed = 0
-    call map(range(1, tabpagenr('$')), 'extend(l:tpbl, tabpagebuflist(v:val))')
-    let l:filter = 'buflisted(v:val) && index(l:tpbl, v:val) == -1'
-    for buf in filter(range(1, bufnr('$')), l:filter)
-        if getbufvar(buf, '&mod') == 0
-            silent execute 'bdelete' buf
-            let l:closed += 1
-        endif
+function! LoadCustomProjections() abort
+    for [l:root, l:value] in projectionist#query('format')
+        let b:FormatCodePrg = l:value
+        break
     endfor
-    echo "Deleted " . l:closed . " hidden buffers"
+    for [l:root, l:value] in projectionist#query('wrap')
+        let b:ColumnLimit = l:value
+        let &l:textwidth = l:value
+        break
+    endfor
 endfunction
-
-" =========== Color scheme =====================================================
-
-set termguicolors
-set background=dark
-colorscheme onedark
-highlight clear NonText
-highlight link NonText Comment
 
 " =========== Encryption =======================================================
 
