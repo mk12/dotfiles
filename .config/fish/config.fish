@@ -6,6 +6,8 @@ if not functions -q fisher
     fish -c fisher
 end
 
+# =========== Functions ========================================================
+
 function upd --description "Update software"
     if command -qv brew
         echo "Updating homebrew"
@@ -49,7 +51,7 @@ function add_paths --description "Add to the PATH"
     end
 end
 
-function open_editor --description "Open EDITOR (with Session.vim if present)"
+function open_editor --description "Open the EDITOR"
     if test (count $argv) -eq 0 -a -f Session.vim
         env $EDITOR -S Session.vim
     else
@@ -57,23 +59,26 @@ function open_editor --description "Open EDITOR (with Session.vim if present)"
     end
 end
 
-if command -qv exa
-    alias l "exa"
-    alias ll "exa -l"
-    alias la "exa -la"
-else if test (uname -s | tr "[A-Z]" "[a-z]") = darwin
-    alias l "command ls -G"
-    alias ll "command ls -Ghl"
-    alias la "command ls -Ghla"
-else
-    alias l "command ls --color=auto"
-    alias ll "command ls --color=auto -hl"
-    alias la "command ls --color=auto -hla"
-end
+# =========== Aliases ==========================================================
 
 alias vi open_editor
 alias vim open_editor
 alias nvim open_editor
+
+alias gg "git branch; and git status -s"
+
+if command -qv exa
+    alias l "exa"
+    alias ll "exa -l"
+    alias la "exa -la"
+else
+    alias l "ls"
+end
+
+# =========== Variables ========================================================
+
+set -x PAGER less
+
 if command -qv nvim
     set -x EDITOR nvim
     set -x VISUAL nvim
@@ -86,11 +91,8 @@ if command -qv rg
     set -x FZF_DEFAULT_COMMAND "rg --files"
 end
 
-alias gg "git branch; and git status -s"
+# =========== Colors ===========================================================
 
-set -x PAGER less
-
-# Colors
 set fish_color_autosuggestion brblack
 set fish_color_cancel --reverse
 set fish_color_command blue
@@ -111,6 +113,8 @@ set fish_pager_color_description green
 set fish_pager_color_prefix white --bold --underline
 set fish_pager_color_progress brwhite --background=cyan
 
+# =========== Other config =====================================================
+
 # OS-specific configuration
 set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
 if test -e $specific
@@ -123,7 +127,9 @@ if test -e $secret
     source $secret
 end
 
-# Allow the other configs to override PROJECTS
+# =========== Epilogue =========================================================
+
+# Do this last so that other config can override PROJECTS.
 if test -z $PROJECTS
     set -x PROJECTS ~/GitHub
 end

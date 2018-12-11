@@ -4,38 +4,27 @@
 shopt -s checkwinsize
 shopt -s histappend
 
-os=$(uname -s | tr "[A-Z]" "[a-z]")
+open_editor() {
+    if [[ $# -eq 0 && -f Session.vim ]]; then
+        env $EDITOR -S Session.vim
+    else
+        env $EDITOR "$@"
+    fi
+}
+
+alias vi=open_editor
+alias vim=open_editor
+alias nvim=open_editor
+
+alias gg='git branch && git status -s'
 
 if command -v exa &> /dev/null; then
     alias l=exa
     alias ll='exa -l'
     alias la='exa -la'
-elif [[ "$os" == darwin ]]; then
-    alias l=ls
-    alias ll='ls -Ghl'
-    alias la='ls -Ghla'
 else
     alias l=ls
-    alias ll='ls --color=auto -hl'
-    alias la='ls --color=auto -hla'
 fi
-
-if command -v nvim &> /dev/null; then
-    alias vi=nvim
-    alias vim=nvim
-    export EDITOR=nvim
-    export VISUAL=nvim
-else
-    alias vi=vim
-    export EDITOR=vim
-    export VISUAL=vim
-fi
-
-if command -v rg &> /dev/null; then
-    export FZF_DEFAULT_COMMAND='rg --files'
-fi
-
-alias gg='git branch && git status -s'
 
 export CLICOLOR=true
 export GREP_OPTIONS='--color=auto'
@@ -46,9 +35,20 @@ export LESS='-MerX'
 export LESSHISTFILE='-'
 export PAGER=less
 
+if command -v nvim &> /dev/null; then
+    export EDITOR=nvim
+    export VISUAL=nvim
+else
+    export EDITOR=vim
+    export VISUAL=vim
+fi
+
+if command -v rg &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='rg --files'
+fi
+
 export PROJECTS=~/GitHub
 export LEDGER_FILE=$PROJECTS/finance/journal.ledger
-
 for p in $PROJECTS/scripts ~/.fzf/bin ~/.cargo/bin; do
     [[ $PATH != *$p* && -d $p ]] && PATH=$PATH:$p
 done
