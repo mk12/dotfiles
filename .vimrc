@@ -35,6 +35,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
@@ -94,6 +95,7 @@ set suffixes-=.h
 set textwidth=80
 set undofile
 set visualbell
+set wildmode=longest,full
 
 if !exists('g:loaded_sleuth')
     set expandtab
@@ -168,10 +170,12 @@ Shortcut open shortcut menu
 
 Shortcut go to file in project
     \ nnoremap <silent> <Leader><Leader> :call ProjectFiles()<CR>
-Shortcut go to open buffer
-    \ nnoremap <silent> <Leader><Tab> :Buffers<CR>
 Shortcut go to file in same directory
     \ nnoremap <silent> <Leader>. :Files %:h<CR>
+Shortcut go to file in a directory
+    \ nnoremap <expr> <Leader>, ':Files ' . InputDirectory() . '<CR>'
+Shortcut go to open buffer
+    \ nnoremap <silent> <Leader><Tab> :Buffers<CR>
 Shortcut go to last buffer
     \ nnoremap <silent> <Leader><BS> :buffer #<CR>
 
@@ -226,10 +230,14 @@ Shortcut git blame
     \ nnoremap <Leader>gb :Gblame<CR>
 Shortcut git commit
     \ nnoremap <Leader>gc :Gcommit<CR>
+Shortcut git commit verbose
+    \ nnoremap <Leader>gC :Gcommit -v<CR>
 Shortcut git diff
     \ nnoremap <Leader>gd :Gdiff<CR>
-Shortcut git pull
-    \ nnoremap <Leader>gl :Gpull<CR>
+Shortcut browse on GitHub
+    \ nnoremap <Leader>gh :Gbrowse<CR>
+Shortcut git log
+    \ nnoremap <Leader>gl :Commits<CR>
 Shortcut git push
     \ nnoremap <Leader>gp :Gpush<CR>
 Shortcut git read/checkout
@@ -238,6 +246,10 @@ Shortcut git read/checkout hunk
     \ nmap <Leader>gR <Plug>GitGutterUndoHunk
 Shortcut git status
     \ nnoremap <Leader>gs :Gstatus<CR>
+Shortcut git pull/update
+    \ nnoremap <Leader>gu :Gpull<CR>
+Shortcut git view versions
+    \ nnoremap <Leader>gv :silent Glog<CR>
 Shortcut git write/add
     \ nnoremap <Leader>gw :Gwrite<CR>
 Shortcut git write/add hunk
@@ -248,16 +260,12 @@ Shortcut find help
 
 Shortcut jump to line in any buffer
     \ nnoremap <Leader>ja :Lines<CR>
-Shortcut jump to git commit
-    \ nnoremap <Leader>jc :Commits<CR>
-Shortcut jump to file in a directory
-    \ nnoremap <expr> <Leader>jd ':Files ' . InputDirectory() . '<CR>'
-Shortcut jump to file in working directory
-    \ nnoremap <Leader>jf :Files<CR>
-Shortcut jump to git file
-    \ nnoremap <Leader>jg :GFiles<CR>
+Shortcut jump/switch to filetype
+    \ nnoremap <Leader>jf :Filetypes<CR>
 Shortcut jump to line in buffer
     \ nnoremap <Leader>jl :BLines<CR>
+Shortcut jump to mark
+    \ nnoremap <Leader>jm :Marks<CR>
 Shortcut jump to symbol/tag in buffer
     \ nnoremap <Leader>js :BTags<CR>
 Shortcut jump to tag in project
@@ -379,16 +387,19 @@ augroup custom
     autocmd FileType text,markdown setlocal textwidth=0 colorcolumn=0
     autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
 
+    autocmd User ProjectionistActivate call LoadCustomProjections()
+
     " By default GitGutter waits for 'updatetime' ms before updating.
     autocmd BufWritePost * GitGutter
 
-    autocmd User ProjectionistActivate call LoadCustomProjections()
+    " Sometimes Airline doesn't clean up properly.
+    autocmd BufWipeout * call airline#extensions#tabline#buflist#clean()
 augroup END
 
 " =========== Functions ========================================================
 
 function! s:Error(msg) abort
-    echohl ErrorMSg
+    echohl ErrorMsg
     echomsg a:msg
     echohl Normal
 endfunction
@@ -455,7 +466,7 @@ endfunction
 
 function! ProjectFiles() abort
     if !empty(glob('.git'))
-        GitFiles
+        GFiles
     else
         Files
     endif
