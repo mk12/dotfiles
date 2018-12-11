@@ -390,7 +390,7 @@ augroup custom
     autocmd User ProjectionistActivate call LoadCustomProjections()
 
     " By default GitGutter waits for 'updatetime' ms before updating.
-    autocmd BufWritePost * GitGutter
+    autocmd BufWritePost,WinEnter * GitGutter
 
     " Sometimes Airline doesn't clean up properly.
     autocmd BufWipeout * call airline#extensions#tabline#buflist#clean()
