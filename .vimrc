@@ -54,9 +54,11 @@ let g:AutoPairsShortcutToggle = ''
 
 let g:airline#extensions#default#layout = [['a', 'c'], ['x', 'y']]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline_base16_improved_contrast = 0
+let g:airline_base16_monotone = 1
 let g:airline_extensions = ['tabline']
 let g:airline_highlighting_cache = 1
-let g:airline_theme = 'base16'
+let g:airline_theme = 'base16_vim'
 
 let g:dispatch_no_maps = 1
 let g:dispatch_quickfix_height = 15
@@ -115,6 +117,12 @@ call mkdir(&undodir, 'p')
 set notermguicolors
 colorscheme base16-default-dark
 
+hi clear StatusLine
+hi link StatusLine PMenu
+hi clear WildMenu
+hi link WildMenu PMenuSel
+hi Normal ctermbg=NONE
+
 " =========== Mappings =========================================================
 
 nnoremap <Space> <Nop>
@@ -130,15 +138,17 @@ noremap : ;
 
 nnoremap Y y$
 
+inoremap <C-U> <C-G>u<C-U>
+
+nnoremap & :&&<CR>
+xnoremap & :&&<CR>
+
 xnoremap < <gv
 xnoremap > >gv
 
 nnoremap gV `[v`]
 
-nnoremap & :&&<CR>
-xnoremap & :&&<CR>
-
-inoremap <C-U> <C-G>u<C-U>
+nnoremap gh :echo synIDattr(synID(line('.'), col('.'), 1), 'name')<CR>
 
 xnoremap <silent> <expr> p VisualReplaceExpr()
 
@@ -152,8 +162,11 @@ nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 nnoremap <C-q> <C-i>
 
 nnoremap <silent> <C-]> :call CaseSensitiveTagJump()<CR>
-nnoremap <silent> <C-w>] <C-w>s:call CaseSensitiveTagJump()<CR>
-nnoremap <silent> <C-w><C-]> <C-w>s:call CaseSensitiveTagJump()<CR>
+xnoremap <silent> <C-]> "vy:call CaseSensitiveTagJump(@v)<CR>
+nmap <C-w>] <C-w>s<C-]>
+xmap <C-w>] <C-w>s<C-]>
+nmap <C-w><C-]> <C-w>]
+xmap <C-w><C-]> <C-w>]
 
 nmap [h <Plug>GitGutterPrevHunk
 nmap ]h <Plug>GitGutterNextHunk
@@ -452,11 +465,12 @@ function! PrevBufOrTab() abort
     endif
 endfunction
 
-function! CaseSensitiveTagJump() abort
+function! CaseSensitiveTagJump(...) abort
+    let l:term = a:0 > 0 ? a:1 : expand('<cword>')
     let l:save_ic = &ignorecase
     set noignorecase
     try
-        execute 'tag' expand('<cword>')
+        execute 'tag' l:term
     catch
         call s:EchoException()
     finally
@@ -569,7 +583,7 @@ endfunction
 
 " http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window#Script
 function! KillBuffer(bang) abort
-    if &modified == 1 && empty(a:bang)
+    if empty(a:bang) && (&modified == 1 || &buftype ==# 'terminal')
         try
             bdelete
         catch
