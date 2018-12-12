@@ -445,7 +445,7 @@ endfunction
 
 function! ReflowText() abort
     if synIDattr(synID(line('.'), col('.'), 1), 'name') =~? 'comment'
-        normal! gqac
+        normal gqac
     else
         normal! gqap
     endif
