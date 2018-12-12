@@ -35,16 +35,20 @@ export LESS='-MerX'
 export LESSHISTFILE='-'
 export PAGER=less
 
+export FZF_DEFAULT_OPTS="
+    --color=bg+:10,bg:0,fg+:13,fg:12,header:4,hl+:4,hl:4
+    --color=info:3,marker:6,pointer:6,prompt:3,spinner:6"
+
+if command -v rg &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='rg --files'
+fi
+
 if command -v nvim &> /dev/null; then
     export EDITOR=nvim
     export VISUAL=nvim
 else
     export EDITOR=vim
     export VISUAL=vim
-fi
-
-if command -v rg &> /dev/null; then
-    export FZF_DEFAULT_COMMAND='rg --files'
 fi
 
 export PROJECTS=~/GitHub

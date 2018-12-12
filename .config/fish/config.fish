@@ -79,16 +79,20 @@ end
 
 set -x PAGER less
 
+set -x FZF_DEFAULT_OPTS "
+    --color=bg+:10,bg:0,fg+:13,fg:12,header:4,hl+:4,hl:4
+    --color=info:3,marker:6,pointer:6,prompt:3,spinner:6"
+
+if command -qv rg
+    set -x FZF_DEFAULT_COMMAND "rg --files"
+end
+
 if command -qv nvim
     set -x EDITOR nvim
     set -x VISUAL nvim
 else
     set -x EDITOR vim
     set -x VISUAL vim
-end
-
-if command -qv rg
-    set -x FZF_DEFAULT_COMMAND "rg --files"
 end
 
 # =========== Colors ===========================================================
