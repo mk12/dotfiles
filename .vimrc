@@ -183,7 +183,7 @@ Shortcut go to file in project
 Shortcut go to file in same directory
     \ nnoremap <silent> <Leader>. :Files %:h<CR>
 Shortcut go to file in a directory
-    \ nnoremap <expr> <Leader>, ':Files ' . InputDirectory() . '<CR>'
+    \ nnoremap <silent> <expr> <Leader>, ':Files ' . InputDirectory() . '<CR>'
 Shortcut go to open buffer
     \ nnoremap <silent> <Leader><Tab> :Buffers<CR>
 Shortcut go to last buffer
@@ -196,7 +196,7 @@ Shortcut project-wide search with input
     \|xnoremap <silent> <Leader>* "vy:call SearchProject(@v)<CR>
 
 Shortcut go to alternate file
-    \ nnoremap <silent> <Leader>a :call AlternateFile()<CR>
+    \ nnoremap <Leader>a :call AlternateFile()<CR>
 
 Shortcut toggle comment
     \ nnoremap <Leader>c :Commentary<CR>
@@ -228,10 +228,12 @@ Shortcut edit new buffer
     \ nnoremap <Leader>en :enew<CR>
 Shortcut reload current buffer
     \ nnoremap <Leader>er :edit!<CR>
-Shortcut reload vimrc or init.vim
-    \ nnoremap <Leader>eR :source $MYVIMRC<CR>
+Shortcut resolve symlinks
+    \ nnoremap <Leader>es :call ResolveSymlinks()<CR>
 Shortcut edit vimrc or init.vim
     \ nnoremap <Leader>ev :edit $MYVIMRC<CR>
+Shortcut source vimrc or init.vim
+    \ nnoremap <Leader>eV :source $MYVIMRC<CR>
 
 Shortcut format code
     \ nnoremap <Leader>f :call FormatCode()<CR>
@@ -247,9 +249,9 @@ Shortcut git diff
 Shortcut browse on GitHub
     \ nnoremap <Leader>gh :Gbrowse<CR>
 Shortcut git log
-    \ nnoremap <silent> <Leader>gl :call ExecuteInBufferDir('Commits')<CR>
+    \ nnoremap <Leader>gl :call ExecuteInBufferDir('Commits')<CR>
 Shortcut git log for buffer
-    \ nnoremap <silent> <Leader>gL :call ExecuteInBufferDir('BCommits')<CR>
+    \ nnoremap <Leader>gL :call ExecuteInBufferDir('BCommits')<CR>
 Shortcut git push
     \ nnoremap <Leader>gp :Gpush<CR>
 Shortcut git read/checkout
@@ -550,6 +552,19 @@ function! DeleteHiddenBuffers() abort
         endif
     endfor
     echo "Deleted " . l:closed . " hidden buffers"
+endfunction
+
+function! ResolveSymlinks() abort
+    let l:current = expand('%')
+    let l:resolved = resolve(l:current)
+    if l:current !=# l:resolved
+        try
+            silent execute 'keepalt file' fnameescape(l:resolved)
+            silent edit
+        catch
+            call s:EchoException()
+        endtry
+    endif
 endfunction
 
 function! FormatCode() abort
