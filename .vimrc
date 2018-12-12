@@ -24,6 +24,7 @@ Plug 'justinmk/vim-dirvish'
 Plug 'kana/vim-textobj-user'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
+Plug 'sgur/vim-textobj-parameter'
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
 Plug 'tpope/vim-apathy'
@@ -94,6 +95,7 @@ set showcmd
 set sidescrolloff=5
 set smartcase
 set suffixes-=.h
+set tagcase=match
 set textwidth=80
 set undofile
 set visualbell
@@ -140,15 +142,13 @@ nnoremap Y y$
 
 inoremap <C-U> <C-G>u<C-U>
 
-nnoremap & :&&<CR>
-xnoremap & :&&<CR>
-
 xnoremap < <gv
 xnoremap > >gv
 
 nnoremap gV `[v`]
 
-nnoremap gh :echo synIDattr(synID(line('.'), col('.'), 1), 'name')<CR>
+nnoremap & :&&<CR>
+xnoremap & :&&<CR>
 
 xnoremap <silent> <expr> p VisualReplaceExpr()
 
@@ -163,12 +163,7 @@ nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 " Since <Tab> and <C-i> are the same, I need a new mapping for <C-i>.
 nnoremap <C-q> <C-i>
 
-nnoremap <silent> <C-]> :call CaseSensitiveTagJump()<CR>
-xnoremap <silent> <C-]> "vy:call CaseSensitiveTagJump(@v)<CR>
-nmap <C-w>] <C-w>s<C-]>
-xmap <C-w>] <C-w>s<C-]>
-nmap <C-w><C-]> <C-w>]
-xmap <C-w><C-]> <C-w>]
+nnoremap zS :echo synIDattr(synID(line('.'), col('.'), 1), 'name')<CR>
 
 nmap [h <Plug>GitGutterPrevHunk
 nmap ]h <Plug>GitGutterNextHunk
@@ -404,6 +399,7 @@ augroup custom
     autocmd FileType text,markdown setlocal textwidth=0 colorcolumn=0
     autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
 
+    autocmd BufEnter * call DisableSyntaxForDiff()
     autocmd User ProjectionistActivate call LoadCustomProjections()
 
     " By default GitGutter waits for 'updatetime' ms before updating.
@@ -467,19 +463,6 @@ function! PrevBufOrTab() abort
     else
         bprevious
     endif
-endfunction
-
-function! CaseSensitiveTagJump(...) abort
-    let l:term = a:0 > 0 ? a:1 : expand('<cword>')
-    let l:save_ic = &ignorecase
-    set noignorecase
-    try
-        execute 'tag' l:term
-    catch
-        call s:EchoException()
-    finally
-        let &ignorecase = l:save_ic
-    endtry
 endfunction
 
 function! ProjectFiles() abort
@@ -649,6 +632,14 @@ function! ToggleColumnLimit() abort
         setlocal colorcolumn=+1
     else
         setlocal textwidth=0 colorcolumn=0
+    endif
+endfunction
+
+function! DisableSyntaxForDiff() abort
+    if &diff == 1
+        setlocal syntax=
+    elseif &syntax ==# ''
+        let &l:filetype = &filetype
     endif
 endfunction
 
