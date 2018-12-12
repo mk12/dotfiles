@@ -155,6 +155,8 @@ xnoremap <silent> <expr> p VisualReplaceExpr()
 nnoremap <silent> Q :call ReflowText()<CR>
 xnoremap Q gq
 
+nnoremap <silent> _ :Dirvish<CR>
+
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 
@@ -250,7 +252,9 @@ Shortcut git diff
 Shortcut browse on GitHub
     \ nnoremap <Leader>gh :Gbrowse<CR>
 Shortcut git log
-    \ nnoremap <Leader>gl :Commits<CR>
+    \ nnoremap <silent> <Leader>gl :call ExecuteInBufferDir('Commits')<CR>
+Shortcut git log for buffer
+    \ nnoremap <silent> <Leader>gL :call ExecuteInBufferDir('BCommits')<CR>
 Shortcut git push
     \ nnoremap <Leader>gp :Gpush<CR>
 Shortcut git read/checkout
@@ -491,20 +495,25 @@ function! SearchProject(...) abort
     if empty(l:term)
         return
     endif
+    let @/ = l:term
     let l:old_dir = getcwd()
     let l:dir = InputDirectory()
     if l:dir !=# ''
         try
             silent execute 'cd' l:dir
         catch
+            redraw
+            call s:EchoException()
             return
         endtry
     endif
-    silent execute 'Rg' l:term
-    if l:dir !=# ''
-        silent execute 'cd' l:old_dir
-    endif
-    let @/ = l:term
+    try
+        silent execute 'Rg' l:term
+    finally
+        if l:dir !=# ''
+            silent execute 'cd' l:old_dir
+        endif
+    endtry
 endfunction
 
 function! AlternateFile() abort
@@ -579,6 +588,16 @@ function! FormatCode() abort
     silent execute '!' l:cmd '%'
     silent edit
     call winrestview(l:view)
+endfunction
+
+function! ExecuteInBufferDir(command) abort
+    let l:old_dir = getcwd()
+    try
+        silent cd %:h
+        silent execute a:command
+    finally
+        silent execute 'cd' l:old_dir
+    endtry
 endfunction
 
 " http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window#Script
