@@ -430,7 +430,7 @@ function! s:EchoException() abort
 endfunction
 
 function! InputDirectory() abort
-    return input("From dir: ", getcwd() . '/', 'dir')
+    return input('From dir: ', getcwd() . '/', 'dir')
 endfunction
 
 function! VisualReplaceExpr() abort
@@ -476,7 +476,7 @@ function! ProjectFiles() abort
 endfunction
 
 function! SearchProject(...) abort
-    let l:term = input("Search: ", a:0 > 0 ? a:1 : '')
+    let l:term = input('Search: ', a:0 > 0 ? a:1 : '')
     if empty(l:term)
         return
     endif
@@ -551,7 +551,7 @@ function! DeleteHiddenBuffers() abort
             let l:closed += 1
         endif
     endfor
-    echo "Deleted " . l:closed . " hidden buffers"
+    echo 'Deleted ' . l:closed . ' hidden buffers'
 endfunction
 
 function! ResolveSymlinks() abort
@@ -573,12 +573,12 @@ function! FormatCode() abort
     elseif &filetype ==# 'c' || &filetype ==# 'cpp'
         let l:cmd = 'clang-format -i'
     else
-        call s:Error("Unable to format " . &filetype . " file")
+        call s:Error('Unable to format ' . &filetype . ' file')
         return
     endif
     let l:first = split(l:cmd)[0]
     if !executable(l:first)
-        call s:Error("Executable not found: " . l:first)
+        call s:Error('Executable not found: ' . l:first)
         return
     endif
     silent write
