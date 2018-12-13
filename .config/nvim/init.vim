@@ -130,17 +130,17 @@ noremap : ;
 
 nnoremap Y y$
 
-inoremap <C-U> <C-G>u<C-U>
-
 xnoremap < <gv
 xnoremap > >gv
 
 nnoremap gV `[v`]
 
-nnoremap & :&&<CR>
-xnoremap & :&&<CR>
+inoremap <C-U> <C-G>u<C-U>
 
-xnoremap <silent> <expr> p VisualReplaceExpr()
+nnoremap <silent> & :&&<CR>
+xnoremap <silent> & :&&<CR>
+
+xnoremap <expr> p VisualReplaceExpr()
 
 nnoremap <silent> Q :call ReflowText()<CR>
 xnoremap Q gq
@@ -153,7 +153,7 @@ nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 " Since <Tab> and <C-i> are the same, I need a new mapping for <C-i>.
 nnoremap <C-q> <C-i>
 
-nnoremap zS :echo synIDattr(synID(line('.'), col('.'), 1), 'name')<CR>
+nnoremap <silent> zS :echo synIDattr(synID(line('.'), col('.'), 1), 'name')<CR>
 
 nmap [h <Plug>GitGutterPrevHunk
 nmap ]h <Plug>GitGutterNextHunk
@@ -434,7 +434,7 @@ function! RestoreRegister() abort
 endfunction
 
 function! ReflowText() abort
-    if synIDattr(synID(line('.'), col('.'), 1), 'name') =~? 'comment'
+    if synIDattr(synID(line('.'), col('.'), 1), 'name') is? 'comment'
         normal gqac
     else
         normal! gqap
@@ -473,7 +473,7 @@ function! SearchProject(...) abort
     let @/ = l:term
     let l:old_dir = getcwd()
     let l:dir = InputDirectory()
-    if l:dir !=# ''
+    if !empty(l:dir)
         try
             silent execute 'cd' l:dir
         catch
@@ -485,7 +485,7 @@ function! SearchProject(...) abort
     try
         silent execute 'Rg' l:term
     finally
-        if l:dir !=# ''
+        if !empty(l:dir)
             silent execute 'cd' l:old_dir
         endif
     endtry
@@ -532,35 +532,46 @@ endfunction
 
 function! DeleteHiddenBuffers() abort
     let l:tpbl = []
-    let l:closed = 0
+    let l:deleted = 0
     call map(range(1, tabpagenr('$')), 'extend(l:tpbl, tabpagebuflist(v:val))')
-    let l:filter = 'buflisted(v:val) && index(l:tpbl, v:val) == -1'
+    let l:filter = 'buflisted(v:val) && index(l:tpbl, v:val) is -1'
     for buf in filter(range(1, bufnr('$')), l:filter)
-        if getbufvar(buf, '&mod') == 0
+        if getbufvar(buf, '&mod') is 0
             silent execute 'bdelete' buf
-            let l:closed += 1
+            let l:deleted += 1
         endif
     endfor
-    echo 'Deleted ' . l:closed . ' hidden buffers'
+    echomsg 'Deleted ' . l:deleted . ' hidden buffers'
 endfunction
 
 function! ResolveSymlinks() abort
     let l:current = expand('%')
     let l:resolved = resolve(l:current)
-    if l:current !=# l:resolved
-        try
-            silent execute 'keepalt file' fnameescape(l:resolved)
-            silent edit
-        catch
-            call s:EchoException()
-        endtry
+    if l:current is# l:resolved
+        echomsg 'No symlinks to resolve'
+        return
     endif
+    if &mod is 1
+        call s:Error('E37: No write since last change')
+        return
+    endif
+    try
+        silent execute 'keepalt file' fnameescape(l:resolved)
+        try
+            silent write
+        catch /^Vim\%((\a\+)\)\=:E13/
+            silent write!
+        endtry
+        echomsg 'Resolved to ' . l:resolved
+    catch
+        call s:EchoException()
+    endtry
 endfunction
 
 function! FormatCode() abort
     if exists('b:FormatCodePrg')
         let l:cmd = b:FormatCodePrg
-    elseif &filetype ==# 'c' || &filetype ==# 'cpp'
+    elseif &filetype is# 'c' || &filetype is# 'cpp'
         let l:cmd = 'clang-format -i'
     else
         call s:Error('Unable to format ' . &filetype . ' file')
@@ -590,7 +601,7 @@ endfunction
 
 " http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window#Script
 function! KillBuffer(bang) abort
-    if empty(a:bang) && (&modified == 1 || &buftype ==# 'terminal')
+    if empty(a:bang) && (&modified is 1 || &buftype is# 'terminal')
         try
             bdelete
         catch
@@ -599,20 +610,20 @@ function! KillBuffer(bang) abort
         return
     endif
     let l:btarget = bufnr('%')
-    let l:wnums = filter(range(1, winnr('$')), 'winbufnr(v:val) == l:btarget')
+    let l:wnums = filter(range(1, winnr('$')), 'winbufnr(v:val) is l:btarget')
     let l:wcurrent = winnr()
     for l:w in l:wnums
         silent execute l:w 'wincmd w'
         let l:balt = bufnr('#')
-        if l:balt > 0 && buflisted(l:balt) && l:balt != l:btarget
+        if l:balt > 0 && buflisted(l:balt) && l:balt isnot l:btarget
             buffer #
         else
             bprevious
         endif
-        if bufnr('%') == l:btarget
+        if bufnr('%') is l:btarget
             " Listed buffers that are not the target.
             let l:blisted = filter(range(1, bufnr('$')),
-                \ 'buflisted(v:val) && v:val != l:btarget')
+                \ 'buflisted(v:val) && v:val isnot l:btarget')
             " Listed buffers that are not the target and not displayed.
             let l:bhidden = filter(copy(l:blisted), 'bufwinnr(v:val) < 0')
             " Take the first buffer, if any (could be more intelligent).
@@ -632,7 +643,7 @@ function! KillBuffer(bang) abort
 endfunction
 
 function! ToggleColumnLimit() abort
-    if empty(&colorcolumn) || &colorcolumn ==# '0'
+    if empty(&colorcolumn) || &colorcolumn is# '0'
         let &l:textwidth = get(b:, 'ColumnLimit', 80)
         setlocal colorcolumn=+1
     else
@@ -641,9 +652,9 @@ function! ToggleColumnLimit() abort
 endfunction
 
 function! DisableSyntaxForDiff() abort
-    if &diff == 1
+    if &diff is 1
         setlocal syntax=
-    elseif &syntax ==# ''
+    elseif empty(&syntax)
         let &l:filetype = &filetype
     endif
 endfunction
