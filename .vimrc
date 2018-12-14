@@ -21,6 +21,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'justinmk/vim-dirvish'
+Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-user'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
@@ -119,6 +120,8 @@ call mkdir(&undodir, 'p')
 set notermguicolors
 colorscheme base16-default-dark
 
+call Base16hi("WarningMsg", g:base16_gui0A, "", g:base16_cterm0A, "")
+
 hi clear StatusLine
 hi link StatusLine PMenu
 hi clear WildMenu
@@ -147,10 +150,15 @@ nnoremap gV `[v`]
 
 inoremap <C-U> <C-G>u<C-U>
 
+nnoremap <C-N> nzz
+nnoremap <C-P> Nzz
+
 nnoremap <silent> & :&&<CR>
 xnoremap <silent> & :&&<CR>
 
 xnoremap <expr> p VisualReplaceExpr()
+
+nnoremap <silent> zS :echo SyntaxName()<CR>
 
 nnoremap <silent> Q :call ReflowText()<CR>
 xnoremap Q gq
@@ -160,10 +168,8 @@ nnoremap <silent> _ :Dirvish<CR>
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 
-" Since <Tab> and <C-i> are the same, I need a new mapping for <C-i>.
-nnoremap <C-q> <C-i>
-
-nnoremap <silent> zS :echo synIDattr(synID(line('.'), col('.'), 1), 'name')<CR>
+" Since <Tab> and <C-I> are the same, I need a new mapping for <C-I>.
+nnoremap <C-Q> <C-I>
 
 nmap [h <Plug>GitGutterPrevHunk
 nmap ]h <Plug>GitGutterNextHunk
@@ -193,7 +199,7 @@ Shortcut project-wide search
     \ nnoremap <silent> <Leader>/ :call SearchProject()<CR>
 Shortcut project-wide search with input
     \ nnoremap <silent> <Leader>* :call SearchProject(expand('<cword>'))<CR>
-    \|xnoremap <silent> <Leader>* "vy:call SearchProject(@v)<CR>
+    \|xnoremap <silent> <Leader>* "zy:call SearchProject(@z)<CR>
 
 Shortcut go to alternate file
     \ nnoremap <Leader>a :call AlternateFile()<CR>
@@ -206,8 +212,8 @@ Shortcut indent lines
     \ nnoremap <Leader>di =ip
     \|xnoremap <Leader>di =
 Shortcut show number of search matches
-    \ nnoremap <Leader>dm :%s/<C-r>///n<CR>
-    \|xnoremap <Leader>dm "vy:%s/<C-r>v//n<CR>
+    \ nnoremap <Leader>dm :%s/<C-R>///n<CR>
+    \|xnoremap <Leader>dm "zy:%s/<C-R>z//n<CR>
 Shortcut sort lines
     \ nnoremap <Leader>ds vip:sort<CR>
     \|xnoremap <Leader>ds :sort<CR>
@@ -236,7 +242,8 @@ Shortcut source vimrc or init.vim
     \ nnoremap <Leader>eV :source $MYVIMRC<CR>
 
 Shortcut format code
-    \ nnoremap <Leader>f :call FormatCode()<CR>
+    \ nnoremap <Leader>f :call ExecuteRestoringView('%call FormatCode()')<CR>
+    \|xnoremap <Leader>f :call FormatCode()<CR>
 
 Shortcut git blame
     \ nnoremap <Leader>gb :Gblame<CR>
@@ -283,7 +290,7 @@ Shortcut jump to mark
 Shortcut jump to symbol/tag in buffer
     \ nnoremap <Leader>js :BTags<CR>
 Shortcut jump to tag in project
-    \ nnoremap <Leader>jt :Tags<CR>
+    \ nnoremap <Leader>jt :call BrowseTags()<CR>
 
 Shortcut kill/delete buffer
     \ nnoremap <silent> <leader>k :call KillBuffer('')<CR>
@@ -310,6 +317,8 @@ Shortcut start project
     \ nnoremap <Leader>ms :Start<CR>
 Shortcut start project in background
     \ nnoremap <Leader>mS :Start!<CR>
+Shortcut generate project tags
+    \ nnoremap <Leader>mt :call GenerateTags()<CR>
 
 Shortcut stop highlighting the search
     \ nnoremap <Leader>n :nohlsearch<CR>
@@ -355,33 +364,33 @@ Shortcut toggle list/whitespace mode
     \ nnoremap <Leader>tw :set list!<CR>
 
 Shortcut new horizontal split
-    \ nnoremap <Leader>w- <C-w>s
+    \ nnoremap <Leader>w- <C-W>s
 Shortcut new vertical split
-    \ nnoremap <Leader>w/ <C-w>v
+    \ nnoremap <Leader>w/ <C-W>v
 Shortcut use 2-up vertical split
-    \ nnoremap <Leader>w2 <C-w>o<C-w>v
+    \ nnoremap <Leader>w2 <C-W>o<C-W>v
 Shortcut use 3-up vertical split
-    \ nnoremap <Leader>w3 <C-w>o<C-w>v<C-w>v
+    \ nnoremap <Leader>w3 <C-W>o<C-W>v<C-W>v
 Shortcut resize windows equally
-    \ nnoremap <Leader>w= <C-w>=
+    \ nnoremap <Leader>w= <C-W>=
 Shortcut go to left window
-    \ nnoremap <Leader>wh <C-w>h
+    \ nnoremap <Leader>wh <C-W>h
 Shortcut move window left
-    \ nnoremap <Leader>wH <C-w>H
+    \ nnoremap <Leader>wH <C-W>H
 Shortcut go to down window
-    \ nnoremap <Leader>wj <C-w>j
+    \ nnoremap <Leader>wj <C-W>j
 Shortcut move window down
-    \ nnoremap <Leader>wJ <C-w>J
+    \ nnoremap <Leader>wJ <C-W>J
 Shortcut go to up window
-    \ nnoremap <Leader>wk <C-w>k
+    \ nnoremap <Leader>wk <C-W>k
 Shortcut move window up
-    \ nnoremap <Leader>wK <C-w>K
+    \ nnoremap <Leader>wK <C-W>K
 Shortcut go to right window
-    \ nnoremap <Leader>wl <C-w>l
+    \ nnoremap <Leader>wl <C-W>l
 Shortcut move window right
-    \ nnoremap <Leader>wL <C-w>L
+    \ nnoremap <Leader>wL <C-W>L
 Shortcut close all other windows
-    \ nnoremap <Leader>wo <C-w>o
+    \ nnoremap <Leader>wo <C-W>o
 Shortcut new tab
     \ nnoremap <Leader>wt :tabnew %<CR>
 
@@ -430,21 +439,28 @@ function! s:EchoException() abort
 endfunction
 
 function! InputDirectory() abort
-    return input('From dir: ', getcwd() . '/', 'dir')
+    let l:default_dir = get(s:, 'last_input_dir', '')
+    let l:dir = input('From dir: ', l:default_dir, 'dir')
+    let s:last_input_dir = l:dir
+    return l:dir
 endfunction
 
 function! VisualReplaceExpr() abort
-    let s:restore_reg = @"
+    let s:saved_register = @"
     return "p@=RestoreRegister()\<CR>"
 endfunction
 
 function! RestoreRegister() abort
-    let @" = s:restore_reg
+    let @" = s:saved_register
     return ''
 endfunction
 
+function! SyntaxName() abort
+    return synIDattr(synID(line('.'), col('.'), 1), 'name')
+endfunction
+
 function! ReflowText() abort
-    if synIDattr(synID(line('.'), col('.'), 1), 'name') is? 'comment'
+    if SyntaxName() is? 'comment'
         normal gqac
     else
         normal! gqap
@@ -476,11 +492,12 @@ function! ProjectFiles() abort
 endfunction
 
 function! SearchProject(...) abort
-    let l:term = input('Search: ', a:0 > 0 ? a:1 : '')
+    let l:default_term = a:0 > 0 ? a:1 : get(s:, 'last_search_term', '')
+    let l:term = input('Search: ', l:default_term)
     if empty(l:term)
         return
     endif
-    let @/ = l:term
+    let s:last_search_term = l:term
     let l:old_dir = getcwd()
     let l:dir = InputDirectory()
     if !empty(l:dir)
@@ -571,6 +588,8 @@ function! ResolveSymlinks() abort
             silent write
         catch /^Vim\%((\a\+)\)\=:E13/
             silent write!
+            " Reload so that fugitive picks it up.
+            silent edit
         endtry
         echomsg 'Resolved to ' . l:resolved
     catch
@@ -578,13 +597,24 @@ function! ResolveSymlinks() abort
     endtry
 endfunction
 
-function! FormatCode() abort
-    if exists('b:FormatCodePrg')
-        let l:cmd = b:FormatCodePrg
+function! ExecuteRestoringView(cmd) abort
+    " http://vim.wikia.com/wiki/
+    " Restore_the_cursor_position_after_undoing_text_change_made_by_a_script
+    normal! ix
+    normal! x
+    let l:view = winsaveview()
+    silent execute a:cmd
+    call winrestview(l:view)
+endfunction
+
+function! FormatCode() abort range
+    if exists('b:format_command')
+        let l:cmd = b:format_command
     elseif &filetype is# 'c' || &filetype is# 'cpp'
-        let l:cmd = 'clang-format -i'
+        let l:cmd = 'clang-format'
     else
-        call s:Error('Unable to format ' . &filetype . ' file')
+        let l:ft = empty(&filetype) ? '<no filetype>' : &filetype
+        call s:Error('Unable to format ' . l:ft . ' file')
         return
     endif
     let l:first = split(l:cmd)[0]
@@ -592,11 +622,7 @@ function! FormatCode() abort
         call s:Error('Executable not found: ' . l:first)
         return
     endif
-    silent write
-    let l:view = winsaveview()
-    silent execute '!' l:cmd '%'
-    silent edit
-    call winrestview(l:view)
+    silent execute a:firstline . ',' . a:lastline . '!' . l:cmd
 endfunction
 
 function! ExecuteInBufferDir(command) abort
@@ -606,6 +632,18 @@ function! ExecuteInBufferDir(command) abort
         silent execute a:command
     finally
         silent execute 'cd' l:old_dir
+    endtry
+endfunction
+
+function! BrowseTags() abort
+    if empty(tagfiles())
+        call s:Error('No tags file found')
+        return
+    endif
+    try
+        Tags
+    catch
+        call s:EchoException()
     endtry
 endfunction
 
@@ -652,6 +690,16 @@ function! KillBuffer(bang) abort
     silent execute l:wcurrent 'wincmd w'
 endfunction
 
+function! GenerateTags() abort
+    call s:Warning('Preparing tags')
+    call system(get(b:, 'tags_command', 'ctags -R'))
+    if empty(tagfiles())
+        call s:Warning('Failed to create tags')
+    else
+        echomsg 'Finished generating tags'
+    endif
+endfunction
+
 function! ToggleColumnLimit() abort
     if empty(&colorcolumn) || &colorcolumn is# '0'
         let &l:textwidth = get(b:, 'ColumnLimit', 80)
@@ -670,13 +718,21 @@ function! DisableSyntaxForDiff() abort
 endfunction
 
 function! LoadCustomProjections() abort
-    for [l:root, l:value] in projectionist#query('format')
-        let b:FormatCodePrg = l:value
+    for [l:root, l:value] in projectionist#query('filetype')
+        let &l:filetype = l:value
         break
     endfor
-    for [l:root, l:value] in projectionist#query('wrap')
-        let b:ColumnLimit = l:value
+    for [l:root, l:value] in projectionist#query('textwidth')
+        let b:column_limit = l:value
         let &l:textwidth = l:value
+        break
+    endfor
+    for [l:root, l:value] in projectionist#query('format_command')
+        let b:format_command = l:value
+        break
+    endfor
+    for [l:root, l:value] in projectionist#query('tags_command')
+        let b:tags_command = l:value
         break
     endfor
 endfunction

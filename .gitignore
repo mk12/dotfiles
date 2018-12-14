@@ -36,7 +36,7 @@ ehthumbs.db
 Thumbs.db
 
 # Other
-src/tags
+tags
 Session.vim
 .projections.json
 .vscode/
