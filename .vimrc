@@ -120,6 +120,9 @@ call mkdir(&undodir, 'p')
 set notermguicolors
 colorscheme base16-default-dark
 
+call Base16hi("DiffFile", g:base16_gui05, "", g:base16_cterm05, "", "bold")
+call Base16hi("DiffIndexLine", g:base16_gui05, "", g:base16_cterm05, "", "bold")
+call Base16hi("DiffNewFile", g:base16_gui05, "", g:base16_cterm05, "", "bold")
 call Base16hi("WarningMsg", g:base16_gui0A, "", g:base16_cterm0A, "")
 
 hi clear StatusLine
@@ -242,45 +245,31 @@ Shortcut source vimrc or init.vim
     \ nnoremap <Leader>eV :source $MYVIMRC<CR>
 
 Shortcut format code
-    \ nnoremap <Leader>f :call ExecuteRestoringView('%call FormatCode()')<CR>
+    \ nnoremap <Leader>f :call FormatCode('%')<CR>
     \|xnoremap <Leader>f :call FormatCode()<CR>
 
 Shortcut git blame
     \ nnoremap <Leader>gb :Gblame<CR>
-Shortcut git commit
-    \ nnoremap <Leader>gc :Gcommit<CR>
-Shortcut git commit verbose
-    \ nnoremap <Leader>gC :Gcommit -v<CR>
-Shortcut git diff
+Shortcut git diff current file
     \ nnoremap <Leader>gd :Gdiff<CR>
+Shortcut git diff all files
+    \ nnoremap <Leader>gD :Gtabedit! diff<CR>
 Shortcut browse on GitHub
     \ nnoremap <Leader>gh :Gbrowse<CR>
-Shortcut git log
-    \ nnoremap <Leader>gl :call ExecuteInBufferDir('Commits')<CR>
-Shortcut git log for buffer
-    \ nnoremap <Leader>gL :call ExecuteInBufferDir('BCommits')<CR>
 Shortcut git push
     \ nnoremap <Leader>gp :Gpush<CR>
-Shortcut git read/checkout
-    \ nnoremap <Leader>gr :Gread<CR>
-Shortcut git read/checkout hunk
-    \ nmap <Leader>gR <Plug>GitGutterUndoHunk
 Shortcut git status
     \ nnoremap <Leader>gs :Gstatus<CR>
-Shortcut git pull/update
+Shortcut git update/pull
     \ nnoremap <Leader>gu :Gpull<CR>
-Shortcut git view versions
-    \ nnoremap <Leader>gv :silent Glog<CR>
-Shortcut git write/add
-    \ nnoremap <Leader>gw :Gwrite<CR>
-Shortcut git write/add hunk
-    \ nmap <Leader>gW <Plug>GitGutterStageHunk
 
 Shortcut find help
     \ nnoremap <Leader>h :Helptags<CR>
 
 Shortcut jump to line in any buffer
     \ nnoremap <Leader>ja :Lines<CR>
+Shortcut jump to commit
+    \ nnoremap <Leader>jc :Commits<CR>
 Shortcut jump/switch to filetype
     \ nnoremap <Leader>jf :Filetypes<CR>
 Shortcut jump to line in buffer
@@ -438,6 +427,16 @@ function! s:EchoException() abort
     call s:Error(substitute(v:exception, '^Vim.\{-}:', '', ''))
 endfunction
 
+function! s:ExecuteRestoringView(cmd) abort
+    " http://vim.wikia.com/wiki/
+    " Restore_the_cursor_position_after_undoing_text_change_made_by_a_script
+    normal! ix
+    normal! x
+    let l:view = winsaveview()
+    silent execute a:cmd
+    call winrestview(l:view)
+endfunction
+
 function! InputDirectory() abort
     let l:default_dir = get(s:, 'last_input_dir', '')
     let l:dir = input('From dir: ', l:default_dir, 'dir')
@@ -492,7 +491,7 @@ function! ProjectFiles() abort
 endfunction
 
 function! SearchProject(...) abort
-    let l:default_term = a:0 > 0 ? a:1 : get(s:, 'last_search_term', '')
+    let l:default_term = get(a:, 1, get(s:, 'last_search_term', ''))
     let l:term = input('Search: ', l:default_term)
     if empty(l:term)
         return
@@ -597,17 +596,7 @@ function! ResolveSymlinks() abort
     endtry
 endfunction
 
-function! ExecuteRestoringView(cmd) abort
-    " http://vim.wikia.com/wiki/
-    " Restore_the_cursor_position_after_undoing_text_change_made_by_a_script
-    normal! ix
-    normal! x
-    let l:view = winsaveview()
-    silent execute a:cmd
-    call winrestview(l:view)
-endfunction
-
-function! FormatCode() abort range
+function! FormatCode(...) abort range
     if exists('b:format_command')
         let l:cmd = b:format_command
     elseif &filetype is# 'c' || &filetype is# 'cpp'
@@ -622,17 +611,8 @@ function! FormatCode() abort range
         call s:Error('Executable not found: ' . l:first)
         return
     endif
-    silent execute a:firstline . ',' . a:lastline . '!' . l:cmd
-endfunction
-
-function! ExecuteInBufferDir(command) abort
-    let l:old_dir = getcwd()
-    try
-        silent cd %:h
-        silent execute a:command
-    finally
-        silent execute 'cd' l:old_dir
-    endtry
+    let l:range = get(a:, 1, a:firstline . ',' . a:lastline)
+    call s:ExecuteRestoringView(l:range . '!' . l:cmd)
 endfunction
 
 function! BrowseTags() abort
