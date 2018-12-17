@@ -79,9 +79,8 @@ end
 
 set -x PAGER less
 
-set -x FZF_DEFAULT_OPTS "--history=$HOME/.fzf/history\
---color=bg+:10,bg:0,fg+:13,fg:12,header:4,hl+:4,hl:4,\
-info:3,marker:6,pointer:6,prompt:3,spinner:6"
+set -x FZF_DEFAULT_OPTS "--history=$HOME/.fzf/history --color=bg+:10,bg:0,\
+fg+:13,fg:12,header:4,hl+:4,hl:4,info:3,marker:6,pointer:6,prompt:3,spinner:6"
 
 if command -qv rg
     set -x FZF_DEFAULT_COMMAND "rg --files"
