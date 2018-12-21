@@ -14,10 +14,10 @@ link_dotfiles() {
     mkdir -p "$HOME"/.config/{fish,nvim}
 
     cd -P "$dir"
-    for filepath in $(find . -type f -not -path "./.git/*" \
-            -not -name ".DS_Store" -not -name "*.md" \
-            -not -path "./.config/fish/.gitignore" \
-            -not -name "$(basename "$src")"); do
+    for filepath in $(find . -type f -path "./.*" \
+            -not -name ".DS_Store" \
+            -not -path "./.git/*" \
+            -not -path "./.config/fish/.gitignore"); do
         file=${filepath#'./'}
         if [[ -e ~/$file ]]; then
             echo "~/$file: file exists"
