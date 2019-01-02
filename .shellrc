@@ -1,0 +1,53 @@
+# =========== Aliases ==========================================================
+
+alias gg='git branch && git status -s'
+
+# =========== Environment variables ============================================
+
+export PROJECTS=~/GitHub
+export LEDGER_FILE=$PROJECTS/finance/journal.ledger
+
+export CLICOLOR=true
+export GREP_OPTIONS='--color=auto'
+export PAGER=less
+
+export FZF_DEFAULT_OPTS="--history=$HOME/.fzf/history --color=bg+:10,bg:0,\
+fg+:13,fg:12,header:4,hl+:4,hl:4,info:3,marker:6,pointer:6,prompt:3,spinner:6"
+
+export COQ_COLORS="constr.evar=37:constr.keyword=1:constr.notation=37:\
+constr.path=95:constr.reference=32:constr.type=33:message.debug=35;1:\
+message.error=31;1:message.warning=33;1:module.definition=91;1:\
+module.keyword=1:tactic.keyword=1:tactic.primitive=32:tactic.string=91"
+
+# =========== Optional software ================================================
+
+if command -v exa &> /dev/null; then
+    alias l=exa
+    alias ll='exa -l'
+    alias la='exa -la'
+else
+    alias l=ls
+fi
+
+if command -v rg &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='rg --files'
+fi
+
+if command -v nvim &> /dev/null; then
+    alias vi=nvim
+    alias vim=nvim
+    export EDITOR=nvim
+    export VISUAL=nvim
+else
+    alias vi=vim
+    export EDITOR=vim
+    export VISUAL=vim
+fi
+
+# =========== Path =============================================================
+
+for p in $PROJECTS/scripts ~/.fzf/bin ~/.cargo/bin; do
+    if [[ $PATH != *$p* && -d $p ]]; then
+        PATH=$PATH:$p
+    fi
+done

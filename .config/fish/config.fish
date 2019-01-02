@@ -1,3 +1,5 @@
+# =========== Plugins ==========================================================
+
 # Install fisher if it isn't already installed.
 if not functions -q fisher
     set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
@@ -43,57 +45,6 @@ function cleanup --description "Free up disk space"
     end
 end
 
-function add_paths --description "Add to the PATH"
-    for dir in $argv
-        if begin; not contains $dir $PATH; and test -d $dir; end
-            set PATH $PATH $dir
-        end
-    end
-end
-
-function open_editor --description "Open the EDITOR"
-    if test (count $argv) -eq 0 -a -f Session.vim
-        env $EDITOR -S Session.vim
-    else
-        env $EDITOR $argv
-    end
-end
-
-# =========== Aliases ==========================================================
-
-alias vi open_editor
-alias vim open_editor
-alias nvim open_editor
-
-alias gg "git branch; and git status -s"
-
-if command -qv exa
-    alias l "exa"
-    alias ll "exa -l"
-    alias la "exa -la"
-else
-    alias l "ls"
-end
-
-# =========== Environment ======================================================
-
-set -x PAGER less
-
-set -x FZF_DEFAULT_OPTS "--history=$HOME/.fzf/history --color=bg+:10,bg:0,\
-fg+:13,fg:12,header:4,hl+:4,hl:4,info:3,marker:6,pointer:6,prompt:3,spinner:6"
-
-if command -qv rg
-    set -x FZF_DEFAULT_COMMAND "rg --files"
-end
-
-if command -qv nvim
-    set -x EDITOR nvim
-    set -x VISUAL nvim
-else
-    set -x EDITOR vim
-    set -x VISUAL vim
-end
-
 # =========== Colors ===========================================================
 
 set fish_color_autosuggestion brblack
@@ -118,6 +69,9 @@ set fish_pager_color_progress brwhite --background=cyan
 
 # =========== Other config =====================================================
 
+# Configuration shared with bashrc
+bass source ~/.shellrc
+
 # OS-specific configuration
 set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
 if test -e $specific
@@ -129,14 +83,3 @@ set secret ~/.config/fish/secret.fish
 if test -e $secret
     source $secret
 end
-
-# =========== Epilogue =========================================================
-
-# Do this last so that other config can override PROJECTS.
-if test -z $PROJECTS
-    set -x PROJECTS ~/GitHub
-end
-
-set -x LEDGER_FILE $PROJECTS/finance/journal.ledger
-
-add_paths $PROJECTS/scripts ~/.fzf/bin ~/.cargo/bin
