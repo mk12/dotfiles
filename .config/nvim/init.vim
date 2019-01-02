@@ -217,6 +217,10 @@ Shortcut yank to system clipboard
     \ nnoremap <Leader>dy :%y+<Bar>call YankToSystemClipboard(@+)<CR>
     \|xnoremap <Leader>dy "+y:call YankToSystemClipboard(@+)<CR>
 
+Shortcut edit brewfile
+    \ nnoremap <Leader>eb :edit ~/.Brewfile<CR>
+Shortcut edit local brewfile
+    \ nnoremap <Leader>eB :edit ~/.Brewfile.local<CR>
 Shortcut edit fish config
     \ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
 Shortcut delete hidden buffers
