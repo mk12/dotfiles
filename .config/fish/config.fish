@@ -11,7 +11,7 @@ end
 # =========== Functions ========================================================
 
 function bbundle --description "Use brew bundle with a combined Brewfile"
-    if !command -qv brew
+    if ! command -qv brew
         echo "Homebrew not installed" >&2
         return 1
     end
