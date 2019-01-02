@@ -10,10 +10,25 @@ end
 
 # =========== Functions ========================================================
 
+function bbundle --description "Use brew bundle with a combined Brewfile"
+    if !command -qv brew
+        echo "Homebrew not installed" >&2
+        return 1
+    end
+    set combined (mktemp)
+    cat ~/.Brewfile{,.local} > $combined
+    brew bundle $argv --file=$combined
+    rm $combined
+end
+
+function inst --description "Install software"
+    bbundle install --no-upgrade
+end
+
 function upd --description "Update software"
     if command -qv brew
         echo "Updating homebrew"
-        brew update; and brew upgrade
+        brew update; and bbundle install
     end
     if set -q TMUX
         echo "Updating tmux"
@@ -33,7 +48,7 @@ end
 function cleanup --description "Free up disk space"
     if command -qv brew
         echo "Cleaning homebrew"
-        brew cleanup -s; and brew prune
+        bbundle cleanup --force; and brew cleanup -s; and brew prune
     end
     if command -qv nvim
         echo "Cleaning neovim"
