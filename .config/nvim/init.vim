@@ -85,10 +85,10 @@ set noruler
 set noshowmode
 set nostartofline
 set number
-set scrolloff=1
+set scrolloff=4
 set shiftround
 set showcmd
-set sidescrolloff=5
+set sidescrolloff=4
 set smartcase
 set suffixes-=.h
 set tagcase=match
@@ -383,6 +383,9 @@ Shortcut save/write all and exit
 augroup custom
     autocmd!
 
+    " Automatically load Obsession sessions.
+    autocmd VimEnter * silent! source Session.vim
+
     autocmd FileType c,cpp setlocal commentstring=//\ %s comments^=:///
     autocmd FileType sql setlocal commentstring=--\ %s
 
@@ -671,7 +674,7 @@ function! GenerateTags() abort
 endfunction
 
 function! ToggleColumnLimit() abort
-    if empty(&colorcolumn) || &colorcolumn is# '0'
+    if &tw is 0 || empty(&colorcolumn) || &colorcolumn is# '0'
         let &l:textwidth = get(b:, 'ColumnLimit', 80)
         setlocal colorcolumn=+1
     else
