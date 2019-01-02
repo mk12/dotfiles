@@ -21,10 +21,6 @@ function bbundle --description "Use brew bundle with a combined Brewfile"
     rm $combined
 end
 
-function inst --description "Install software"
-    bbundle install --no-upgrade
-end
-
 function upd --description "Update software"
     if command -qv brew
         echo "Updating homebrew"
@@ -47,6 +43,10 @@ end
 
 function cleanup --description "Free up disk space"
     if command -qv brew
+        read -l -P 'Is everything in .Brewfile{,.local}? [y/N] ' answer
+        if test $answer != y -a $answer != Y
+            return 1
+        end
         echo "Cleaning homebrew"
         bbundle cleanup --force; and brew cleanup -s; and brew prune
     end

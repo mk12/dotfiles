@@ -1,3 +1,5 @@
+tap "homebrew/cask"
+
 brew "bash"
 brew "clang-format"
 brew "cloc"
