@@ -394,7 +394,7 @@ augroup custom
     autocmd!
 
     " Automatically load Obsession sessions.
-    autocmd VimEnter * silent! source Session.vim
+    autocmd VimEnter * if argc() is 0 | silent! source Session.vim | endif
 
     autocmd FileType c,cpp setlocal commentstring=//\ %s comments^=:///
     autocmd FileType sql setlocal commentstring=--\ %s
