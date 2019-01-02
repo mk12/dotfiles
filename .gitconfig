@@ -22,11 +22,8 @@
 [color]
     ui = auto
 [core]
-    editor = vim
     excludesfile = ~/.gitignore
 [diff]
-    tool = vimdiff
-    prompt = false
     algorithm = minimal
     compactionHeuristic = true
     renames = true
@@ -34,7 +31,8 @@
     tool = vimdiff
     conflictstyle = diff3
 [mergetool "vimdiff"]
-    path = vim
+    cmd = $EDITOR -d $LOCAL $BASE $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+    prompt = false
 [push]
     default = simple
 [pull]
