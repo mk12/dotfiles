@@ -1,41 +1,78 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+set -eufo pipefail
+
+prog=$(basename "$0")
+
+force=false
+
+die() {
+    echo "$prog: $*"
+    exit 1
+}
+
+usage() {
+    cat <<EOS
+usage: $prog [-fh]
+
+symlink dotfiles in the home directory
+
+options:
+    -f  skip prompts
+    -h  show this help message
+EOS
+}
 
 link_dotfiles() {
-    # Get the script's path
-    src="${BASH_SOURCE[0]}"
+    src="$0"
     dir=$(dirname "$src")
-    while [ -L "$src" ]; do
+    while [[ -L "$src" ]]; do
         src=$(readlink "$src")
         [[ $src != /* ]] && src="$dir/$src"
-        dir=$(cd -P "$( dirname "$src")" && pwd)
+        dir=$(cd -P "$(dirname "$src")" && pwd)
     done
-    dir=$(cd -P "$( dirname "$src")" && pwd)
+    dir=$(cd -P "$(dirname "$src")" && pwd)
 
-    mkdir -p "$HOME"/.config/{fish,nvim}
+    mkdir -p ~/.config/{fish,nvim}
 
-    cd -P "$dir"
-    for filepath in $(find . -type f -path "./.*" \
+    cd -P "$dir" || die "failed to cd to $dir"
+    find . -type f -path "./.*" \
             -not -name ".DS_Store" \
             -not -path "./.git/*" \
-            -not -path "./.config/fish/.gitignore"); do
+            -not -path "./.config/fish/.gitignore" \
+            | while read -r filepath; do
         file=${filepath#'./'}
-        if [[ -e ~/$file ]]; then
-            echo "~/$file: file exists"
+        if [[ -e "$HOME/$file" ]]; then
+            echo "$HOME/$file: file exists"
         else
-            echo "symlinking ~/$file -> $dir/$file"
+            echo "symlinking $HOME/$file -> $dir/$file"
             ln -s "$dir/$file" "$HOME/$file" > /dev/null
         fi
     done
 }
 
-if [ "$1" == "--force" -o "$1" == "-f" ]; then
-    link_dotfiles
-else
-    read -p "Symlink all dotfiles into your home directory? (Y/n) " -n 1
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
+main() {
+    if [[ "$force" == true ]]; then
         link_dotfiles
     else
-        exit 1
+        echo -n "Symlink all dotfiles into your home directory? (Y/n) "
+        read -r reply
+        if [[ "$reply" =~ ^[Yy]$ ]]; then
+            link_dotfiles
+        else
+            die "aborting"
+        fi
     fi
-fi
+}
+
+while getopts "fh" opt; do
+    case $opt in
+        f) force=true ;;
+        h) usage; exit 0 ;;
+        *) exit 1 ;;
+    esac
+done
+shift $((OPTIND - 1))
+[[ $# -eq 0 ]] || die "too many arguments"
+
+main
