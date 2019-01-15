@@ -46,7 +46,7 @@ fi
 
 # =========== Path =============================================================
 
-for p in $PROJECTS/scripts ~/.fzf/bin ~/.cargo/bin; do
+for p in $PROJECTS/scripts ~/.fzf/bin ~/.cargo/bin ~/.cabal/bin; do
     if [[ $PATH != *$p* && -d $p ]]; then
         PATH=$PATH:$p
     fi
