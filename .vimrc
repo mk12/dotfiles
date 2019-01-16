@@ -473,7 +473,7 @@ function! SyntaxName() abort
 endfunction
 
 function! ReflowText() abort
-    if SyntaxName() is? 'comment'
+    if SyntaxName() =~? 'comment$'
         normal gqac
     else
         normal! gqap
