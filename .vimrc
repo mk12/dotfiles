@@ -344,7 +344,7 @@ Shortcut toggle git line highlight
 Shortcut toggle line numbers
     \ nnoremap <Leader>tn :set number!<CR>
 Shortcut toggle obsess/session tracking
-    \ nnoremap <Leader>to :Obsess!<CR>
+    \ nnoremap <Leader>to :Obsession!<CR>
 Shortcut toggle paste mode
     \ nnoremap <Leader>tp :set paste!<CR>
 Shortcut toggle relative line numbers
@@ -397,8 +397,7 @@ Shortcut save/write all and exit
 augroup custom
     autocmd!
 
-    " Automatically load Obsession sessions.
-    autocmd VimEnter * if argc() is 0 | silent! source Session.vim | endif
+    autocmd VimEnter * nested call LoadExistingSession()
 
     autocmd FileType c,cpp setlocal commentstring=//\ %s comments^=:///
     autocmd FileType sql setlocal commentstring=--\ %s
@@ -693,6 +692,14 @@ function! ToggleColumnLimit() abort
         setlocal colorcolumn=+1
     else
         setlocal textwidth=0 colorcolumn=0
+    endif
+endfunction
+
+" https://github.com/tpope/vim-obsession/issues/17#issuecomment-229144719
+function! LoadExistingSession() abort
+    if argc() is 0 && &modified is 0 && empty(v:this_session)
+            \ && filereadable('Session.vim')
+        source Session.vim
     endif
 endfunction
 
