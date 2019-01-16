@@ -4,7 +4,7 @@ alias gg='git branch && git status -s'
 
 # =========== Environment variables ============================================
 
-export PROJECTS=~/GitHub
+export PROJECTS=$HOME/GitHub
 export LEDGER_FILE=$PROJECTS/finance/journal.ledger
 
 export CLICOLOR=true
@@ -46,8 +46,15 @@ fi
 
 # =========== Path =============================================================
 
-for p in $PROJECTS/scripts ~/.fzf/bin ~/.cargo/bin ~/.cabal/bin; do
-    if [[ $PATH != *$p* && -d $p ]]; then
+paths=()
+paths+=("$HOME/.cabal/bin")
+paths+=("$HOME/.cargo/bin")
+paths+=("$HOME/.fzf/bin")
+paths+=("$HOME/.linuxbrew/bin")
+paths+=("$PROJECTS/scripts")
+
+for p in "${paths[@]}"; do
+    if [[ "$PATH" != *"$p"* && -d "$p" ]]; then
         PATH=$PATH:$p
     fi
 done
