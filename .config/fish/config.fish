@@ -87,7 +87,11 @@ set fish_pager_color_progress brwhite --background=cyan
 # =========== Other config =====================================================
 
 # Configuration shared with bashrc
-bass source ~/.shellrc
+if functions -q bass
+    bass source ~/.shellrc
+else
+    echo (status -f): "bass unavailable, not sourcing shellrc"
+end
 
 # OS-specific configuration
 set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
