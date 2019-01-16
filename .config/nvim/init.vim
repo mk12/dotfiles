@@ -103,11 +103,15 @@ if !exists('g:loaded_sleuth')
 endif
 
 let &backupdir = $HOME . '/.local/share/nvim/backup'
-call mkdir(&backupdir, 'p')
+if !isdirectory(&backupdir)
+    call mkdir(&backupdir, 'p')
+endif
 
 " =========== Color scheme =====================================================
 
-set notermguicolors
+if has('termguicolors')
+    set notermguicolors
+end
 colorscheme base16-default-dark
 
 call Base16hi("DiffFile", g:base16_gui05, "", g:base16_cterm05, "", "bold")

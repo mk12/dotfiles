@@ -111,13 +111,21 @@ let &directory = $HOME . '/.vim/tmp'
 let &backupdir= $HOME . '/.vim/backup'
 let &undodir = $HOME . '/.vim/undo'
 
-call mkdir(&directory, 'p')
-call mkdir(&backupdir, 'p')
-call mkdir(&undodir, 'p')
+if !isdirectory(&directory)
+    call mkdir(&directory, 'p')
+endif
+if !isdirectory(&backupdir)
+    call mkdir(&backupdir, 'p')
+endif
+if !isdirectory(&undordir)
+    call mkdir(&undodir, 'p')
+endif
 
 " =========== Color scheme =====================================================
 
-set notermguicolors
+if has('termguicolors')
+    set notermguicolors
+end
 colorscheme base16-default-dark
 
 call Base16hi("DiffFile", g:base16_gui05, "", g:base16_cterm05, "", "bold")
