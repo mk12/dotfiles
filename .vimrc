@@ -117,7 +117,7 @@ endif
 if !isdirectory(&backupdir)
     call mkdir(&backupdir, 'p')
 endif
-if !isdirectory(&undordir)
+if !isdirectory(&undodir)
     call mkdir(&undodir, 'p')
 endif
 
