@@ -16,6 +16,8 @@
     rb = rebase
     cp = cherry-pick
     sh = stash
+    u = pull
+    p = push
     unstage = reset HEAD --
     last = log -1 HEAD
     lol = log --pretty=oneline --abbrev-commit --graph --decorate
