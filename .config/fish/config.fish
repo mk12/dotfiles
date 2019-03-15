@@ -24,7 +24,7 @@ end
 function upd --description "Update software"
     if command -qv brew
         echo "Updating homebrew"
-        brew update; and bbundle install
+        brew update; and brew upgrade
     end
     if set -q TMUX
         echo "Updating tmux"
