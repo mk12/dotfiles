@@ -11,8 +11,9 @@ endif
 call plug#begin()
 
 Plug 'airblade/vim-gitgutter'
-Plug 'chriskempson/base16-vim'
+Plug 'danielwe/base16-vim' " TODO: Change back from danielwe to chriskempson
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --release'}
 Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
@@ -31,6 +32,7 @@ Plug 'tpope/vim-commentary', { 'on': 'Commentary' }
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-fireplace', {'for': 'clojure'}
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-projectionist'
