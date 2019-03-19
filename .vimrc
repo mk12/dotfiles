@@ -13,16 +13,17 @@ endif
 call plug#begin()
 
 Plug 'airblade/vim-gitgutter'
-Plug 'danielwe/base16-vim' " TODO: Change back from danielwe to chriskempson
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'danielwe/base16-vim' " TODO: Change back from danielwe to chriskempson
 Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --release'}
 Plug 'glts/vim-textobj-comment'
+Plug 'guns/vim-sexp'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
+Plug 'junegunn/gv.vim'
 Plug 'justinmk/vim-dirvish'
-Plug 'kana/vim-textobj-entire'
 Plug 'kana/vim-textobj-user'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
@@ -34,12 +35,13 @@ Plug 'tpope/vim-commentary', { 'on': 'Commentary' }
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-fireplace', {'for': 'clojure'}
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-sexp-mappings-for-regular-people'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
@@ -69,6 +71,56 @@ let g:dispatch_quickfix_height = 15
 let g:dispatch_tmux_height = 15
 
 let g:gitgutter_map_keys = 0
+
+let g:sexp_enable_insert_mode_mappings = 0
+let g:sexp_mappings = {
+    \ 'sexp_move_to_prev_bracket':      '(',
+    \ 'sexp_move_to_next_bracket':      '',
+    \ 'sexp_move_to_prev_element_head': '',
+    \ 'sexp_move_to_next_element_head': '',
+    \ 'sexp_move_to_prev_element_tail': '',
+    \ 'sexp_move_to_next_element_tail': '',
+    \ 'sexp_flow_to_prev_close':        '',
+    \ 'sexp_flow_to_next_open':         ')',
+    \ 'sexp_flow_to_prev_open':         '',
+    \ 'sexp_flow_to_next_close':        '',
+    \ 'sexp_flow_to_prev_leaf_head':    '',
+    \ 'sexp_flow_to_next_leaf_head':    '',
+    \ 'sexp_flow_to_prev_leaf_tail':    '',
+    \ 'sexp_flow_to_next_leaf_tail':    '',
+    \ 'sexp_move_to_prev_top_element':  '',
+    \ 'sexp_move_to_next_top_element':  '',
+    \ 'sexp_select_prev_element':       '',
+    \ 'sexp_select_next_element':       '',
+    \ 'sexp_indent':                    '',
+    \ 'sexp_indent_top':                '',
+    \ 'sexp_round_head_wrap_list':      '',
+    \ 'sexp_round_tail_wrap_list':      '',
+    \ 'sexp_square_head_wrap_list':     '',
+    \ 'sexp_square_tail_wrap_list':     '',
+    \ 'sexp_curly_head_wrap_list':      '',
+    \ 'sexp_curly_tail_wrap_list':      '',
+    \ 'sexp_round_head_wrap_element':   '',
+    \ 'sexp_round_tail_wrap_element':   '',
+    \ 'sexp_square_head_wrap_element':  '',
+    \ 'sexp_square_tail_wrap_element':  '',
+    \ 'sexp_curly_head_wrap_element':   '',
+    \ 'sexp_curly_tail_wrap_element':   '',
+    \ 'sexp_insert_at_list_head':       '',
+    \ 'sexp_insert_at_list_tail':       '',
+    \ 'sexp_splice_list':               '',
+    \ 'sexp_convolute':                 '',
+    \ 'sexp_raise_list':                '',
+    \ 'sexp_raise_element':             '',
+    \ 'sexp_swap_list_backward':        '',
+    \ 'sexp_swap_list_forward':         '',
+    \ 'sexp_swap_element_backward':     '',
+    \ 'sexp_swap_element_forward':      '',
+    \ 'sexp_emit_head_element':         '',
+    \ 'sexp_emit_tail_element':         '',
+    \ 'sexp_capture_prev_element':      '',
+    \ 'sexp_capture_next_element':      '',
+    \ }
 
 " =========== Options ==========================================================
 
@@ -146,7 +198,7 @@ hi Normal ctermbg=NONE
 nnoremap <Space> <Nop>
 
 let mapleader = "\<Space>"
-let maplocalleader = '\'
+let maplocalleader = ','
 
 inoremap jk <Esc>
 inoremap kj <Esc>
@@ -233,9 +285,6 @@ Shortcut sort lines
 Shortcut remove trailing whitespace
     \ nnoremap <Leader>dw :%s/\s\+$//e<CR>
     \|xnoremap <Leader>dw :s/\s\+$//e<CR>
-Shortcut yank to system clipboard
-    \ nnoremap <Leader>dy :%y+<Bar>call YankToSystemClipboard(@+)<CR>
-    \|xnoremap <Leader>dy "+y:call YankToSystemClipboard(@+)<CR>
 
 Shortcut edit brewfile
     \ nnoremap <Leader>eb :edit ~/.Brewfile<CR>
@@ -264,16 +313,29 @@ Shortcut format code
 
 Shortcut git blame
     \ nnoremap <Leader>gb :Gblame<CR>
+Shortcut git diff
+    \ nnoremap <Leader>gd :Gtabedit! diff<CR>
 Shortcut git diff current file
-    \ nnoremap <Leader>gd :Gdiff<CR>
-Shortcut git diff all files
-    \ nnoremap <Leader>gD :Gtabedit! diff<CR>
+    \ nnoremap <Leader>gD :Gdiff<CR>
+Shortcut git status
+    \ nnoremap <Leader>gg :Gstatus<CR>
 Shortcut browse on GitHub
     \ nnoremap <Leader>gh :Gbrowse<CR>
+Shortcut git diff staged/cached/index
+    \ nnoremap <Leader>gi :Gtabedit! diff --staged<CR>
+Shortcut git diff staged/cached/index current file
+    \ nnoremap <Leader>gI :Gtabedit @:%<Bar>Gdiff :<CR>
+Shortcut git log
+    \ nnoremap <Leader>gl :GV<CR>
+    \|xnoremap <Leader>gl :GV<CR>
+Shortcut git log current file
+    \ nnoremap <Leader>gL :GV!<CR>
 Shortcut git push
     \ nnoremap <Leader>gp :Gpush<CR>
-Shortcut git status
-    \ nnoremap <Leader>gs :Gstatus<CR>
+Shortcut git show HEAD
+    \ nnoremap <Leader>gs :Gtabedit! show<CR>
+Shortcut git show HEAD current file
+    \ nnoremap <Leader>gS :Gtabedit @~:%<Bar>Gdiff @<CR>
 Shortcut git update/pull
     \ nnoremap <Leader>gu :Gpull<CR>
 
@@ -300,26 +362,26 @@ Shortcut kill/delete buffer
 Shortcut force kill/delete buffer
     \ nnoremap <silent> <Leader>K :call KillBuffer('!')<CR>
 
-Shortcut open console
-    \ nnoremap <Leader>mc :Console<CR>
 Shortcut open console in background
-    \ nnoremap <Leader>mC :Console!<CR>
-Shortcut dispatch default task
-    \ nnoremap <Leader>md :Dispatch<CR>
+    \ nnoremap <Leader>mc :Console!<CR>
+Shortcut open console in foreground
+    \ nnoremap <Leader>mC :Console<CR>
 Shortcut dispatch default task in background
-    \ nnoremap <Leader>mD :Dispatch!<CR>
-Shortcut make/build project
-    \ nnoremap <Leader>mm :Make<CR>
+    \ nnoremap <Leader>md :Dispatch!<CR>
+Shortcut dispatch default task in foreground
+    \ nnoremap <Leader>mD :Dispatch<CR>
 Shortcut make/build project in background
-    \ nnoremap <Leader>mM :Make!<CR>
+    \ nnoremap <Leader>mm :Make!<CR>
+Shortcut make/build project in foreground
+    \ nnoremap <Leader>mM :Make<CR>
 Shortcut open build results
     \ nnoremap <Leader>mo :Copen<CR>
 Shortcut open catch-all build results
     \ nnoremap <Leader>mO :Copen!<CR>
-Shortcut start project
-    \ nnoremap <Leader>ms :Start<CR>
 Shortcut start project in background
-    \ nnoremap <Leader>mS :Start!<CR>
+    \ nnoremap <Leader>ms :Start!<CR>
+Shortcut start project in foreground
+    \ nnoremap <Leader>mS :Start<CR>
 Shortcut generate project tags
     \ nnoremap <Leader>mt :call GenerateTags()<CR>
 
@@ -402,6 +464,10 @@ Shortcut save/write and exit
 Shortcut save/write all and exit
     \ nnoremap <Leader>X :xall<CR>
 
+Shortcut yank to system clipboard
+    \ nnoremap <Leader>y :%y+<Bar>call YankToSystemClipboard(@+)<CR>
+    \|xnoremap <Leader>y "+y:call YankToSystemClipboard(@+)<CR>
+
 " =========== Autocommands =====================================================
 
 augroup custom
@@ -415,6 +481,11 @@ augroup custom
     autocmd FileType text,markdown setlocal textwidth=0 colorcolumn=0
     autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
 
+    " Parinfer is enabled for these filetypes.
+    autocmd FileType clojure,scheme,lisp,racket,hy let b:AutoPairs = {'"':'"'}
+
+    autocmd FileType clojure call SetupClojureMappings()
+
     autocmd BufEnter * call DisableSyntaxForDiff()
     autocmd User ProjectionistActivate call LoadCustomProjections()
 
@@ -423,6 +494,8 @@ augroup custom
 
     " Sometimes Airline doesn't clean up properly.
     autocmd BufWipeout * call airline#extensions#tabline#buflist#clean()
+
+    autocmd BufEnter fugitive://*//* nnoremap <buffer> <silent> q :bdelete<CR>
 augroup END
 
 " =========== Functions ========================================================
@@ -711,6 +784,21 @@ function! LoadExistingSession() abort
             \ && filereadable('Session.vim')
         source Session.vim
     endif
+endfunction
+
+function! SetupClojureMappings() abort
+    nmap <buffer> <LocalLeader> <Plug>FireplacePrint
+    nmap <buffer> <LocalLeader><LocalLeader>
+        \ <Plug>FireplacePrint<Plug>(sexp_outer_list)
+    nmap <buffer> <LocalLeader>q <Plug>FireplaceEdit
+    nmap <buffer> <LocalLeader>qq <Plug>FireplaceEdit<Plug>(sexp_outer_list)
+    nmap <buffer> <LocalLeader>m <Plug>FireplaceMacroExpand
+    nmap <buffer> <LocalLeader>mm
+        \ <Plug>FireplaceMacroExpand<Plug>(sexp_outer_list)
+    nmap <buffer> <LocalLeader>e <Plug>FireplacePrompt
+    nmap <buffer> <LocalLeader>r cpr
+    nnoremap <buffer> <LocalLeader>s :Last<CR>
+    xnoremap <buffer> <silent> <LocalLeader> :Eval<CR>
 endfunction
 
 function! DisableSyntaxForDiff() abort
