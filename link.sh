@@ -33,9 +33,12 @@ link_dotfiles() {
     done
     dir=$(cd -P "$(dirname "$src")" && pwd)
 
-    mkdir -p ~/.config/{fish,nvim}
-
     cd -P "$dir" || die "failed to cd to $dir"
+
+    while read -r d; do
+        mkdir -p "$HOME/.config/$d"
+    done < <(ls -1 .config/)
+
     find . -type f -path "./.*" \
             -not -name ".DS_Store" \
             -not -path "./.git/*" \
