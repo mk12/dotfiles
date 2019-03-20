@@ -25113,146 +25113,150 @@
 	<false/>
 	<key>GlobalKeyMap</key>
 	<dict>
-		<key>0x30-0x140000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-greenscreen</string>
-		</dict>
-		<key>0x30-0x1c0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-greenscreen</string>
-		</dict>
-		<key>0x31-0x140000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-solarized-dark</string>
-		</dict>
-		<key>0x31-0x1c0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-solarized-light</string>
-		</dict>
-		<key>0x32-0x140000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-tomorrow-night</string>
-		</dict>
-		<key>0x32-0x1c0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-tomorrow</string>
-		</dict>
-		<key>0x33-0x140000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-google-dark</string>
-		</dict>
-		<key>0x33-0x1c0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-google-light</string>
-		</dict>
-		<key>0x34-0x140000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-gruvbox-dark-pale</string>
-		</dict>
-		<key>0x34-0x1c0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-gruvbox-dark-pale</string>
-		</dict>
-		<key>0x35-0x140000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-eighties</string>
-		</dict>
-		<key>0x35-0x1c0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-eighties</string>
-		</dict>
-		<key>0x36-0x140000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-oceanicnext</string>
-		</dict>
-		<key>0x36-0x1c0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-oceanicnext</string>
-		</dict>
-		<key>0x37-0x140000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-twilight</string>
-		</dict>
-		<key>0x37-0x1c0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-twilight</string>
-		</dict>
-		<key>0x38-0x140000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-circus</string>
-		</dict>
-		<key>0x38-0x1c0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-circus</string>
-		</dict>
-		<key>0x39-0x140000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-monokai</string>
-		</dict>
-		<key>0x39-0x1c0000</key>
-		<dict>
-			<key>Action</key>
-			<integer>40</integer>
-			<key>Text</key>
-			<string>base16-monokai</string>
-		</dict>
+
+		<!-- START_ITERMCOLORMAP -->
+<key>0x31-0x140000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-solarized-dark</string>
+</dict>
+<key>0x32-0x140000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-tomorrow-night</string>
+</dict>
+<key>0x33-0x140000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-google-dark</string>
+</dict>
+<key>0x34-0x140000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-gruvbox-dark-pale</string>
+</dict>
+<key>0x35-0x140000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-eighties</string>
+</dict>
+<key>0x36-0x140000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-oceanicnext</string>
+</dict>
+<key>0x37-0x140000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-twilight</string>
+</dict>
+<key>0x38-0x140000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-circus</string>
+</dict>
+<key>0x39-0x140000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-monokai</string>
+</dict>
+<key>0x30-0x140000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-greenscreen</string>
+</dict>
+<key>0x31-0x1c0000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-solarized-light</string>
+</dict>
+<key>0x32-0x1c0000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-tomorrow</string>
+</dict>
+<key>0x33-0x1c0000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-google-light</string>
+</dict>
+<key>0x34-0x1c0000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-gruvbox-dark-pale</string>
+</dict>
+<key>0x35-0x1c0000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-eighties</string>
+</dict>
+<key>0x36-0x1c0000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-oceanicnext</string>
+</dict>
+<key>0x37-0x1c0000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-twilight</string>
+</dict>
+<key>0x38-0x1c0000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-circus</string>
+</dict>
+<key>0x39-0x1c0000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-monokai</string>
+</dict>
+<key>0x30-0x1c0000</key>
+<dict>
+    <key>Action</key>
+    <integer>40</integer>
+    <key>Text</key>
+    <string>base16-greenscreen</string>
+</dict>
+		<!-- END_ITERMCOLORMAP -->
+
 		<key>0x66-0x140000</key>
 		<dict>
 			<key>Action</key>
