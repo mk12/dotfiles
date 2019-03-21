@@ -1,3 +1,8 @@
+# If not running interactively, don't do anything.
+if not status --is-interactive
+    exit
+end
+
 # =========== Plugins ==========================================================
 
 # Install fisher if it isn't already installed.
@@ -6,6 +11,31 @@ if not functions -q fisher
     curl https://git.io/fisher --create-dirs -sLo \
         $XDG_CONFIG_HOME/fish/functions/fisher.fish
     fish -c fisher
+end
+
+# =========== Shared config ====================================================
+
+# Source configuration shared with bashrc. Only do it for login shells since
+# other shells will inherit the environment variables (and bass is slow).
+if status --is-login
+    if functions -q bass
+        bass source ~/.shellrc
+    else
+        echo (status -f): "bass unavailable, not sourcing shellrc"
+    end
+end
+
+# =========== Aliases ==========================================================
+
+alias g=git
+alias gg='git status; and git branch'
+alias vi=$EDITOR
+alias vim=$EDITOR
+
+if command -qv exa
+    alias l=exa
+    alias ll='exa -l'
+    alias la='exa -la'
 end
 
 # =========== Functions ========================================================
@@ -85,13 +115,6 @@ set fish_pager_color_prefix white --bold --underline
 set fish_pager_color_progress brwhite --background=cyan
 
 # =========== Other config =====================================================
-
-# Configuration shared with bashrc
-if functions -q bass
-    bass source ~/.shellrc
-else
-    echo (status -f): "bass unavailable, not sourcing shellrc"
-end
 
 # OS-specific configuration
 set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
