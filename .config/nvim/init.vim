@@ -11,9 +11,10 @@ endif
 call plug#begin()
 
 Plug 'airblade/vim-gitgutter'
+Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'danielwe/base16-vim' " TODO: Change back from danielwe to chriskempson
-Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --release'}
+Plug 'eraserhd/parinfer-rust', { 'do': 'cargo build --release' }
 Plug 'glts/vim-textobj-comment'
 Plug 'guns/vim-sexp'
 Plug 'jiangmiao/auto-pairs'
@@ -62,8 +63,6 @@ let g:airline_highlighting_cache = 1
 let g:airline_theme = 'base16_vim'
 
 let g:dispatch_no_maps = 1
-let g:dispatch_quickfix_height = 15
-let g:dispatch_tmux_height = 15
 
 let g:gitgutter_map_keys = 0
 
@@ -116,6 +115,9 @@ let g:sexp_mappings = {
     \ 'sexp_capture_prev_element':      '',
     \ 'sexp_capture_next_element':      '',
     \ }
+
+let g:VimuxPromptString = "Vimux: "
+let g:VimuxHeight = "30"
 
 " =========== Options ==========================================================
 
@@ -324,6 +326,8 @@ Shortcut git show HEAD current file
     \ nnoremap <Leader>gS :Gtabedit @~:%<Bar>Gdiff @<CR>
 Shortcut git update/pull
     \ nnoremap <Leader>gu :Gpull<CR>
+Shortcut git update/pull (autostash)
+    \ nnoremap <Leader>gU :Gpull --autostash<CR>
 
 Shortcut find help
     \ nnoremap <Leader>h :Helptags<CR>
@@ -348,26 +352,30 @@ Shortcut kill/delete buffer
 Shortcut force kill/delete buffer
     \ nnoremap <silent> <Leader>K :call KillBuffer('!')<CR>
 
+Shortcut open console
+    \ nnoremap <Leader>mc :Console<CR>
 Shortcut open console in background
-    \ nnoremap <Leader>mc :Console!<CR>
-Shortcut open console in foreground
-    \ nnoremap <Leader>mC :Console<CR>
+    \ nnoremap <Leader>mC :Console!<CR>
+Shortcut dispatch default task
+    \ nnoremap <Leader>md :Dispatch<CR>
 Shortcut dispatch default task in background
-    \ nnoremap <Leader>md :Dispatch!<CR>
-Shortcut dispatch default task in foreground
-    \ nnoremap <Leader>mD :Dispatch<CR>
+    \ nnoremap <Leader>mD :Dispatch!<CR>
+Shortcut select default dispatch task
+    \ nnoremap <Leader>mf :FocusDispatch<Space>
+Shortcut clear default dispatch task
+    \ nnoremap <Leader>mF :FocusDispatch<CR>
+Shortcut make/build project
+    \ nnoremap <Leader>mm :Make<CR>
 Shortcut make/build project in background
-    \ nnoremap <Leader>mm :Make!<CR>
-Shortcut make/build project in foreground
-    \ nnoremap <Leader>mM :Make<CR>
+    \ nnoremap <Leader>mM :Make!<CR>
 Shortcut open build results
     \ nnoremap <Leader>mo :Copen<CR>
 Shortcut open catch-all build results
-    \ nnoremap <Leader>mO :Copen!<CR>
+    \ nnoremap <Leader>mO :Copen<CR>
+Shortcut start project
+    \ nnoremap <Leader>ms :Start<CR>
 Shortcut start project in background
-    \ nnoremap <Leader>ms :Start!<CR>
-Shortcut start project in foreground
-    \ nnoremap <Leader>mS :Start<CR>
+    \ nnoremap <Leader>mS :Start!<CR>
 Shortcut generate project tags
     \ nnoremap <Leader>mt :call GenerateTags()<CR>
 
@@ -449,6 +457,26 @@ Shortcut save/write and exit
     \ nnoremap <Leader>x :exit<CR>
 Shortcut save/write all and exit
     \ nnoremap <Leader>X :xall<CR>
+
+Shortcut open horizontal vimux pane
+    \ nnoremap <Leader>v- :call OpenVimux('v')<CR>
+Shortcut open vertical vimux pane
+    \ nnoremap <Leader>v/ :call OpenVimux('h')<CR>
+Shortcut interrupt (Ctrl-C) vimux
+    \ nnoremap <Leader>vc :VimuxInterruptRunner<CR>
+Shortcut inspect vimux pane
+    \ nnoremap <Leader>vi :VimuxInspectRunner<CR>
+Shortcut clear vimux history
+    \ nnoremap <Leader>vk
+        \ :call VimuxSendKeys('C-l')<Bar>VimuxClearRunnerHistory<CR>
+Shortcut run last vimux command
+    \ nnoremap <Leader>vl :VimuxRunLastCommand<CR>
+Shortcut close vimux pane
+    \ nnoremap <Leader>vq :VimuxCloseRunner<CR>
+Shortcut run vimux command
+    \ nnoremap <Leader>vv :VimuxPromptCommand<CR>
+Shortcut zoom vimux pane
+    \ nnoremap <Leader>vz :VimuxZoomRunner<CR>
 
 Shortcut yank to system clipboard
     \ nnoremap <Leader>y :%y+<Bar>call YankToSystemClipboard(@+)<CR>
@@ -621,16 +649,6 @@ function! AlternateFile() abort
     endtry
 endfunction
 
-" https://sunaku.github.io/tmux-yank-osc52.html
-function! YankToSystemClipboard(text) abort
-    let l:escape = system('yank', a:text)
-    if v:shell_error
-        echoerr l:escape
-    else
-        call writefile([l:escape], '/dev/tty', 'b')
-    endif
-endfunction
-
 function! DeleteHiddenBuffers() abort
     let l:tpbl = []
     let l:deleted = 0
@@ -761,6 +779,22 @@ function! ToggleColumnLimit() abort
         setlocal colorcolumn=+1
     else
         setlocal textwidth=0 colorcolumn=0
+    endif
+endfunction
+
+function! OpenVimux(orientation) abort
+    VimuxCloseRunner
+    let g:VimuxOrientation = a:orientation
+    call VimuxOpenRunner()
+endfunction
+
+" https://sunaku.github.io/tmux-yank-osc52.html
+function! YankToSystemClipboard(text) abort
+    let l:escape = system('yank', a:text)
+    if v:shell_error
+        echoerr l:escape
+    else
+        call writefile([l:escape], '/dev/tty', 'b')
     endif
 endfunction
 
