@@ -25183,692 +25183,6 @@
 		    <key>Text</key>
 		    <string>base16-greenscreen</string>
 		</dict>
-		<key>0xf704-0x100000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-3024</string>
-		</dict>
-		<key>0xf705-0x100000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-apathy</string>
-		</dict>
-		<key>0xf706-0x100000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-ashes</string>
-		</dict>
-		<key>0xf707-0x100000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-cave</string>
-		</dict>
-		<key>0xf708-0x100000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-cave-light</string>
-		</dict>
-		<key>0xf709-0x100000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-dune</string>
-		</dict>
-		<key>0xf70a-0x100000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-dune-light</string>
-		</dict>
-		<key>0xf70b-0x100000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-estuary</string>
-		</dict>
-		<key>0xf70c-0x100000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-estuary-light</string>
-		</dict>
-		<key>0xf70d-0x100000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-forest</string>
-		</dict>
-		<key>0xf70e-0x100000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-forest-light</string>
-		</dict>
-		<key>0xf70f-0x100000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-heath</string>
-		</dict>
-		<key>0xf704-0x120000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-heath-light</string>
-		</dict>
-		<key>0xf705-0x120000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-lakeside</string>
-		</dict>
-		<key>0xf706-0x120000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-lakeside-light</string>
-		</dict>
-		<key>0xf707-0x120000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-plateau</string>
-		</dict>
-		<key>0xf708-0x120000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-plateau-light</string>
-		</dict>
-		<key>0xf709-0x120000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-savanna</string>
-		</dict>
-		<key>0xf70a-0x120000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-savanna-light</string>
-		</dict>
-		<key>0xf70b-0x120000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-seaside</string>
-		</dict>
-		<key>0xf70c-0x120000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-seaside-light</string>
-		</dict>
-		<key>0xf70d-0x120000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-sulphurpool</string>
-		</dict>
-		<key>0xf70e-0x120000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-atelier-sulphurpool-light</string>
-		</dict>
-		<key>0xf70f-0x120000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-bespin</string>
-		</dict>
-		<key>0xf704-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-brewer</string>
-		</dict>
-		<key>0xf705-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-bright</string>
-		</dict>
-		<key>0xf706-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-brushtrees</string>
-		</dict>
-		<key>0xf707-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-brushtrees-dark</string>
-		</dict>
-		<key>0xf708-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-chalk</string>
-		</dict>
-		<key>0xf709-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-circus</string>
-		</dict>
-		<key>0xf70a-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-classic-dark</string>
-		</dict>
-		<key>0xf70b-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-classic-light</string>
-		</dict>
-		<key>0xf70c-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-codeschool</string>
-		</dict>
-		<key>0xf70d-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-cupcake</string>
-		</dict>
-		<key>0xf70e-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-cupertino</string>
-		</dict>
-		<key>0xf70f-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-darktooth</string>
-		</dict>
-		<key>0xf704-0x160000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-default-dark</string>
-		</dict>
-		<key>0xf705-0x160000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-default-light</string>
-		</dict>
-		<key>0xf706-0x160000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-dracula</string>
-		</dict>
-		<key>0xf707-0x160000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-eighties</string>
-		</dict>
-		<key>0xf708-0x160000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-embers</string>
-		</dict>
-		<key>0xf709-0x160000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-flat</string>
-		</dict>
-		<key>0xf70a-0x160000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-github</string>
-		</dict>
-		<key>0xf70b-0x160000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-google-dark</string>
-		</dict>
-		<key>0xf70c-0x160000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-google-light</string>
-		</dict>
-		<key>0xf70d-0x160000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-grayscale-dark</string>
-		</dict>
-		<key>0xf70e-0x160000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-grayscale-light</string>
-		</dict>
-		<key>0xf70f-0x160000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-greenscreen</string>
-		</dict>
-		<key>0xf704-0x180000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-gruvbox-dark-hard</string>
-		</dict>
-		<key>0xf705-0x180000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-gruvbox-dark-medium</string>
-		</dict>
-		<key>0xf706-0x180000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-gruvbox-dark-pale</string>
-		</dict>
-		<key>0xf707-0x180000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-gruvbox-dark-soft</string>
-		</dict>
-		<key>0xf708-0x180000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-gruvbox-light-hard</string>
-		</dict>
-		<key>0xf709-0x180000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-gruvbox-light-medium</string>
-		</dict>
-		<key>0xf70a-0x180000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-gruvbox-light-soft</string>
-		</dict>
-		<key>0xf70b-0x180000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-harmonic-dark</string>
-		</dict>
-		<key>0xf70c-0x180000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-harmonic-light</string>
-		</dict>
-		<key>0xf70d-0x180000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-hopscotch</string>
-		</dict>
-		<key>0xf70e-0x180000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-irblack</string>
-		</dict>
-		<key>0xf70f-0x180000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-isotope</string>
-		</dict>
-		<key>0xf704-0x1a0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-macintosh</string>
-		</dict>
-		<key>0xf705-0x1a0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-marrakesh</string>
-		</dict>
-		<key>0xf706-0x1a0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-materia</string>
-		</dict>
-		<key>0xf707-0x1a0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-material</string>
-		</dict>
-		<key>0xf708-0x1a0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-material-darker</string>
-		</dict>
-		<key>0xf709-0x1a0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-material-lighter</string>
-		</dict>
-		<key>0xf70a-0x1a0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-material-palenight</string>
-		</dict>
-		<key>0xf70b-0x1a0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-mellow-purple</string>
-		</dict>
-		<key>0xf70c-0x1a0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-mexico-light</string>
-		</dict>
-		<key>0xf70d-0x1a0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-mocha</string>
-		</dict>
-		<key>0xf70e-0x1a0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-monokai</string>
-		</dict>
-		<key>0xf70f-0x1a0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-nord</string>
-		</dict>
-		<key>0xf704-0x1c0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-ocean</string>
-		</dict>
-		<key>0xf705-0x1c0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-oceanicnext</string>
-		</dict>
-		<key>0xf706-0x1c0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-one-light</string>
-		</dict>
-		<key>0xf707-0x1c0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-onedark</string>
-		</dict>
-		<key>0xf708-0x1c0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-paraiso</string>
-		</dict>
-		<key>0xf709-0x1c0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-phd</string>
-		</dict>
-		<key>0xf70a-0x1c0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-pico</string>
-		</dict>
-		<key>0xf70b-0x1c0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-pop</string>
-		</dict>
-		<key>0xf70c-0x1c0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-railscasts</string>
-		</dict>
-		<key>0xf70d-0x1c0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-rebecca</string>
-		</dict>
-		<key>0xf70e-0x1c0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-seti</string>
-		</dict>
-		<key>0xf70f-0x1c0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-shapeshifter</string>
-		</dict>
-		<key>0xf704-0x60000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-solarflare</string>
-		</dict>
-		<key>0xf705-0x60000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-solarized-dark</string>
-		</dict>
-		<key>0xf706-0x60000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-solarized-light</string>
-		</dict>
-		<key>0xf707-0x60000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-spacemacs</string>
-		</dict>
-		<key>0xf708-0x60000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-summerfruit-dark</string>
-		</dict>
-		<key>0xf709-0x60000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-summerfruit-light</string>
-		</dict>
-		<key>0xf70a-0x60000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-tomorrow</string>
-		</dict>
-		<key>0xf70b-0x60000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-tomorrow-night</string>
-		</dict>
-		<key>0xf70c-0x60000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-tube</string>
-		</dict>
-		<key>0xf70d-0x60000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-twilight</string>
-		</dict>
-		<key>0xf70e-0x60000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-unikitty-dark</string>
-		</dict>
-		<key>0xf70f-0x60000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-unikitty-light</string>
-		</dict>
-		<key>0xf704-0xa0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-woodland</string>
-		</dict>
-		<key>0xf705-0xa0000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-zenburn</string>
-		</dict>
 		<key>0x66-0x140000</key>
 		<dict>
 			<key>Action</key>
@@ -26039,13 +25353,13 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>658 408 606 469 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>1705 388 958 470 1440 132 1366 768 </string>
+	<string>1630 320 958 470 1440 132 1366 768 </string>
 	<key>NSWindow Frame com.apple.typography_panel_Iosevka</key>
 	<string>708 300 260 330 0 0 1440 877 </string>
 	<key>NSWindow Frame com.apple.typography_panel_Menlo-Regular</key>
 	<string>246 523 260 36 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>437 374 650 502 0 0 1440 900 </string>
+	<string>0 421 1440 479 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>532 235 650 452 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -26070,13 +25384,13 @@
 			<key>Ansi 0 Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.21176470999999999</real>
+				<real>0.89019610000000005</real>
 				<key>Color Space</key>
 				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.16862746000000001</real>
+				<real>0.96470590000000001</real>
 				<key>Red Component</key>
-				<real>0.0</real>
+				<real>0.99215686000000003</real>
 			</dict>
 			<key>Ansi 1 Color</key>
 			<dict>
@@ -26092,39 +25406,6 @@
 			<key>Ansi 10 Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.25882354000000002</real>
-				<key>Color Space</key>
-				<string>sRGB</string>
-				<key>Green Component</key>
-				<real>0.21176470999999999</real>
-				<key>Red Component</key>
-				<real>0.02745098</real>
-			</dict>
-			<key>Ansi 11 Color</key>
-			<dict>
-				<key>Blue Component</key>
-				<real>0.45882352999999998</real>
-				<key>Color Space</key>
-				<string>sRGB</string>
-				<key>Green Component</key>
-				<real>0.43137255000000002</real>
-				<key>Red Component</key>
-				<real>0.34509804999999999</real>
-			</dict>
-			<key>Ansi 12 Color</key>
-			<dict>
-				<key>Blue Component</key>
-				<real>0.58823530000000002</real>
-				<key>Color Space</key>
-				<string>sRGB</string>
-				<key>Green Component</key>
-				<real>0.58039220000000002</real>
-				<key>Red Component</key>
-				<real>0.51372549999999995</real>
-			</dict>
-			<key>Ansi 13 Color</key>
-			<dict>
-				<key>Blue Component</key>
 				<real>0.83529410000000004</real>
 				<key>Color Space</key>
 				<string>sRGB</string>
@@ -26132,6 +25413,39 @@
 				<real>0.9098039</real>
 				<key>Red Component</key>
 				<real>0.93333334000000001</real>
+			</dict>
+			<key>Ansi 11 Color</key>
+			<dict>
+				<key>Blue Component</key>
+				<real>0.63137259999999995</real>
+				<key>Color Space</key>
+				<string>sRGB</string>
+				<key>Green Component</key>
+				<real>0.63137259999999995</real>
+				<key>Red Component</key>
+				<real>0.57647060000000006</real>
+			</dict>
+			<key>Ansi 12 Color</key>
+			<dict>
+				<key>Blue Component</key>
+				<real>0.51372549999999995</real>
+				<key>Color Space</key>
+				<string>sRGB</string>
+				<key>Green Component</key>
+				<real>0.48235294000000001</real>
+				<key>Red Component</key>
+				<real>0.39607843999999998</real>
+			</dict>
+			<key>Ansi 13 Color</key>
+			<dict>
+				<key>Blue Component</key>
+				<real>0.25882354000000002</real>
+				<key>Color Space</key>
+				<string>sRGB</string>
+				<key>Green Component</key>
+				<real>0.21176470999999999</real>
+				<key>Red Component</key>
+				<real>0.02745098</real>
 			</dict>
 			<key>Ansi 14 Color</key>
 			<dict>
@@ -26147,13 +25461,13 @@
 			<key>Ansi 15 Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.89019610000000005</real>
+				<real>0.21176470999999999</real>
 				<key>Color Space</key>
 				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.96470590000000001</real>
+				<real>0.16862746000000001</real>
 				<key>Red Component</key>
-				<real>0.99215686000000003</real>
+				<real>0.0</real>
 			</dict>
 			<key>Ansi 2 Color</key>
 			<dict>
@@ -26213,24 +25527,24 @@
 			<key>Ansi 7 Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.63137259999999995</real>
+				<real>0.45882352999999998</real>
 				<key>Color Space</key>
 				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.63137259999999995</real>
+				<real>0.43137255000000002</real>
 				<key>Red Component</key>
-				<real>0.57647060000000006</real>
+				<real>0.34509804999999999</real>
 			</dict>
 			<key>Ansi 8 Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.51372549999999995</real>
+				<real>0.58823530000000002</real>
 				<key>Color Space</key>
 				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.48235294000000001</real>
+				<real>0.58039220000000002</real>
 				<key>Red Component</key>
-				<real>0.39607843999999998</real>
+				<real>0.51372549999999995</real>
 			</dict>
 			<key>Ansi 9 Color</key>
 			<dict>
@@ -26248,13 +25562,13 @@
 			<key>Background Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.21176470999999999</real>
+				<real>0.89019610000000005</real>
 				<key>Color Space</key>
 				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.16862746000000001</real>
+				<real>0.96470590000000001</real>
 				<key>Red Component</key>
-				<real>0.0</real>
+				<real>0.99215686000000003</real>
 			</dict>
 			<key>Background Image Location</key>
 			<string></string>
@@ -26278,13 +25592,13 @@
 			<key>Bold Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.63137259999999995</real>
+				<real>0.45882352999999998</real>
 				<key>Color Space</key>
 				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.63137259999999995</real>
+				<real>0.43137255000000002</real>
 				<key>Red Component</key>
-				<real>0.57647060000000006</real>
+				<real>0.34509804999999999</real>
 			</dict>
 			<key>Bound Hosts</key>
 			<array/>
@@ -26301,13 +25615,13 @@
 			<key>Cursor Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.63137259999999995</real>
+				<real>0.45882352999999998</real>
 				<key>Color Space</key>
 				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.63137259999999995</real>
+				<real>0.43137255000000002</real>
 				<key>Red Component</key>
-				<real>0.57647060000000006</real>
+				<real>0.34509804999999999</real>
 			</dict>
 			<key>Cursor Guide Color</key>
 			<dict>
@@ -26325,13 +25639,13 @@
 			<key>Cursor Text Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.21176470999999999</real>
+				<real>0.89019610000000005</real>
 				<key>Color Space</key>
 				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.16862746000000001</real>
+				<real>0.96470590000000001</real>
 				<key>Red Component</key>
-				<real>0.0</real>
+				<real>0.99215686000000003</real>
 			</dict>
 			<key>Custom Command</key>
 			<string>Yes</string>
@@ -26348,13 +25662,13 @@
 			<key>Foreground Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.63137259999999995</real>
+				<real>0.45882352999999998</real>
 				<key>Color Space</key>
 				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.63137259999999995</real>
+				<real>0.43137255000000002</real>
 				<key>Red Component</key>
-				<real>0.57647060000000006</real>
+				<real>0.34509804999999999</real>
 			</dict>
 			<key>Guid</key>
 			<string>7317E754-830A-444E-8055-55525CBF75F2</string>
@@ -26411,17 +25725,6 @@
 			<key>Selected Text Color</key>
 			<dict>
 				<key>Blue Component</key>
-				<real>0.63137259999999995</real>
-				<key>Color Space</key>
-				<string>sRGB</string>
-				<key>Green Component</key>
-				<real>0.63137259999999995</real>
-				<key>Red Component</key>
-				<real>0.57647060000000006</real>
-			</dict>
-			<key>Selection Color</key>
-			<dict>
-				<key>Blue Component</key>
 				<real>0.45882352999999998</real>
 				<key>Color Space</key>
 				<string>sRGB</string>
@@ -26429,6 +25732,17 @@
 				<real>0.43137255000000002</real>
 				<key>Red Component</key>
 				<real>0.34509804999999999</real>
+			</dict>
+			<key>Selection Color</key>
+			<dict>
+				<key>Blue Component</key>
+				<real>0.63137259999999995</real>
+				<key>Color Space</key>
+				<string>sRGB</string>
+				<key>Green Component</key>
+				<real>0.63137259999999995</real>
+				<key>Red Component</key>
+				<real>0.57647060000000006</real>
 			</dict>
 			<key>Send Code When Idle</key>
 			<false/>
@@ -26979,7 +26293,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-03-21T12:45:57Z</date>
+	<date>2019-03-25T23:43:30Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>ShowBookmarkName</key>
@@ -27001,7 +26315,7 @@
 	<key>findMode_iTerm</key>
 	<integer>0</integer>
 	<key>iTerm Version</key>
-	<string>3.2.7</string>
+	<string>3.2.8</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>0</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>
