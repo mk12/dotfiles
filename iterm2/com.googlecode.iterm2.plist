@@ -25113,76 +25113,6 @@
 	<false/>
 	<key>GlobalKeyMap</key>
 	<dict>
-		<key>0x31-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-solarized-light</string>
-		</dict>
-		<key>0x32-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-solarized-dark</string>
-		</dict>
-		<key>0x33-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-one-light</string>
-		</dict>
-		<key>0x34-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-onedark</string>
-		</dict>
-		<key>0x35-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-eighties</string>
-		</dict>
-		<key>0x36-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-oceanicnext</string>
-		</dict>
-		<key>0x37-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-solarflare</string>
-		</dict>
-		<key>0x38-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-tomorrow-night</string>
-		</dict>
-		<key>0x39-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-grayscale-dark</string>
-		</dict>
-		<key>0x30-0x140000</key>
-		<dict>
-		    <key>Action</key>
-		    <integer>40</integer>
-		    <key>Text</key>
-		    <string>base16-greenscreen</string>
-		</dict>
 		<key>0x66-0x140000</key>
 		<dict>
 			<key>Action</key>
@@ -25353,15 +25283,15 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>658 408 606 469 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>1630 320 958 470 1440 132 1366 768 </string>
+	<string>398 463 918 423 0 0 1440 900 </string>
 	<key>NSWindow Frame com.apple.typography_panel_Iosevka</key>
 	<string>708 300 260 330 0 0 1440 877 </string>
 	<key>NSWindow Frame com.apple.typography_panel_Menlo-Regular</key>
 	<string>246 523 260 36 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 421 1440 479 0 0 1440 900 </string>
+	<string>135 0 1298 877 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>532 235 650 452 0 0 1440 877 </string>
+	<string>532 191 650 502 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
 	<string>547 356 650 452 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 3</key>
@@ -25374,7 +25304,7 @@
 			<key>ASCII Anti Aliased</key>
 			<true/>
 			<key>ASCII Ligatures</key>
-			<true/>
+			<false/>
 			<key>Allow Title Reporting</key>
 			<false/>
 			<key>Allow Title Setting</key>
@@ -25712,6 +25642,8 @@
 			<string>Iosevka 15</string>
 			<key>Option Key Sends</key>
 			<integer>2</integer>
+			<key>Place Prompt at First Column</key>
+			<false/>
 			<key>Prompt Before Closing 2</key>
 			<integer>2</integer>
 			<key>Right Option Key Sends</key>
@@ -25748,6 +25680,8 @@
 			<false/>
 			<key>Shortcut</key>
 			<string></string>
+			<key>Show Mark Indicators</key>
+			<false/>
 			<key>Silence Bell</key>
 			<false/>
 			<key>Smart Cursor Color</key>
@@ -26153,6 +26087,8 @@
 			<false/>
 			<key>Option Key Sends</key>
 			<integer>2</integer>
+			<key>Place Prompt at First Column</key>
+			<false/>
 			<key>Prompt Before Closing 2</key>
 			<integer>2</integer>
 			<key>Right Option Key Sends</key>
@@ -26189,6 +26125,8 @@
 			<false/>
 			<key>Shortcut</key>
 			<string></string>
+			<key>Show Mark Indicators</key>
+			<false/>
 			<key>Silence Bell</key>
 			<false/>
 			<key>Smart Cursor Color</key>
@@ -26293,7 +26231,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-03-25T23:43:30Z</date>
+	<date>2019-04-07T23:47:12Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>ShowBookmarkName</key>
