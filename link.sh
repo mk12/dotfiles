@@ -38,6 +38,7 @@ link_dotfiles() {
     while read -r d; do
         mkdir -p "$HOME/.config/$d"
     done < <(ls -1 .config/)
+    mkdir -p "$HOME/.lein"
 
     find . -type f -path "./.*" \
             -not -name ".DS_Store" \
