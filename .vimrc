@@ -195,6 +195,9 @@ hi clear WildMenu
 hi link WildMenu PMenuSel
 hi Normal ctermbg=NONE
 
+hi clear SpellBad
+hi SpellBad cterm=underline,bold ctermfg=red
+
 " =========== Mappings =========================================================
 
 nnoremap <Space> <Nop>
@@ -502,6 +505,7 @@ augroup custom
     autocmd!
 
     autocmd VimEnter * nested call LoadExistingSession()
+    autocmd User ProjectionistActivate call LoadCustomProjections()
 
     autocmd FileType c,cpp setlocal commentstring=//\ %s comments^=:///
     autocmd FileType sql setlocal commentstring=--\ %s
@@ -509,13 +513,16 @@ augroup custom
     autocmd FileType text,markdown setlocal textwidth=0 colorcolumn=0
     autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
 
+    " Fix it so that crontab -e can save properly.
+    autocmd filetype crontab setlocal nobackup nowritebackup textwidth=0
+
     " Parinfer is enabled for these filetypes.
     autocmd FileType clojure,scheme,lisp,racket,hy let b:AutoPairs = {'"':'"'}
 
     autocmd FileType clojure call SetupClojureMappings()
 
+    " Don't do syntax highlighting in diffs.
     autocmd BufEnter * call DisableSyntaxForDiff()
-    autocmd User ProjectionistActivate call LoadCustomProjections()
 
     " By default GitGutter waits for 'updatetime' ms before updating.
     autocmd BufWritePost,WinEnter * GitGutter
@@ -523,6 +530,7 @@ augroup custom
     " Sometimes Airline doesn't clean up properly.
     autocmd BufWipeout * call airline#extensions#tabline#buflist#clean()
 
+    " Exit fugitive windows consistently with q.
     autocmd BufEnter fugitive://*//* nnoremap <buffer> <silent> q :bdelete<CR>
 augroup END
 
@@ -545,13 +553,22 @@ function! s:EchoException() abort
 endfunction
 
 function! s:ExecuteRestoringView(cmd) abort
-    " http://vim.wikia.com/wiki/
-    " Restore_the_cursor_position_after_undoing_text_change_made_by_a_script
+    " http://vim.wikia.com/wiki/Restore_the_cursor_position_after_undoing_text_change_made_by_a_script
     normal! ix
     normal! x
     let l:view = winsaveview()
-    silent execute a:cmd
-    call winrestview(l:view)
+    let l:old_shellredir = &shellredir
+    let l:errfile = tempname()
+    let &shellredir = '>%s 2>' . l:errfile
+    try
+        silent execute a:cmd
+    finally
+        let &shellredir = l:old_shellredir
+        call winrestview(l:view)
+    endtry
+    if v:shell_error != 0
+        call s:Error(readfile(l:errfile)[0])
+    endif
 endfunction
 
 function! InputDirectory() abort
@@ -708,6 +725,8 @@ function! FormatCode(...) abort range
         let l:cmd = b:format_command
     elseif &filetype is# 'c' || &filetype is# 'cpp'
         let l:cmd = 'clang-format'
+    elseif &filetype is# 'python'
+        let l:cmd = 'black -l ' . &textwidth . ' -'
     else
         let l:ft = empty(&filetype) ? '<no filetype>' : &filetype
         call s:Error('Unable to format ' . l:ft . ' file')
