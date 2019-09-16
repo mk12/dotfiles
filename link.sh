@@ -40,17 +40,27 @@ link_dotfiles() {
     done < <(ls -1 .config/)
     mkdir -p "$HOME/.lein"
 
-    find . -type f -path "./.*" \
-            -not -name ".DS_Store" \
-            -not -path "./.git/*" \
-            -not -path "./.config/fish/.gitignore" \
-            | while read -r filepath; do
+    files=()
+    while read -r filepath; do
         file=${filepath#'./'}
         if [[ -e "$HOME/$file" ]]; then
             echo "$HOME/$file: file exists"
         else
-            echo "symlinking $HOME/$file -> $dir/$file"
+            files+=("$file")
+        fi
+    done < <(find . -type f -path "./.*" \
+            -not -name ".DS_Store" \
+            -not -path "./.git/*" \
+            -not -path "./.config/fish/.gitignore")
+
+    for file in "${files[@]+"${files[@]}"}"; do
+        echo -n "symlink $HOME/$file -> $dir/$file ? (y/N) " reply
+        read -r reply
+        if [[ "$reply" =~ ^[Yy]$ ]]; then
             ln -s "$dir/$file" "$HOME/$file" > /dev/null
+            echo "symlinked $HOME/$file -> $dir/$file"
+        else
+            echo "skipping $file"
         fi
     done
 }
@@ -59,7 +69,7 @@ main() {
     if [[ "$force" == true ]]; then
         link_dotfiles
     else
-        echo -n "Symlink all dotfiles into your home directory? (Y/n) "
+        echo -n "Symlink dotfiles into your home directory? (y/N) "
         read -r reply
         if [[ "$reply" =~ ^[Yy]$ ]]; then
             link_dotfiles
