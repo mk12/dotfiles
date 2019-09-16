@@ -13,16 +13,15 @@ if not functions -q fisher
     fish -c fisher
 end
 
+set pure_separate_prompt_on_error true
+
 # =========== Shared config ====================================================
 
-# Source configuration shared with bashrc. Only do it for login shells since
-# other shells will inherit the environment variables (and bass is slow).
-if status --is-login
-    if functions -q bass
-        bass source ~/.shellrc
-    else
-        echo (status -f): "bass unavailable, not sourcing shellrc"
-    end
+# Source configuration shared with bashrc.
+if functions -q fenv
+    fenv source ~/.shellrc
+else
+    echo (status -f): "fenv unavailable, not sourcing shellrc"
 end
 
 # =========== Aliases ==========================================================
@@ -38,7 +37,15 @@ if command -qv exa
     alias la='exa -la'
 end
 
+if command -qv bat
+    alias cat=bat
+end
+
 # =========== Functions ========================================================
+
+function fish_source --description "Reload config files"
+    source ~/.config/fish/config.fish
+end
 
 function bbundle --description "Use brew bundle with a combined Brewfile"
     if ! command -qv brew
@@ -122,8 +129,8 @@ if test -e $specific
     source $specific
 end
 
-# Secret information
-set secret ~/.config/fish/secret.fish
-if test -e $secret
-    source $secret
+# Local configuration
+set local ~/.config/fish/local.fish
+if test -e $local
+    source $local
 end

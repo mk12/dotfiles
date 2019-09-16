@@ -5,6 +5,8 @@ export CLICOLOR=true
 export GREP_OPTIONS='--color=auto'
 export PAGER=less
 
+export BAT_THEME=base16
+
 export FZF_DEFAULT_OPTS="--history=$HOME/.fzf/history --color=bg+:10,bg:0,\
 fg+:13,fg:12,header:4,hl+:4,hl:4,info:3,marker:6,pointer:6,prompt:3,spinner:6"
 
@@ -17,6 +19,8 @@ if command -v fd &> /dev/null; then
     export FZF_DEFAULT_COMMAND='fd --type file'
 elif command -v rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files'
+else
+    export FZF_DEFAULT_COMMAND=''
 fi
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 
@@ -29,9 +33,11 @@ else
 fi
 
 paths=()
+paths+=("$HOME/bin")
 paths+=("$HOME/.cabal/bin")
 paths+=("$HOME/.cargo/bin")
 paths+=("$HOME/.fzf/bin")
+paths+=("$HOME/brew/bin")
 paths+=("$HOME/.linuxbrew/bin")
 paths+=("$PROJECTS/scripts")
 

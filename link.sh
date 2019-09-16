@@ -54,7 +54,7 @@ link_dotfiles() {
             -not -path "./.config/fish/.gitignore")
 
     for file in "${files[@]+"${files[@]}"}"; do
-        echo -n "symlink $HOME/$file -> $dir/$file ? (y/N) " reply
+        echo -n "symlink $HOME/$file -> $dir/$file ? (y/N) "
         read -r reply
         if [[ "$reply" =~ ^[Yy]$ ]]; then
             ln -s "$dir/$file" "$HOME/$file" > /dev/null
