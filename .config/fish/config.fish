@@ -35,6 +35,8 @@ if command -qv exa
     alias l=exa
     alias ll='exa -l'
     alias la='exa -la'
+else
+    alias l=ls
 end
 
 if command -qv bat
