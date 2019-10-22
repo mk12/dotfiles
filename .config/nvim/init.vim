@@ -413,7 +413,7 @@ Shortcut toggle git line highlight
 Shortcut toggle line numbers
     \ nnoremap <Leader>tn :set number!<CR>
 Shortcut toggle obsess/session tracking
-    \ nnoremap <Leader>to :Obsession!<CR>
+    \ nnoremap <Leader>to :call ToggleObsession()<CR>
 Shortcut toggle paste mode
     \ nnoremap <Leader>tp :set paste!<CR>
 Shortcut toggle relative line numbers
@@ -490,7 +490,6 @@ Shortcut yank to system clipboard
 augroup custom
     autocmd!
 
-    autocmd VimEnter * nested call LoadExistingSession()
     autocmd User ProjectionistActivate call LoadCustomProjections()
 
     autocmd FileType c,cpp setlocal commentstring=//\ %s comments^=:///
@@ -801,6 +800,15 @@ function! ToggleColumnLimit() abort
     endif
 endfunction
 
+function! ToggleObsession() abort
+    if empty(ObsessionStatus()) && argc() is 0 && &modified is 0
+                \ && empty(v:this_session) && filereadable('Session.vim')
+        source Session.vim
+    else
+        Obsession!
+    endif
+endfunction
+
 function! OpenVimux(orientation) abort
     VimuxCloseRunner
     let g:VimuxOrientation = a:orientation
@@ -814,14 +822,6 @@ function! YankToSystemClipboard(text) abort
         echoerr l:escape
     else
         call writefile([l:escape], '/dev/tty', 'b')
-    endif
-endfunction
-
-" https://github.com/tpope/vim-obsession/issues/17#issuecomment-229144719
-function! LoadExistingSession() abort
-    if argc() is 0 && &modified is 0 && empty(v:this_session)
-            \ && filereadable('Session.vim')
-        source Session.vim
     endif
 endfunction
 
