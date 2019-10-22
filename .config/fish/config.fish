@@ -101,6 +101,10 @@ function cleanup --description "Free up disk space"
     end
 end
 
+# =========== Text =============================================================
+
+set fish_emoji_width 2
+
 # =========== Colors ===========================================================
 
 set fish_color_autosuggestion brblack

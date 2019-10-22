@@ -12,6 +12,8 @@
     cm = commit
     cmv = commit --verbose
     cma = commit --amend
+    cmav = commit --amend --verbose
+    unamend = reset --soft HEAD@{1}
     fx = commit --amend --reuse-message=HEAD
     rb = rebase
     cp = cherry-pick
@@ -19,6 +21,7 @@
     u = pull
     p = push
     unstage = reset HEAD --
+    l = log
     last = log -1 HEAD
     lol = log --pretty=oneline --abbrev-commit --graph --decorate
 [color]
