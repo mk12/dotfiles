@@ -16,9 +16,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'danielwe/base16-vim' " TODO: Change back from danielwe to chriskempson
-Plug 'eraserhd/parinfer-rust', { 'do': 'cargo build --release' }
 Plug 'glts/vim-textobj-comment'
-Plug 'guns/vim-sexp'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
@@ -36,13 +34,11 @@ Plug 'tpope/vim-commentary', { 'on': 'Commentary' }
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
-Plug 'tpope/vim-sexp-mappings-for-regular-people'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
@@ -70,56 +66,6 @@ let g:airline_theme = 'base16_vim'
 let g:dispatch_no_maps = 1
 
 let g:gitgutter_map_keys = 0
-
-let g:sexp_enable_insert_mode_mappings = 0
-let g:sexp_mappings = {
-    \ 'sexp_move_to_prev_bracket':      '(',
-    \ 'sexp_move_to_next_bracket':      '',
-    \ 'sexp_move_to_prev_element_head': '',
-    \ 'sexp_move_to_next_element_head': '',
-    \ 'sexp_move_to_prev_element_tail': '',
-    \ 'sexp_move_to_next_element_tail': '',
-    \ 'sexp_flow_to_prev_close':        '',
-    \ 'sexp_flow_to_next_open':         ')',
-    \ 'sexp_flow_to_prev_open':         '',
-    \ 'sexp_flow_to_next_close':        '',
-    \ 'sexp_flow_to_prev_leaf_head':    '',
-    \ 'sexp_flow_to_next_leaf_head':    '',
-    \ 'sexp_flow_to_prev_leaf_tail':    '',
-    \ 'sexp_flow_to_next_leaf_tail':    '',
-    \ 'sexp_move_to_prev_top_element':  '',
-    \ 'sexp_move_to_next_top_element':  '',
-    \ 'sexp_select_prev_element':       '',
-    \ 'sexp_select_next_element':       '',
-    \ 'sexp_indent':                    '',
-    \ 'sexp_indent_top':                '',
-    \ 'sexp_round_head_wrap_list':      '',
-    \ 'sexp_round_tail_wrap_list':      '',
-    \ 'sexp_square_head_wrap_list':     '',
-    \ 'sexp_square_tail_wrap_list':     '',
-    \ 'sexp_curly_head_wrap_list':      '',
-    \ 'sexp_curly_tail_wrap_list':      '',
-    \ 'sexp_round_head_wrap_element':   '',
-    \ 'sexp_round_tail_wrap_element':   '',
-    \ 'sexp_square_head_wrap_element':  '',
-    \ 'sexp_square_tail_wrap_element':  '',
-    \ 'sexp_curly_head_wrap_element':   '',
-    \ 'sexp_curly_tail_wrap_element':   '',
-    \ 'sexp_insert_at_list_head':       '',
-    \ 'sexp_insert_at_list_tail':       '',
-    \ 'sexp_splice_list':               '',
-    \ 'sexp_convolute':                 '',
-    \ 'sexp_raise_list':                '',
-    \ 'sexp_raise_element':             '',
-    \ 'sexp_swap_list_backward':        '',
-    \ 'sexp_swap_list_forward':         '',
-    \ 'sexp_swap_element_backward':     '',
-    \ 'sexp_swap_element_forward':      '',
-    \ 'sexp_emit_head_element':         '',
-    \ 'sexp_emit_tail_element':         '',
-    \ 'sexp_capture_prev_element':      '',
-    \ 'sexp_capture_next_element':      '',
-    \ }
 
 let g:VimuxPromptString = "Vimux: "
 let g:VimuxHeight = "30"
@@ -291,10 +237,6 @@ Shortcut remove trailing whitespace
     \ nnoremap <Leader>dw :%s/\s\+$//e<CR>
     \|xnoremap <Leader>dw :s/\s\+$//e<CR>
 
-Shortcut edit brewfile
-    \ nnoremap <Leader>eb :edit ~/.Brewfile<CR>
-Shortcut edit local brewfile
-    \ nnoremap <Leader>eB :edit ~/.Brewfile.local<CR>
 Shortcut edit fish config
     \ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
 Shortcut delete hidden buffers
@@ -427,7 +369,7 @@ Shortcut toggle git line highlight
 Shortcut toggle line numbers
     \ nnoremap <Leader>tn :set number!<CR>
 Shortcut toggle obsess/session tracking
-    \ nnoremap <Leader>to :Obsession!<CR>
+    \ nnoremap <Leader>to :call ToggleObsession()<CR>
 Shortcut toggle paste mode
     \ nnoremap <Leader>tp :set paste!<CR>
 Shortcut toggle relative line numbers
@@ -504,7 +446,6 @@ Shortcut yank to system clipboard
 augroup custom
     autocmd!
 
-    autocmd VimEnter * nested call LoadExistingSession()
     autocmd User ProjectionistActivate call LoadCustomProjections()
 
     autocmd FileType c,cpp setlocal commentstring=//\ %s comments^=:///
@@ -516,11 +457,6 @@ augroup custom
     " Fix it so that crontab -e can save properly.
     autocmd filetype crontab setlocal nobackup nowritebackup textwidth=0
 
-    " Parinfer is enabled for these filetypes.
-    autocmd FileType clojure,scheme,lisp,racket,hy let b:AutoPairs = {'"':'"'}
-
-    autocmd FileType clojure call SetupClojureMappings()
-
     " Don't do syntax highlighting in diffs.
     autocmd BufEnter * call DisableSyntaxForDiff()
 
@@ -529,6 +465,9 @@ augroup custom
 
     " Sometimes Airline doesn't clean up properly.
     autocmd BufWipeout * call airline#extensions#tabline#buflist#clean()
+
+    " Exit dirvish with q.
+    autocmd filetype dirvish nmap <buffer> <silent> q <Plug>(dirvish_quit)
 
     " Exit fugitive windows consistently with q.
     autocmd BufEnter fugitive://*//* nnoremap <buffer> <silent> q :bdelete<CR>
@@ -815,6 +754,15 @@ function! ToggleColumnLimit() abort
     endif
 endfunction
 
+function! ToggleObsession() abort
+    if empty(ObsessionStatus()) && argc() is 0 && &modified is 0
+                \ && empty(v:this_session) && filereadable('Session.vim')
+        source Session.vim
+    else
+        Obsession!
+    endif
+endfunction
+
 function! OpenVimux(orientation) abort
     VimuxCloseRunner
     let g:VimuxOrientation = a:orientation
@@ -829,29 +777,6 @@ function! YankToSystemClipboard(text) abort
     else
         call writefile([l:escape], '/dev/tty', 'b')
     endif
-endfunction
-
-" https://github.com/tpope/vim-obsession/issues/17#issuecomment-229144719
-function! LoadExistingSession() abort
-    if argc() is 0 && &modified is 0 && empty(v:this_session)
-            \ && filereadable('Session.vim')
-        source Session.vim
-    endif
-endfunction
-
-function! SetupClojureMappings() abort
-    nmap <buffer> <LocalLeader> <Plug>FireplacePrint
-    nmap <buffer> <LocalLeader><LocalLeader>
-        \ <Plug>FireplacePrint<Plug>(sexp_outer_list)
-    nmap <buffer> <LocalLeader>q <Plug>FireplaceEdit
-    nmap <buffer> <LocalLeader>qq <Plug>FireplaceEdit<Plug>(sexp_outer_list)
-    nmap <buffer> <LocalLeader>m <Plug>FireplaceMacroExpand
-    nmap <buffer> <LocalLeader>mm
-        \ <Plug>FireplaceMacroExpand<Plug>(sexp_outer_list)
-    nmap <buffer> <LocalLeader>e <Plug>FireplacePrompt
-    nmap <buffer> <LocalLeader>r cpr
-    nnoremap <buffer> <LocalLeader>s :Last<CR>
-    xnoremap <buffer> <silent> <LocalLeader> :Eval<CR>
 endfunction
 
 function! DisableSyntaxForDiff() abort
