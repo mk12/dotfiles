@@ -73,6 +73,8 @@ main() {
         read -r reply
         if [[ "$reply" =~ ^[Yy]$ ]]; then
             link_dotfiles
+            touch ~/.shellrc.local
+            touch ~/.config/fish/local.fish
         else
             die "aborting"
         fi

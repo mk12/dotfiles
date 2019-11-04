@@ -45,65 +45,41 @@ end
 
 # =========== Functions ========================================================
 
-function fish_source --description "Reload config files"
+function fish_source --description "Reload fish config files"
     source ~/.config/fish/config.fish
-end
-
-function bbundle --description "Use brew bundle with a combined Brewfile"
-    if ! command -qv brew
-        echo "Homebrew not installed" >&2
-        return 1
-    end
-    set combined (mktemp)
-    cat ~/.Brewfile{,.local} > $combined
-    brew bundle $argv --file=$combined
-    rm $combined
 end
 
 function upd --description "Update software"
     if command -qv brew
         echo "Updating homebrew"
-        brew update; and brew upgrade
+        brew update; and brew upgrade; and brew cleanup -s
     end
     if set -q TMUX
         echo "Updating tmux"
-        ~/.tmux/plugins/tpm/bin/clean_plugins
         ~/.tmux/plugins/tpm/bin/update_plugins all
+        ~/.tmux/plugins/tpm/bin/clean_plugins
     end
     if command -qv nvim
         echo "Updating neovim"
-        command nvim +PlugUpgrade +PlugUpdate +qall
+        command nvim +PlugUpgrade +PlugUpdate +PlugClean +qall
     end
     if command -qv vim
         echo "Updating vim"
-        command vim +PlugUpgrade +PlugUpdate +qall
+        command vim +PlugUpgrade +PlugUpdate +PlugClean +qall
     end
 end
-
-function cleanup --description "Free up disk space"
-    if command -qv brew
-        echo "Checking ~/.Brewfile{,.local} to see what to uninstall"
-        bbundle cleanup
-        read -l -P 'Proceed? [y/N] ' answer
-        if test $answer != y -a $answer != Y
-            return 1
-        end
-        echo "Cleaning homebrew"
-        bbundle cleanup --force; and brew cleanup -s
-    end
-    if command -qv nvim
-        echo "Cleaning neovim"
-        command nvim +PlugClean +qall
-    end
-    if command -qv vim
-        echo "Cleaning vim"
-        command vim +PlugClean +qall
-    end
-end
-
-# =========== Text =============================================================
 
 set fish_emoji_width 2
+
+function done --description "Print an emoji indicating exit status"
+    set the_status $status
+    if test $the_status -eq 0
+        printf "\n\xf0\x9f\xa6\x84\n"
+    else
+        printf "\n\xf0\x9f\x92\xa5\n"
+        return $the_status
+    end
+end
 
 # =========== Colors ===========================================================
 
