@@ -237,8 +237,14 @@ Shortcut remove trailing whitespace
     \ nnoremap <Leader>dw :%s/\s\+$//e<CR>
     \|xnoremap <Leader>dw :s/\s\+$//e<CR>
 
+Shortcut edit shell config
+    \ nnoremap <Leader>ec :edit ~/.shellrc<CR>
+Shortcut edit shell config (local)
+    \ nnoremap <Leader>eC :edit ~/.shellrc.local<CR>
 Shortcut edit fish config
     \ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
+Shortcut edit fish config (local)
+    \ nnoremap <Leader>eF :edit ~/.config/fish/local.fish<CR>
 Shortcut delete hidden buffers
     \ nnoremap <Leader>eh :call DeleteHiddenBuffers()<CR>
 Shortcut edit journal file
