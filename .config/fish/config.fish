@@ -27,7 +27,6 @@ end
 # =========== Aliases ==========================================================
 
 alias g=git
-alias gg='git status; and git branch'
 alias vi=$EDITOR
 alias vim=$EDITOR
 
@@ -47,6 +46,12 @@ end
 
 function fish_source --description "Reload fish config files"
     source ~/.config/fish/config.fish
+end
+
+function gg --description "Print git overview"
+    git log --pretty=oneline --abbrev-commit -n1; or return
+    git branch
+    git status -s
 end
 
 function upd --description "Update software"
