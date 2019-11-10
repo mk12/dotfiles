@@ -49,7 +49,7 @@ function fish_source --description "Reload fish config files"
 end
 
 function gg --description "Print git overview"
-    git log --pretty=oneline --abbrev-commit -n1; or return
+    git log --oneline -n1; or return
     git branch
     git status -s
 end
@@ -82,8 +82,8 @@ function done --description "Print an emoji indicating exit status"
         printf "\n\xf0\x9f\xa6\x84\n"
     else
         printf "\n\xf0\x9f\x92\xa5\n"
-        return $the_status
     end
+    return $the_status
 end
 
 # =========== Colors ===========================================================

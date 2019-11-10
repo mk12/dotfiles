@@ -25139,9 +25139,9 @@
 		<key>0x75-0x100000</key>
 		<dict>
 			<key>Action</key>
-			<integer>11</integer>
+			<integer>12</integer>
 			<key>Text</key>
-			<string>0x1a 0x66 0x67 0x3b 0x64 0x6f 0x6e 0x65 0x0a</string>
+			<string>done\n</string>
 		</dict>
 		<key>0x9-0x40000</key>
 		<dict>
@@ -25346,7 +25346,7 @@
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>2 0 1438 900 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
-	<string>3 0 1437 900 0 0 1440 900 </string>
+	<string>3 3 1434 897 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 3</key>
 	<string>239 1 650 477 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 4</key>
@@ -26271,7 +26271,7 @@
 		<key>screenFrame</key>
 		<string>{{0, 0}, {1440, 900}}</string>
 		<key>topLeft</key>
-		<string>{177, 797}</string>
+		<string>{235, 733}</string>
 	</dict>
 	<key>NoSyncHaveRequestedFullDiskAccess</key>
 	<true/>
@@ -27062,7 +27062,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-11-05T04:38:21Z</date>
+	<date>2019-11-08T03:53:54Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUUpdateRelaunchingMarker</key>

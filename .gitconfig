@@ -23,7 +23,7 @@
     unstage = reset HEAD --
     l = log
     last = log -1 HEAD
-    lol = log --pretty=oneline --abbrev-commit --graph --decorate
+    lol = log --oneline --graph --decorate
 [color]
     ui = auto
 [core]
