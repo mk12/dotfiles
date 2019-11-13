@@ -25352,7 +25352,7 @@
 	<key>NSWindow Frame com.apple.typography_panel_Menlo-Regular</key>
 	<string>246 523 260 36 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>50 360 650 517 0 0 1440 877 </string>
+	<string>50 421 1390 479 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>77 18 1386 859 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -26165,7 +26165,7 @@
 			<key>HotKey Window Dock Click Action</key>
 			<integer>0</integer>
 			<key>HotKey Window Floats</key>
-			<true/>
+			<false/>
 			<key>HotKey Window Reopens On Activation</key>
 			<false/>
 			<key>Idle Code</key>
@@ -26215,7 +26215,7 @@
 			<key>Rows</key>
 			<integer>25</integer>
 			<key>Screen</key>
-			<integer>-1</integer>
+			<integer>-2</integer>
 			<key>Scrollback Lines</key>
 			<integer>10000</integer>
 			<key>Selected Text Color</key>
@@ -26279,7 +26279,7 @@
 			<key>Visual Bell</key>
 			<true/>
 			<key>Window Type</key>
-			<integer>2</integer>
+			<integer>7</integer>
 			<key>Working Directory</key>
 			<string>/Users/mkember</string>
 		</dict>
