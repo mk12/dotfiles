@@ -213,6 +213,9 @@ Shortcut toggle comment
 Shortcut indent lines
     \ nnoremap <Leader>di =ip
     \|xnoremap <Leader>di =
+Shortcut run shellcheck
+    \ nnoremap <Leader>dc :!shellcheck %<CR>
+    \|xnoremap <Leader>dc :w !shellcheck -<CR>
 Shortcut show number of search matches
     \ nnoremap <Leader>dm :%s/<C-R>///n<CR>
     \|xnoremap <Leader>dm "zy:%s/<C-R>z//n<CR>
@@ -223,10 +226,6 @@ Shortcut remove trailing whitespace
     \ nnoremap <Leader>dw :%s/\s\+$//e<CR>
     \|xnoremap <Leader>dw :s/\s\+$//e<CR>
 
-Shortcut edit shell config
-    \ nnoremap <Leader>ec :edit ~/.shellrc<CR>
-Shortcut edit shell config (local)
-    \ nnoremap <Leader>eC :edit ~/.shellrc.local<CR>
 Shortcut edit fish config
     \ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
 Shortcut edit fish config (local)
@@ -235,12 +234,16 @@ Shortcut delete hidden buffers
     \ nnoremap <Leader>eh :call DeleteHiddenBuffers()<CR>
 Shortcut edit journal file
     \ nnoremap <Leader>ej :edit ~/ia/Journal/Journal.txt<CR>
+Shortcut resolve symlinks
+    \ nnoremap <Leader>el :call ResolveSymlinks()<CR>
 Shortcut edit new buffer
     \ nnoremap <Leader>en :enew<CR>
 Shortcut reload current buffer
     \ nnoremap <Leader>er :edit!<CR>
-Shortcut resolve symlinks
-    \ nnoremap <Leader>es :call ResolveSymlinks()<CR>
+Shortcut edit shell config
+    \ nnoremap <Leader>es :edit ~/.shellrc<CR>
+Shortcut edit shell config (local)
+    \ nnoremap <Leader>eS :edit ~/.shellrc.local<CR>
 Shortcut edit vimrc or init.vim
     \ nnoremap <Leader>ev :edit $MYVIMRC<CR>
 Shortcut source vimrc or init.vim
@@ -604,11 +607,15 @@ function! AlternateFile() abort
             endif
         endfor
     endif
-    try
-        A
-    catch
-        call s:EchoException()
-    endtry
+    if exists(':A') == 2
+        try
+            A
+        catch
+            call s:EchoException()
+        endtry
+    else
+        call s:Error("Cannot find alternate file")
+    endif
 endfunction
 
 function! DeleteHiddenBuffers() abort
@@ -731,7 +738,7 @@ function! GenerateTags() abort
     call s:Warning('Preparing tags')
     call system(get(b:, 'tags_command', 'ctags -R'))
     if empty(tagfiles())
-        call s:Warning('Failed to create tags')
+        call s:Error('Failed to create tags')
     else
         echomsg 'Finished generating tags'
     endif
