@@ -24,9 +24,10 @@ else
     echo (status -f): "fenv unavailable, not sourcing shellrc"
 end
 
-# =========== Aliases ==========================================================
+# =========== Shortcuts ========================================================
 
-alias g=git
+abbr g git
+
 alias vi=$EDITOR
 alias vim=$EDITOR
 
@@ -74,7 +75,6 @@ function upd --description "Update software"
     end
 end
 
-set fish_emoji_width 2
 
 function done --description "Print an emoji indicating exit status"
     set the_status $status
@@ -86,7 +86,12 @@ function done --description "Print an emoji indicating exit status"
     return $the_status
 end
 
-# =========== Colors ===========================================================
+# Workaround for https://github.com/fish-shell/fish-shell/issues/6270
+function __fish_describe_command; end
+
+# =========== Variables ========================================================
+
+set fish_emoji_width 2
 
 set fish_color_autosuggestion brblack
 set fish_color_cancel --reverse
