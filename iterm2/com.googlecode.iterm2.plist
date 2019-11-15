@@ -16,6 +16,8 @@
 	<string>manual</string>
 	<key>AutoHideTmuxClientSession</key>
 	<true/>
+	<key>CGFontRenderingFontSmoothingDisabled</key>
+	<false/>
 	<key>CloseBookmarksWindowAfterOpening</key>
 	<true/>
 	<key>ClosingTmuxTabKillsTmuxWindows</key>
@@ -25346,31 +25348,33 @@
 	<key>NSWindow Frame NSFontPanel</key>
 	<string>1545 194 445 455 1440 132 1366 768 </string>
 	<key>NSWindow Frame NSNavPanelAutosaveName</key>
-	<string>403 153 799 448 0 0 1440 900 </string>
+	<string>299 322 841 470 0 0 1440 900 </string>
 	<key>NSWindow Frame ProfilesPanel</key>
 	<string>205 457 735 382 0 0 1440 900 </string>
 	<key>NSWindow Frame SUAutomaticUpdateAlert</key>
 	<string>436 527 616 174 0 0 1440 877 </string>
 	<key>NSWindow Frame SUStatusFrame</key>
-	<string>974 287 400 129 0 0 1440 900 </string>
+	<string>520 578 400 129 0 0 1440 900 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
 	<string>410 381 620 392 0 0 1440 900 </string>
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>658 476 609 401 0 0 1440 900 </string>
 	<key>NSWindow Frame SharedPreferences</key>
 	<string>1695 459 928 394 1440 132 1366 768 </string>
+	<key>NSWindow Frame UKCrashReporter</key>
+	<string>99 293 592 584 0 0 1440 900 </string>
 	<key>NSWindow Frame com.apple.typography_panel_Iosevka</key>
 	<string>708 300 260 330 0 0 1440 877 </string>
 	<key>NSWindow Frame com.apple.typography_panel_Menlo-Regular</key>
 	<string>246 523 260 36 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>50 421 1390 479 0 0 1440 900 </string>
+	<string>377 186 650 517 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
-	<string>77 18 1386 859 0 0 1440 877 </string>
+	<string>0 18 1389 859 0 0 1440 900 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
-	<string>0 18 1386 859 0 0 1440 900 </string>
+	<string>485 211 650 517 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 3</key>
-	<string>239 1 650 477 0 0 1440 877 </string>
+	<string>435 164 650 517 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 4</key>
 	<string>260 400 650 477 0 0 1440 877 </string>
 	<key>New Bookmarks</key>
@@ -26584,8 +26588,6 @@
 			<string>Default</string>
 			<key>Disable Window Resizing</key>
 			<true/>
-			<key>Dynamic Profile Filename</key>
-			<string>/Users/mitchell/Library/Application Support/iTerm2/DynamicProfiles/profiles.json</string>
 			<key>Flashing Bell</key>
 			<false/>
 			<key>Foreground Color</key>
@@ -26600,7 +26602,9 @@
 				<real>0.67058825</real>
 			</dict>
 			<key>Guid</key>
-			<string>local-tmux</string>
+			<string>7B12F32C-33C8-43D5-B5F8-0BEC769908AF</string>
+			<key>Has Hotkey</key>
+			<false/>
 			<key>Horizontal Spacing</key>
 			<real>1</real>
 			<key>Icon</key>
@@ -26636,7 +26640,7 @@
 			<key>Mouse Reporting</key>
 			<true/>
 			<key>Name</key>
-			<string>Local Tmux</string>
+			<string>Tmux</string>
 			<key>Non Ascii Font</key>
 			<string>Monaco 12</string>
 			<key>Non-ASCII Anti Aliased</key>
@@ -26719,9 +26723,7 @@
 				<real>0.0</real>
 			</dict>
 			<key>Tags</key>
-			<array>
-				<string>Dynamic</string>
-			</array>
+			<array/>
 			<key>Terminal Type</key>
 			<string>xterm-256color</string>
 			<key>Thin Strokes</key>
@@ -26793,16 +26795,18 @@
 		<key>screenFrame</key>
 		<string>{{0, 0}, {1440, 900}}</string>
 		<key>topLeft</key>
-		<string>{343, 679}</string>
+		<string>{341, 643}</string>
 	</dict>
 	<key>NoSyncHaveRequestedFullDiskAccess</key>
+	<true/>
+	<key>NoSyncHaveUsedCopyMode</key>
 	<true/>
 	<key>NoSyncHaveWarnedAboutPasteConfirmationChange</key>
 	<true/>
 	<key>NoSyncInstallationId</key>
 	<string>2FA47253-74C2-4B8A-952E-D06E4981C181</string>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>15</integer>
+	<integer>17</integer>
 	<key>NoSyncNewTabFromTmuxOpensTmux</key>
 	<true/>
 	<key>NoSyncNewTabFromTmuxOpensTmux_selection</key>
@@ -27603,13 +27607,17 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2019-11-13T03:14:20Z</date>
+	<date>2019-11-15T05:14:43Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUUpdateRelaunchingMarker</key>
 	<false/>
+	<key>Secure Input</key>
+	<false/>
 	<key>ShowBookmarkName</key>
 	<false/>
+	<key>ShowFullScreenTabBar</key>
+	<true/>
 	<key>ShowMetalFPSmeter</key>
 	<false/>
 	<key>ShowPaneTitles</key>
@@ -27628,6 +27636,8 @@
 	<integer>0</integer>
 	<key>TmuxUsesDedicatedProfile</key>
 	<false/>
+	<key>UKCrashReporterLastCrashReportDate</key>
+	<real>1573795584</real>
 	<key>UseBorder</key>
 	<false/>
 	<key>UseTmuxStatusBar</key>
