@@ -27,6 +27,7 @@ end
 # =========== Shortcuts ========================================================
 
 abbr g git
+abbr v vim
 
 alias vi=$EDITOR
 alias vim=$EDITOR
@@ -43,9 +44,13 @@ if command -qv bat
     alias cat=bat
 end
 
+if string match -q "*kitty*" $TERM
+    alias icat='kitty +kitten icat'
+end
+
 # =========== Functions ========================================================
 
-function fish_source --description "Reload fish config files"
+function refish --description "Reload fish config files"
     source ~/.config/fish/config.fish
 end
 
@@ -55,39 +60,44 @@ function gg --description "Print git overview"
     git status -s
 end
 
-function upd --description "Update software"
-    if command -qv brew
-        echo "Updating homebrew"
-        brew update; and brew upgrade; and brew cleanup -s
-    end
-    if set -q TMUX
-        echo "Updating tmux"
-        ~/.tmux/plugins/tpm/bin/update_plugins all
-        ~/.tmux/plugins/tpm/bin/clean_plugins
-    end
-    if command -qv nvim
-        echo "Updating neovim"
-        command nvim +PlugUpgrade +PlugUpdate +PlugClean +qall
-    end
-    if command -qv vim
-        echo "Updating vim"
-        command vim +PlugUpgrade +PlugUpdate +PlugClean +qall
+function tm --description "Connect to local or remote tmux session"
+    if test (count $argv) -ge 1
+        ssh $argv -t 'tmux new -A -s 0'
+    else
+        tmux new -A -s 0
     end
 end
 
-
-function done --description "Print an emoji indicating exit status"
+function alert --description "Ring the bell without changing exit status"
     set the_status $status
-    if test $the_status -eq 0
-        printf "\n\xf0\x9f\xa6\x84\n"
-    else
-        printf "\n\xf0\x9f\x92\xa5\n"
-    end
+    printf "\a"
     return $the_status
+end
+
+function add_alert --description "Add '; alert' to the end of the command"
+    if test -z (commandline -b)
+        commandline -a $history[1]
+    end
+    if commandline -b | string match -q -r -v "; *alert;?\$"
+        commandline -aj "; alert;"
+    end
+end
+
+function totp
+    set secret (grep '^'$argv[1] < ~/.totp | cut -d' ' -f2)
+    if test -z $secret
+        echo "invalid label"
+        return 1
+    end
+    oathtool --totp -b $secret | pbcopy
 end
 
 # Workaround for https://github.com/fish-shell/fish-shell/issues/6270
 function __fish_describe_command; end
+
+# =========== Keybindings ======================================================
+
+bind \ea add_alert
 
 # =========== Variables ========================================================
 
@@ -114,12 +124,6 @@ set fish_pager_color_prefix white --bold --underline
 set fish_pager_color_progress brwhite --background=cyan
 
 # =========== Other config =====================================================
-
-# OS-specific configuration
-set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
-if test -e $specific
-    source $specific
-end
 
 # Local configuration
 set local ~/.config/fish/local.fish

@@ -1,4 +1,21 @@
-export PROJECTS=~/GitHub
+export PROJECTS=~/Projects
+
+paths=(
+    "$HOME/bin"
+    "$HOME/brew/bin"
+    "$HOME/.linuxbrew/bin"
+    "$HOME/.fzf/bin"
+    "$HOME/.cargo/bin"
+    "$HOME/.cabal/bin"
+    "$PROJECTS/scripts"
+)
+
+for p in "${paths[@]}"; do
+    if [[ "$PATH" != *"$p"* && -d "$p" ]]; then
+        PATH=$PATH:$p
+    fi
+done
+
 export LEDGER_FILE=$PROJECTS/finance/journal.ledger
 
 export CLICOLOR=true
@@ -30,21 +47,5 @@ else
     export EDITOR=vim
     export VISUAL=vim
 fi
-
-paths=(
-    "$HOME/bin"
-    "$HOME/.cabal/bin"
-    "$HOME/.cargo/bin"
-    "$HOME/.fzf/bin"
-    "$HOME/brew/bin"
-    "$HOME/.linuxbrew/bin"
-    "$PROJECTS/scripts"
-)
-
-for p in "${paths[@]}"; do
-    if [[ "$PATH" != *"$p"* && -d "$p" ]]; then
-        PATH=$PATH:$p
-    fi
-done
 
 source ~/.shellrc.local

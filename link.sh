@@ -38,7 +38,10 @@ link_dotfiles() {
     while read -r d; do
         mkdir -p "$HOME/.config/$d"
     done < <(ls -1 .config/)
-    mkdir -p "$HOME/.lein"
+    mkdir -p \
+        "$HOME/.hammerspoon" \
+        "$HOME/.lein" \
+        "$HOME/.ssh"
 
     files=()
     while read -r filepath; do
@@ -54,6 +57,12 @@ link_dotfiles() {
             -not -path "./.config/fish/.gitignore")
 
     for file in "${files[@]+"${files[@]}"}"; do
+        if [[ "$force" == true ]]; then
+            ln -sf "$dir/$file" "$HOME/$file" > /dev/null
+            echo "symlinked $HOME/$file -> $dir/$file"
+            continue
+        fi
+
         echo -n "symlink $HOME/$file -> $dir/$file ? (y/N) "
         read -r reply
         if [[ "$reply" =~ ^[Yy]$ ]]; then
