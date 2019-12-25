@@ -2,6 +2,21 @@
 -- repeating it every reload. Doing it in setupmacos.sh is too complicated.
 hs.ipc.cliInstall()
 
+-- Hyper key for global shortcuts.
+local hyper = {"cmd", "option", "ctrl"}
+
+-- Create a keybinding for hyper+key to open the given app to the target.
+local function hyperBind(key, app, target)
+    hs.hotkey.bind(hyper, key, function()
+        os.execute("open -a '" .. app .. "' " .. target)
+    end)
+end
+
+hyperBind("J", "iA Writer", "~/ia/Journal/Today.txt")
+hyperBind("D", "Visual Studio Code", "~/Projects/dotfiles")
+hyperBind("S", "Visual Studio Code", "~/Projects/scripts")
+hyperBind("F", "Visual Studio Code", "~/Projects/finance")
+
 -- Sends a notification saying the bell rang in kitty.
 function sendKittyBellNotification()
     hs.notify.new(function()
@@ -40,27 +55,4 @@ hs.hotkey.bind({"ctrl"}, "space", function()
     else
         hs.application.launchOrFocus("hotkitty")
     end
-end)
-
--- Hyper key for global shortcuts.
-local hyper = {"cmd", "option", "ctrl"}
-
--- Returns a function to bind to a hyper shortcut.
-local function hyperApp(name)
-    return function()
-        local app = hs.application.get(name)
-        if app and app:mainWindow() then
-            if app:isFrontmost() then
-                app:hide()
-            else
-                app:activate()
-            end
-        else
-            hs.application.launchOrFocus(name)
-        end
-    end
-end
-
-hs.hotkey.bind(hyper, "J", function()
-    os.execute("open ~/ia/Journal/Today.txt")
 end)
