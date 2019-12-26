@@ -83,15 +83,6 @@ function add_alert --description "Add '; alert' to the end of the command"
     end
 end
 
-function totp
-    set secret (grep '^'$argv[1] < ~/.totp | cut -d' ' -f2)
-    if test -z $secret
-        echo "invalid label"
-        return 1
-    end
-    oathtool --totp -b $secret | pbcopy
-end
-
 # Workaround for https://github.com/fish-shell/fish-shell/issues/6270
 function __fish_describe_command; end
 
@@ -124,6 +115,12 @@ set fish_pager_color_prefix white --bold --underline
 set fish_pager_color_progress brwhite --background=cyan
 
 # =========== Other config =====================================================
+
+# OS-specific configuration
+set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
+if test -e $specific
+    source $specific
+end
 
 # Local configuration
 set local ~/.config/fish/local.fish

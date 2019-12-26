@@ -44,15 +44,29 @@ end
 -- Hotkey to show/hide the hotkitty window.
 hs.hotkey.bind({"ctrl"}, "space", function()
     local app = getHotkitty()
-    if app then
-        if not app:mainWindow() then
+    if not app then
+        -- hs.execute("open -a hotkitty --args --config ~/.config/kitty/base.conf")
+        hs.application.launchOrFocus("hotkitty")
+        return
+    end
+
+    if not app:mainWindow() then
+        local newWindow = function()
             app:selectMenuItem({"kitty", "New OS window"})
-        elseif app:isFrontmost() then
-            app:hide()
+        end
+        local current = hs.window.focusedWindow()
+        if current and current:isFullScreen() then
+            -- Calling app:activate() does not switch spaces away from the
+            -- fullscreen app, so selectMenuItem doesn't work.
+            hs.osascript.applescript('tell application "hotkitty" to activate')
+            hs.timer.doAfter(0.1, newWindow)
         else
             app:activate()
+            newWindow()
         end
+    elseif app:isFrontmost() then
+        app:hide()
     else
-        hs.application.launchOrFocus("hotkitty")
+        app:activate()
     end
 end)

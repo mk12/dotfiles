@@ -24,6 +24,6 @@ I got the idea for this from [GitHub does dotfiles][1] and received inspiration 
 
 ## License
 
-© 2012 Mitchell Kember
+© 2019 Mitchell Kember
 
 Dotfiles is available under the MIT License; see [LICENSE](LICENSE.md) for details.
