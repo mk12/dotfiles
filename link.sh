@@ -35,14 +35,6 @@ link_dotfiles() {
 
     cd -P "$dir" || die "failed to cd to $dir"
 
-    while read -r d; do
-        mkdir -p "$HOME/.config/$d"
-    done < <(ls -1 .config/)
-    mkdir -p \
-        "$HOME/.hammerspoon" \
-        "$HOME/.lein" \
-        "$HOME/.ssh"
-
     files=()
     while read -r filepath; do
         file=${filepath#'./'}
@@ -53,11 +45,11 @@ link_dotfiles() {
         fi
     done < <(find . -type f -path "./.*" \
             -not -name ".DS_Store" \
-            -not -path "./.git/*" \
-            -not -path "./.config/fish/.gitignore")
+            -not -path "./.git/*")
 
     for file in "${files[@]+"${files[@]}"}"; do
         if [[ "$force" == true ]]; then
+            mkdir -p "$(dirname $HOME/$file)"
             ln -sf "$dir/$file" "$HOME/$file" > /dev/null
             echo "symlinked $HOME/$file -> $dir/$file"
             continue
@@ -66,6 +58,7 @@ link_dotfiles() {
         echo -n "symlink $HOME/$file -> $dir/$file ? (y/N) "
         read -r reply
         if [[ "$reply" =~ ^[Yy]$ ]]; then
+            mkdir -p "$(dirname $HOME/$file)"
             ln -s "$dir/$file" "$HOME/$file" > /dev/null
             echo "symlinked $HOME/$file -> $dir/$file"
         else
