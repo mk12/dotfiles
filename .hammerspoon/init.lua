@@ -2,13 +2,17 @@
 -- repeating it every reload. Doing it in setupmacos.sh is too complicated.
 hs.ipc.cliInstall()
 
+-- Logger for printing to the Hammerspoon console.
 local log = hs.logger.new("init", "info")
 
 -- Global modifier combination unlikely to be used by other programs.
 local hyper = {"cmd", "option", "ctrl"}
 
+-- Shortcut to reload this config file.
+hs.hotkey.bind(hyper, "R", hs.reload)
+
 -- Creates a keybinding for hyper+key to open the given app to the target.
-local function hyperBind(key, app, target)
+local function hyperBindOpen(key, app, target)
     hs.hotkey.bind(hyper, key, function()
         local cmd = "open -a '" .. app .. "' " .. target
         log.i("Running command: " .. cmd)
@@ -18,12 +22,32 @@ local function hyperBind(key, app, target)
     end)
 end
 
-hyperBind("J", "iA Writer", "~/ia/Journal/Today.txt")
-hyperBind("D", "Visual Studio Code", "~/Projects/dotfiles")
-hyperBind("S", "Visual Studio Code", "~/Projects/scripts")
-hyperBind("F", "Visual Studio Code", "~/Projects/finance")
+-- Shortcuts for commonly-used files and projects.
+hyperBindOpen("J", "iA Writer", "~/ia/Journal/Today.txt")
+hyperBindOpen("D", "Visual Studio Code", "~/Projects/dotfiles")
+hyperBindOpen("S", "Visual Studio Code", "~/Projects/scripts")
+hyperBindOpen("F", "Visual Studio Code", "~/Projects/finance")
 
+-- Configuration directory for Kitty.
 local kittyConfigDir = "~/.config/kitty"
+
+-- Creates a temporary file, writes the given text to it, and returns the path.
+-- If text is nil, does not create a file and simply returns nil.
+local function tempTextFile(text)
+    if not text then
+        return nil
+    end
+    local path = os.tmpname()
+    local file = io.open(path, "w")
+    if not file then
+        log.e("Failed to open temporary file " .. path)
+        return nil
+    end
+    if not file:write(text) then
+        log.e("Failed to write to temporary file " .. path)
+    end
+    return path
+end
 
 -- Returns a temporary file to use as a socket for Kitty.
 local function tempKittySocket()
@@ -35,44 +59,55 @@ local function tempKittySocket()
     return dir:gsub("[ \r\n]+$", "", 1) .. "/kitty.sock"
 end
 
--- Launches a Kitty instance with default keybindings.
-local function launchDefaultKitty()
-    local socket = tempKittySocket()
-    local cmd = (
-        "env KITTY_SOCKET='" .. socket .. "' open -n -a kitty --args" ..
-        " --override allow_remote_control=socket-only" ..
-        " --listen-on 'unix:" .. socket .. "'"
-    )
-    log.i("Launching default kitty: " .. cmd)
+-- Launches Kitty using the given config and launch command. Interprets config
+-- as a path relative to kittyConfigDir. If newInstance is true, starts a new
+-- instance; otherwise, opens a window in the existing instance for this config
+-- (which is assumed to exist).
+local function launchKitty(config, launchCmd, newInstance)
+    local session
+    local sessionArgs = ""
+    if launchCmd then
+        session = tempTextFile("launch " .. launchCmd)
+        if not session then
+            return
+        end
+        sessionArgs = "--session " .. session
+    end
+
+    local cmd
+    if newInstance then
+        local socket = tempKittySocket()
+        if not socket then
+            return
+        end
+        cmd = (
+            "env KITTY_SOCKET='" .. socket .. "'"
+            .. " open -n -a kitty --args --single-instance --instance-group "
+            .. config .. " --config " .. kittyConfigDir .. "/" .. config
+            .. sessionArgs .. " --override allow_remote_control=socket-only"
+            .. " --listen-on 'unix:" .. socket .. "'"
+        )
+    else
+        cmd = (
+            "/usr/local/bin/kitty --single-instance --instance-group " .. config
+            .. sessionArgs
+        )
+    end
+
+    log.i("Launching kitty: " .. cmd)
     if not os.execute(cmd) then
         log.e("Command failed")
     end
-end
-
--- Launches a Kitty instance with tmux keybindings, using the given session.
-local function launchTmuxKitty(session)
-    -- TODO no open if another exists.
-    local socket = tempKittySocket()
-    local cmd = (
-        "env KITTY_SOCKET='" .. socket .. "'" ..
-        " open -n -a kitty --args" ..
-        " --single-instance --instance-group tmux" ..
-        " --config " .. kittyConfigDir .. "/tmux.conf" ..
-        " --session " .. kittyConfigDir .. "/sessions/" .. session ..
-        " --override allow_remote_control=socket-only" ..
-        " --listen-on 'unix:" .. socket .. "'"
-    )
-    log.i("Launching tmux kitty (session: " .. session .. "): " .. cmd)
-    if not os.execute(cmd) then
-        log.e("Command failed")
+    if session then
+        os.remove(session)
     end
 end
 
--- Cached application instance for default Kitty.
-local defaultKittyApp
+-- Cached Kitty application instances.
+local kittyApps
 
--- Returns the default Kitty application instance, or nil if it's not running.
-local function getDefaultKittyApp()
+-- Returns the Kitty application for the given config, or nil if it's not running.
+local function getKittyApp(config)
     if not (defaultKittyApp and defaultKittyApp:isRunning()) then
         log.i("Refreshing default kitty cache")
         defaultKittyApp = nil
