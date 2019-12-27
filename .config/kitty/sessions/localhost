@@ -1,1 +1,0 @@
-launch /usr/local/bin/tmux new -A -s 0
