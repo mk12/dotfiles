@@ -69,7 +69,7 @@ function tm --description "Connect to local or remote tmux session"
 end
 
 function alert --description "Ring the bell without changing exit status"
-    set the_status $status
+    set -l the_status $status
     printf "\a"
     return $the_status
 end
@@ -80,6 +80,19 @@ function add_alert --description "Add '; alert' to the end of the command"
     end
     if commandline -b | string match -q -r -v "; *alert;?\$"
         commandline -aj "; alert;"
+    end
+end
+
+function kc --description "Change the terminal colors in kitty"
+    set -l dir ~/Projects/base16-kitty/colors
+    if not test -d $dir
+        echo "$dir does not exist"
+        return 1
+    end
+    set -l choice (find $dir -name '*[^2][^5][^6].conf' \
+        | sed 's|^.*/base16-||;s/.conf$//' | sort | fzf)
+    if test -n "$choice"
+        kitty @ set-colors -a -c "$dir/base16-$choice.conf"
     end
 end
 

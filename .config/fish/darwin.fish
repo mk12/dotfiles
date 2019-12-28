@@ -3,7 +3,7 @@ function vs --description "Open in VS Code"
 end
 
 function totp --description "Copy TOTP code to clipboard"
-    set secret (grep '^'$argv[1] < ~/.totp | cut -d' ' -f2)
+    set -l secret (grep '^'$argv[1] < ~/.totp | cut -d' ' -f2)
     if test -z $secret
         echo "invalid label"
         return 1

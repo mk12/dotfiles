@@ -77,10 +77,16 @@ end
 local function launchKitty(config, launchCommand, newInstance)
     local args = (
         "--single-instance --instance-group " .. config
+        .. " --directory ~"
         .. " --config " .. kittyConfigDir .. "/" .. config
         .. " --override allow_remote_control=socket-only"
-        .. " --directory ~"
     )
+    if config == "kitty.conf" then
+        -- Hide the kitty.conf instance to avoid seeing multiple instances in
+        -- the Dock and the task switcher. There's no need to access it from
+        -- those places because the Ctrl+Space shortcut is easier.
+        args = args .. " --override macos_hide_from_tasks=yes"
+    end
 
     local session
     if launchCommand then
@@ -127,6 +133,11 @@ local kittyApps = {}
 -- Returns the kitty application for the given config, or nil if it's not
 -- running. Interprets config as a path relative to kittyConfigDir
 local function getKittyApp(config)
+    -- TODO: have cached zombie for which isRunning returns true but it doens't
+    -- seem to actually be running ... maybe check if running and has window,
+    -- and in cases where it doesn't have a window take the performance hit of
+    -- running pgrep again to find the process.
+    -- Nope, pgrep also shows ... maybe caused by no task bar thing.
     if not (kittyApps[config] and kittyApps[config]:isRunning()) then
         log.i("Refreshing kitty application cache for config: " ..config)
         kittyApps[config] = nil
@@ -264,47 +275,45 @@ end
 -- Returns a list of terminal session choices for the given host choice (one of
 -- the items from getHostChoices), to be used with hs.chooser.
 local function getSessionChoices(host)
-    local choices = {
+    local function text(localText, remoteText)
+        return host.remote and remoteText or localText
+    end
+
+    return {
         {
             text = "Default",
-            subText = "Normal keybindings",
+            subText = text(
+                "Create a window",
+                "Connect to remote host"
+            ),
             config = "kitty.conf",
             command = host.command,
         },
         {
-            text = "tmux (attached)",
-            subText = "tmux keybindings",
+            text = text("Local tmux", "Remote tmux"),
+            subText = text(
+                "Create or attach to local tmux session 0",
+                "Create or attach to remote tmux session 0"
+            ),
             config = "tmux.conf",
             command = addTmuxToCommand(host.command, "0"),
         },
         {
-            text = "tmux (detached)",
-            subText = "tmux keybindings",
+            text = text("Local tmux (detached)", "Remote tmux (detached)"),
+            subText = text(
+                "Create a window with tmux keybindings",
+                "Connect to remote host with tmux keybindings"
+            ),
             config = "tmux.conf",
             command = host.command,
         },
     }
-    -- if not host.remote then
-    --     for _, session in pairs(getLocalTmuxSessions()) do
-    --         if session ~= "0" then
-    --             table.insert(choices, {
-    --                 text = "Tmux session " .. session,
-    --                 config = "tmux.conf",
-    --                 command = addTmuxToCommand(host.command, session),
-    --             })
-    --         end
-    --     end
-    -- end
-    -- for _, item in pairs(choices) do
-    --     if not item.subText then
-    --         item.subText = item.command
-    --     end
-    -- end
-    return choices
 end
 
 -- Shortcut to launch a new kitty terminal.
 hs.hotkey.bind(hyper, "space", function()
+    local showChooser, onChooseHost, onChooseSession
+
     function showChooser()
         local chooser = hs.chooser.new(onChooseHost)
         chooser:choices(getHostChoices())

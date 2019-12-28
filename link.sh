@@ -2,7 +2,14 @@
 
 set -eufo pipefail
 
-prog=$(basename "$0")
+readonly prog=$(basename "$0")
+
+readonly local_files=(
+    ".shellrc.local"
+    ".config/fish/local.fish"
+    ".config/kitty/colors.conf"
+    ".config/kitty/remotes"
+)
 
 force=false
 
@@ -23,6 +30,26 @@ options:
 EOS
 }
 
+touch_local_files() {
+    exclude=".git/info/exclude"
+    for file in "${local_files[@]}"; do
+        echo "touch ./$file"
+        touch "./$file"
+        if ! grep -qxF "/$file" "$exclude"; then
+            echo "adding /$file to $exclude"
+            echo "/$file" >> "$exclude"
+        fi
+    done
+}
+
+link_file() {
+    dir=$1
+    file=$2
+    mkdir -p "$(dirname $HOME/$file)"
+    ln -s "$dir/$file" "$HOME/$file" > /dev/null
+    echo "symlinked $HOME/$file -> $dir/$file"
+}
+
 link_dotfiles() {
     src="$0"
     dir=$(dirname "$src")
@@ -32,8 +59,9 @@ link_dotfiles() {
         dir=$(cd -P "$(dirname "$src")" && pwd)
     done
     dir=$(cd -P "$(dirname "$src")" && pwd)
-
     cd -P "$dir" || die "failed to cd to $dir"
+
+    touch_local_files
 
     files=()
     while read -r filepath; do
@@ -49,18 +77,14 @@ link_dotfiles() {
 
     for file in "${files[@]+"${files[@]}"}"; do
         if [[ "$force" == true ]]; then
-            mkdir -p "$(dirname $HOME/$file)"
-            ln -sf "$dir/$file" "$HOME/$file" > /dev/null
-            echo "symlinked $HOME/$file -> $dir/$file"
+            link_file "$dir" "$file"
             continue
         fi
 
         echo -n "symlink $HOME/$file -> $dir/$file ? (y/N) "
         read -r reply
         if [[ "$reply" =~ ^[Yy]$ ]]; then
-            mkdir -p "$(dirname $HOME/$file)"
-            ln -s "$dir/$file" "$HOME/$file" > /dev/null
-            echo "symlinked $HOME/$file -> $dir/$file"
+            link_file "$dir" "$file"
         else
             echo "skipping $file"
         fi
@@ -75,8 +99,6 @@ main() {
         read -r reply
         if [[ "$reply" =~ ^[Yy]$ ]]; then
             link_dotfiles
-            touch ~/.shellrc.local
-            touch ~/.config/fish/local.fish
         else
             die "aborting"
         fi
