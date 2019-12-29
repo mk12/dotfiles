@@ -44,10 +44,6 @@ if command -qv bat
     alias cat=bat
 end
 
-if string match -q "*kitty*" $TERM
-    alias icat='kitty +kitten icat'
-end
-
 # =========== Functions ========================================================
 
 function refish --description "Reload fish config files"
@@ -92,7 +88,9 @@ function kc --description "Change the terminal colors in kitty"
     set -l choice (find $dir -name '*[^2][^5][^6].conf' \
         | sed 's|^.*/base16-||;s/.conf$//' | sort | fzf)
     if test -n "$choice"
-        kitty @ set-colors -a -c "$dir/base16-$choice.conf"
+        for socket in ~/.local/share/kitty/*.sock
+            kitty @ --to unix:$socket set-colors -a -c "$dir/base16-$choice.conf" &
+        end
     end
 end
 

@@ -20,6 +20,7 @@ export LEDGER_FILE=$PROJECTS/finance/journal.ledger
 
 export CLICOLOR=true
 export PAGER=less
+export LESS=-QRi
 
 export BAT_THEME=base16
 
