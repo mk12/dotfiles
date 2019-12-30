@@ -108,8 +108,9 @@ bind -M insert -e \cg \ct \co \ec \eC
 
 bind \ea add_alert
 bind \ec kitty_colors "commandline -f repaint"
-bind \ed backward-kill-bigword
 bind \ek kill-line
+bind \eK backward-kill-bigword
+bind \eD kill-bigword
 bind \e\[1\;4D backward-bigword
 bind \e\[1\;4C forward-bigword
 
