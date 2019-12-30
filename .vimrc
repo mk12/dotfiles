@@ -14,8 +14,8 @@ call plug#begin()
 
 Plug 'airblade/vim-gitgutter'
 Plug 'benmills/vimux'
+Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'danielwe/base16-vim' " TODO: Change back from danielwe to chriskempson
 Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
@@ -128,6 +128,11 @@ endif
 if has('termguicolors')
     set notermguicolors
 end
+
+" There's no need to care about light/dark backgrounds when using base16 themes.
+" Explicitly set it to dark here because auto-detection seems to reset the
+" colorscheme to default when the background is light.
+set background=dark
 colorscheme base16-default-dark
 
 call Base16hi("DiffFile", g:base16_gui05, "", g:base16_cterm05, "", "bold")
@@ -140,9 +145,9 @@ hi link StatusLine PMenu
 hi clear WildMenu
 hi link WildMenu PMenuSel
 hi Normal ctermbg=NONE
-
+hi CursorLineNr term=bold cterm=bold ctermfg=12 gui=bold
 hi clear SpellBad
-hi SpellBad cterm=underline,bold ctermfg=red
+hi SpellBad cterm=underline,bold ctermfg=9
 
 " =========== Mappings =========================================================
 

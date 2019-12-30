@@ -114,6 +114,11 @@ endif
 if has('termguicolors')
     set notermguicolors
 end
+
+" There's no need to care about light/dark backgrounds when using base16 themes.
+" Explicitly set it to dark here because auto-detection seems to reset the
+" colorscheme to default when the background is light.
+set background=dark
 colorscheme base16-default-dark
 
 call Base16hi("DiffFile", g:base16_gui05, "", g:base16_cterm05, "", "bold")
@@ -121,16 +126,14 @@ call Base16hi("DiffIndexLine", g:base16_gui05, "", g:base16_cterm05, "", "bold")
 call Base16hi("DiffNewFile", g:base16_gui05, "", g:base16_cterm05, "", "bold")
 call Base16hi("WarningMsg", g:base16_gui0A, "", g:base16_cterm0A, "")
 
-call Base16hi("rubyControl", g:base16_gui0E, "", g:base16_cterm0E, "")
-
 hi clear StatusLine
 hi link StatusLine PMenu
 hi clear WildMenu
 hi link WildMenu PMenuSel
 hi Normal ctermbg=NONE
-
+hi CursorLineNr term=bold cterm=bold ctermfg=12 gui=bold
 hi clear SpellBad
-hi SpellBad cterm=underline,bold ctermfg=red
+hi SpellBad cterm=underline,bold ctermfg=9
 
 " =========== Mappings =========================================================
 
