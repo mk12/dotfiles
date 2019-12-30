@@ -43,23 +43,6 @@ local function openAppFn(app, target)
     end
 end
 
--- Binds hotkeys so that they are only active in the given application.
-local function bindAppLocalHotkeys(appName, hotkeys)
-    hs.application.watcher.new(function(name, event, app)
-        if name == appName then
-            if event == hs.application.watcher.activated then
-                for _, hotkey in ipairs(hotkeys) do
-                    hotkey:enable()
-                end
-            elseif event == hs.application.watcher.deactivated then
-                for _, hotkey in ipairs(hotkeys) do
-                    hotkey:disable()
-                end
-            end
-        end
-    end):start()
-end
-
 -- ========== Kitty ============================================================
 
 -- Kitty files and directories.
@@ -84,21 +67,26 @@ local function allKittySocketAddresses()
     }
 end
 
--- Launches kitty using the given config and launch command. Interprets config
--- as a path relative to kittyConfigDir. If newInstance is true, starts a new
+-- Launches kitty using the given config and options. Interprets config as a
+-- path relative to kittyConfigDir. If options.lanchCommand is present, uses it
+-- when starting the terminal. If options.newInstance is true, starts a new
 -- instance; otherwise, opens a window in the existing instance for this config
--- (which is assumed to exist).
-local function launchKitty(config, launchCommand, newInstance)
+-- (which is assumed to exist). If options.hideFromTasks is true, hides the app
+-- from the macOS Dock and Cmd-Tab task bar.
+local function launchKitty(config, options)
     local args = (
         "--single-instance --instance-group " .. config
         .. " --directory ~"
         .. " --config " .. kittyConfigDir .. "/" .. config
         .. " --override allow_remote_control=socket-only"
     )
+    if options.hideFromTasks then
+        args = args .. " --override macos_hide_from_tasks=yes"
+    end
 
     local sessionPath
-    if launchCommand then
-        local text = "launch " .. launchCommand
+    if options.launchCommand then
+        local text = "launch " .. options.launchCommand
         log.i("Using kitty session: " .. text)
         sessionPath = tempTextFile(text)
         if not sessionPath then
@@ -108,7 +96,7 @@ local function launchKitty(config, launchCommand, newInstance)
     end
 
     local cmd
-    if newInstance then
+    if options.newInstance then
         args = args .. " --listen-on '" .. kittySocketAddress(config) .. "'"
         cmd = "open -n -a kitty --args " .. args
     else
@@ -185,33 +173,16 @@ local function showOrHideMainKittyInstance()
     local config = "kitty.conf"
     local app = getKittyApp(config)
     if not app then
-        launchKitty(config, nil, true)
+        launchKitty(config, {newInstance = true, hideFromTasks = true})
         return
     end
 
     if not app:mainWindow() then
         log.i("Making a new kitty window")
-        local newWindow = function()
-            app:selectMenuItem({"kitty", "New OS window"})
-        end
-        -- Check if we're in a fullscreen window. In this case app:activate()
-        -- will not switch away from the fullscreen app, so selectMenuItem
-        -- doesn't work. Focusing the app with AppleScript works.
-        local current = hs.window.focusedWindow()
-        if current and current:isFullScreen() then
-            log.i("Using applescript hack")
-            hs.osascript.applescript([[
-                tell application "System Events"
-                    set frontmost of (first process whose unix id is ]] ..
-                    app:pid() .. [[) to true
-                end tell
-            ]])
-            -- Wait for the app to be activated before invoking selectMenuItem.
-            hs.timer.doAfter(0.1, newWindow)
-        else
-            app:activate()
-            newWindow()
-        end
+        -- Use kitty --single-instance to open a new window. We could also
+        -- select the "New OS Window" menu item, but this doesn't work with the
+        -- macos_hide_from_tasks setting.
+        launchKitty(config, {newInstance = false})
     elseif app:isFrontmost() then
         log.i("Hiding kitty")
         app:hide()
@@ -230,6 +201,28 @@ local function addTmuxToCommand(command, tmuxSession)
     return result
 end
 
+-- Opens a kitty window attaching to a tmux session on the default host. The
+-- default host is the one prefixed with an asterisk in the remotes file, or
+-- the local machine if none is.
+local function launchDefaultHostTmuxKitty()
+    local cmd
+    local file = io.open(kittyRemotesFile)
+    if file then
+        for line in file:lines() do
+            local name = line:match("^[^:]+")
+            if name:sub(1, 1) == "*" then
+                cmd = line:sub(#name + 2)
+                break
+            end
+        end
+        file:close()
+    end
+    launchKitty("tmux.conf", {
+        launchCommand = addTmuxToCommand(cmd, "0"),
+        newInstance = not getKittyApp("tmux.conf"),
+    })
+end
+
 -- Returns a list of terminal host choices, to be used with hs.chooser.
 local function getHostChoices()
     local choices = {
@@ -245,6 +238,7 @@ local function getHostChoices()
         for line in file:lines() do
             local name = line:match("^[^:]+")
             local cmd = line:sub(#name + 2)
+            name = name:gsub("^%*", "", 1)
             table.insert(choices, {
                 text = name, subText = cmd, remote = true, command = cmd
             })
@@ -324,36 +318,13 @@ local function displayKittyLaunchChooser()
         end
         log.i("Got session choice: text = " .. choice.text .. ", config = "
             .. choice.config .. ", command = " .. (choice.command or "nil"))
-        local newInstance = not getKittyApp(choice.config)
-        launchKitty(choice.config, choice.command, newInstance)
+        launchKitty(choice.config, {
+            launchCommand = choice.command,
+            newInstance = not getKittyApp(choice.config),
+        })
     end
 
     showChooser()
-end
-
--- Cached list of color theme choices.
-local colorThemeChoices
-
--- Returns a list of color theme choices for kitty, or nil on failure.
-local function getColorThemeChoices()
-    if colorThemeChoices then
-        return colorThemeChoices
-    end
-    local iterFn, dirObj = hs.fs.dir(kittyColorsDir)
-    if not iterFn then
-        log.e("Failed to list " .. kittyColorsDir .. ": " .. dirObj)
-        return nil
-    end
-    local choices = {}
-    for file in iterFn, dirObj do
-        if file:match("[^2][^5][^6].conf$") then
-            local name = file:match("^base16%-(.+)%.conf")
-            table.insert(choices, { text = name })
-        end
-    end
-    table.sort(choices, function(c1, c2) return c1.text < c2.text end)
-    colorThemeChoices = choices
-    return choices
 end
 
 -- Sets the color theme persistently for all current and future kitty instances.
@@ -383,26 +354,17 @@ local function setKittyColorTheme(theme)
     file:close()
 end
 
-local function displayKittyColorThemeChooser()
-    local showChooser, onChooseTheme
+-- Global storing whether macOS Dark Mode was enabled when last checked.
+local darkModeEnabled
 
-    function showChooser()
-        local chooser = hs.chooser.new(onChooseTheme)
-        chooser:choices(getColorThemeChoices())
-        chooser:placeholderText("Choose a color theme")
-        chooser:show()
+-- Updates the kitty color theme to match the OS Dark Mode setting.
+local function syncKittyToDarkMode()
+    local dark = hs.host.interfaceStyle() == "Dark"
+    if dark ~= darkModeEnabled then
+        log.i("Updating kitty for dark mode = " .. (dark and "on" or "off"))
+        setKittyColorTheme(dark and "onedark" or "one-light")
     end
-
-    function onChooseTheme(choice)
-        if not choice then
-            log.i("No choice made for kitty color theme")
-            return
-        end
-        log.i("Got kitty color theme choice: text = " .. choice.text)
-        setKittyColorTheme(choice.text)
-    end
-
-    showChooser()
+    darkModeEnabled = dark
 end
 
 -- ========== Shortcuts ========================================================
@@ -426,9 +388,12 @@ hs.hotkey.bind(hyper, "F",
 -- Shortcuts for kitty.
 hs.hotkey.bind({"ctrl"}, "space", showOrHideMainKittyInstance)
 hs.hotkey.bind(hyper, "space", displayKittyLaunchChooser)
-bindAppLocalHotkeys("kitty", {
-    hs.hotkey.new({"cmd", "shift"}, "C", displayKittyColorThemeChooser)
-})
+hs.hotkey.bind(hyper, "T", launchDefaultHostTmuxKitty)
+
+-- ========== Timers ===========================================================
+
+syncKittyToDarkMode()
+hs.timer.doEvery(hs.timer.minutes(1), syncKittyToDarkMode)
 
 -- ========== Misc =============================================================
 

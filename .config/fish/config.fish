@@ -79,7 +79,7 @@ function add_alert --description "Add '; alert' to the end of the command"
     end
 end
 
-function kc --description "Change the terminal colors in kitty"
+function kitty_colors --description "Change the terminal colors in kitty"
     set -l dir ~/Projects/base16-kitty/colors
     if not test -d $dir
         echo "$dir does not exist"
@@ -88,9 +88,12 @@ function kc --description "Change the terminal colors in kitty"
     set -l choice (find $dir -name '*[^2][^5][^6].conf' \
         | sed 's|^.*/base16-||;s/.conf$//' | sort | fzf)
     if test -n "$choice"
+        set -l path $dir/base16-$choice.conf
         for socket in ~/.local/share/kitty/*.sock
-            kitty @ --to unix:$socket set-colors -a -c "$dir/base16-$choice.conf" &
+            kitty @ --to unix:$socket set-colors -a -c $path &
         end
+        echo "include $path" > ~/.config/kitty/colors.conf
+        wait
     end
 end
 
@@ -99,7 +102,16 @@ function __fish_describe_command; end
 
 # =========== Keybindings ======================================================
 
+# Remove all fzf bindings except Ctrl-R.
+bind -e \cg \ct \co \ec \eC
+bind -M insert -e \cg \ct \co \ec \eC
+
 bind \ea add_alert
+bind \ec kitty_colors "commandline -f repaint"
+bind \ed backward-kill-bigword
+bind \ek kill-line
+bind \e\[1\;4D backward-bigword
+bind \e\[1\;4C forward-bigword
 
 # =========== Variables ========================================================
 

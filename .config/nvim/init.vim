@@ -12,8 +12,8 @@ call plug#begin()
 
 Plug 'airblade/vim-gitgutter'
 Plug 'benmills/vimux'
+Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'danielwe/base16-vim' " TODO: Change back from danielwe to chriskempson
 Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
@@ -120,6 +120,8 @@ call Base16hi("DiffFile", g:base16_gui05, "", g:base16_cterm05, "", "bold")
 call Base16hi("DiffIndexLine", g:base16_gui05, "", g:base16_cterm05, "", "bold")
 call Base16hi("DiffNewFile", g:base16_gui05, "", g:base16_cterm05, "", "bold")
 call Base16hi("WarningMsg", g:base16_gui0A, "", g:base16_cterm0A, "")
+
+call Base16hi("rubyControl", g:base16_gui0E, "", g:base16_cterm0E, "")
 
 hi clear StatusLine
 hi link StatusLine PMenu
