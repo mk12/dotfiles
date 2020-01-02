@@ -222,7 +222,16 @@ local function launchFullScreenTmuxKitty()
         launchCommand = addTmuxToCommand(cmd, "0"),
         newInstance = not getKittyApp(config),
     })
-    getKittyApp(config):mainWindow():setFullScreen(true)
+    local app = getKittyApp(config)
+    local function fullScreen()
+        app:mainWindow():setFullScreen(true)
+    end
+    -- When launching for the first time, wait for the window to be ready.
+    if app and app:mainWindow() then
+        fullScreen()
+    else
+        hs.timer.doAfter(1, fullScreen)
+    end
 end
 
 -- Returns a list of terminal host choices, to be used with hs.chooser.
