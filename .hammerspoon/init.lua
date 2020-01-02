@@ -201,10 +201,10 @@ local function addTmuxToCommand(command, tmuxSession)
     return result
 end
 
--- Opens a kitty window attaching to a tmux session on the default host. The
--- default host is the one prefixed with an asterisk in the remotes file, or
--- the local machine if none is.
-local function launchDefaultHostTmuxKitty()
+-- Opens a fullscreen kitty window attaching to tmux on the default host. The
+-- default host is the one prefixed with an asterisk in the remotes file, or the
+-- local machine if none is.
+local function launchFullScreenTmuxKitty()
     local cmd
     local file = io.open(kittyRemotesFile)
     if file then
@@ -217,10 +217,12 @@ local function launchDefaultHostTmuxKitty()
         end
         file:close()
     end
-    launchKitty("tmux.conf", {
+    local config = "tmux.conf"
+    launchKitty(config, {
         launchCommand = addTmuxToCommand(cmd, "0"),
-        newInstance = not getKittyApp("tmux.conf"),
+        newInstance = not getKittyApp(config),
     })
+    getKittyApp(config):mainWindow():setFullScreen(true)
 end
 
 -- Returns a list of terminal host choices, to be used with hs.chooser.
@@ -388,7 +390,7 @@ hs.hotkey.bind(hyper, "F",
 -- Shortcuts for kitty.
 hs.hotkey.bind({"ctrl"}, "space", showOrHideMainKittyInstance)
 hs.hotkey.bind(hyper, "space", displayKittyLaunchChooser)
-hs.hotkey.bind(hyper, "T", launchDefaultHostTmuxKitty)
+hs.hotkey.bind(hyper, "T", launchFullScreenTmuxKitty)
 
 -- ========== Timers ===========================================================
 
