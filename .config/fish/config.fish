@@ -79,24 +79,6 @@ function add_alert --description "Add '; alert' to the end of the command"
     end
 end
 
-function kitty_colors --description "Change the terminal colors in kitty"
-    set -l dir ~/Projects/base16-kitty/colors
-    if not test -d $dir
-        echo "$dir does not exist"
-        return 1
-    end
-    set -l choice (find $dir -name '*[^2][^5][^6].conf' \
-        | sed 's|^.*/base16-||;s/.conf$//' | sort | fzf)
-    if test -n "$choice"
-        set -l path $dir/base16-$choice.conf
-        for socket in ~/.local/share/kitty/*.sock
-            kitty @ --to unix:$socket set-colors -a -c $path &
-        end
-        echo "include $path" > ~/.config/kitty/colors.conf
-        wait
-    end
-end
-
 # Workaround for https://github.com/fish-shell/fish-shell/issues/6270
 function __fish_describe_command; end
 
@@ -107,7 +89,7 @@ bind -e \cg \ct \co \ec \eC
 bind -M insert -e \cg \ct \co \ec \eC
 
 bind \ea add_alert
-bind \ec kitty_colors "commandline -f repaint"
+bind \ec kitty-colors "commandline -f repaint"
 bind \ek kill-line
 bind \eK backward-kill-bigword
 bind \eD kill-bigword
