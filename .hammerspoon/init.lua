@@ -378,6 +378,41 @@ local function syncKittyToDarkMode()
     darkModeEnabled = dark
 end
 
+-- ========== Chimes ===========================================================
+
+-- Path to the timidity binary.
+local timidityBinary = executeWithUserEnv("which timidity"):match("[^\r\n]+")
+
+-- Flag indicating whether to play chimes every quarter hour.
+local chimesEnabled = true
+
+-- Toggles the chimesEnabled flag and displays a message on screen.
+local function toggleChimesEnabled()
+    chimesEnabled = not chimesEnabled
+    local onOrOff = chimesEnabled and "on" or "off"
+    log.i("Set chimesEnabled = " .. onOrOff)
+    hs.alert("Chimes " .. onOrOff)
+    if not chimesEnabled then
+        local cmd =
+            "pkill -f 'minster.sh' '" .. timidityBinary .. "'"
+        log.i("Killing minster and timidity: " .. cmd)
+        os.execute(cmd)
+    end
+end
+
+-- If chimesEnabled is true, plays Westminster chimes for the current time.
+local function playChimes()
+    if chimesEnabled then
+        -- Must use os.execute and & to avoid blocking the main thread.
+        local cmd =
+            "~/Projects/minster/minster.sh -t '" .. timidityBinary .. "' &"
+        log.i("Playing chimes: " .. cmd)
+        os.execute(cmd)
+    else
+        log.i("Not playing chimes because they are turned off")
+    end
+end
+
 -- ========== Shortcuts ========================================================
 
 -- Global modifier combination unlikely to be used by other programs.
@@ -401,10 +436,15 @@ hs.hotkey.bind({"ctrl"}, "space", showOrHideMainKittyInstance)
 hs.hotkey.bind(hyper, "space", displayKittyLaunchChooser)
 hs.hotkey.bind(hyper, "T", launchFullScreenTmuxKitty)
 
+-- Toggle Westminster chimes.
+hs.hotkey.bind(hyper, "C", toggleChimesEnabled)
+
 -- ========== Timers ===========================================================
 
 syncKittyToDarkMode()
 hs.timer.doEvery(hs.timer.minutes(1), syncKittyToDarkMode)
+
+hs.timer.doAt("00:00", hs.timer.minutes(15), playChimes)
 
 -- ========== Misc =============================================================
 
