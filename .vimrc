@@ -14,7 +14,6 @@ call plug#begin()
 
 Plug 'airblade/vim-gitgutter'
 Plug 'benmills/vimux'
-Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
@@ -26,6 +25,7 @@ Plug 'justinmk/vim-dirvish'
 Plug 'kana/vim-textobj-user'
 Plug 'ledger/vim-ledger', { 'for': 'ledger' }
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
+Plug 'mk12/base16-vim'
 Plug 'sgur/vim-textobj-parameter'
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
@@ -129,25 +129,12 @@ if has('termguicolors')
     set notermguicolors
 end
 
-" There's no need to care about light/dark backgrounds when using base16 themes.
-" Explicitly set it to dark here because auto-detection seems to reset the
-" colorscheme to default when the background is light.
-set background=dark
-colorscheme base16-default-dark
-
-call Base16hi("DiffFile", g:base16_gui05, "", g:base16_cterm05, "", "bold")
-call Base16hi("DiffIndexLine", g:base16_gui05, "", g:base16_cterm05, "", "bold")
-call Base16hi("DiffNewFile", g:base16_gui05, "", g:base16_cterm05, "", "bold")
-call Base16hi("WarningMsg", g:base16_gui0A, "", g:base16_cterm0A, "")
-
-hi clear StatusLine
-hi link StatusLine PMenu
-hi clear WildMenu
-hi link WildMenu PMenuSel
-hi Normal ctermbg=NONE
-hi CursorLineNr term=bold cterm=bold ctermfg=12 gui=bold
-hi clear SpellBad
-hi SpellBad cterm=underline,bold ctermfg=9
+if get(g:, 'colors_name') isnot# 'base16'
+    " Explicitly set background to avoid auto-detection issues. It doesn't
+    " matter whether it's light or dark for base16.
+    set background=dark
+    colorscheme base16
+endif
 
 " =========== Mappings =========================================================
 
