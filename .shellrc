@@ -6,6 +6,7 @@ paths=(
     "$HOME/.linuxbrew/bin"
     "$HOME/.fzf/bin"
     "$HOME/.cargo/bin"
+    "$HOME/.ghcup/bin"
     "$HOME/.cabal/bin"
     "$PROJECTS/scripts"
 )
@@ -15,6 +16,8 @@ for p in "${paths[@]}"; do
         PATH=$PATH:$p
     fi
 done
+
+export GOPATH=$PROJECTS/go
 
 export LEDGER_FILE=$PROJECTS/finance/journal.ledger
 

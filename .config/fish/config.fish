@@ -84,12 +84,10 @@ function __fish_describe_command; end
 
 # =========== Keybindings ======================================================
 
-# Remove all fzf bindings except Ctrl-R.
-bind -e \cg \ct \co \ec \eC
-bind -M insert -e \cg \ct \co \ec \eC
+set -x FZF_LEGACY_KEYBINDINGS 0
 
 bind \ea add_alert
-bind \ec kitty-colors "commandline -f repaint"
+bind \er kitty-colors "commandline -f repaint"
 bind \ek kill-line
 bind \eK backward-kill-bigword
 bind \eD kill-bigword
@@ -118,7 +116,8 @@ set fish_color_valid_path --underline
 set fish_pager_color_completion normal
 set fish_pager_color_description green
 set fish_pager_color_prefix white --bold --underline
-set fish_pager_color_progress brwhite --background=cyan
+set fish_pager_color_progress cyan --bold
+set fish_color_search_match --background=bryellow
 
 # =========== Other config =====================================================
 

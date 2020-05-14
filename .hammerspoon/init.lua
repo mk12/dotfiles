@@ -373,7 +373,7 @@ local function syncKittyToDarkMode()
     local dark = hs.host.interfaceStyle() == "Dark"
     if dark ~= darkModeEnabled then
         log.i("Updating kitty for dark mode = " .. (dark and "on" or "off"))
-        setKittyColorTheme(dark and "onedark" or "one-light")
+        setKittyColorTheme(dark and "solarized-dark" or "solarized-light")
     end
     darkModeEnabled = dark
 end
