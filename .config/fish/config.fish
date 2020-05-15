@@ -84,10 +84,13 @@ function __fish_describe_command; end
 
 # =========== Keybindings ======================================================
 
+# Use only the fzf bindings Ctrl-o, Ctrl-r, Alt-o.
 set -x FZF_LEGACY_KEYBINDINGS 0
+bind -e \ec \eC \eO
+bind -M insert -e \ec \eC \eO
 
 bind \ea add_alert
-bind \er kitty-colors "commandline -f repaint"
+bind \ec kitty-colors "commandline -f repaint"
 bind \ek kill-line
 bind \eK backward-kill-bigword
 bind \eD kill-bigword
