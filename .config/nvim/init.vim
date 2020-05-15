@@ -115,6 +115,9 @@ if has('termguicolors')
     set notermguicolors
 end
 
+" TODO: Figure out why applying colorscheme base16 a second time causes weird
+" light colors in the buffer tabs. For now, skip this if the scheme is already
+" base16 so that this doesn't happen when reloading config.
 if get(g:, 'colors_name') isnot# 'base16'
     " Explicitly set background to avoid auto-detection issues. It doesn't
     " matter whether it's light or dark for base16.
@@ -165,12 +168,12 @@ nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 " Since <Tab> and <C-I> are the same, I need a new mapping for <C-I>.
 nnoremap <C-Q> <C-I>
 
-nmap [h <Plug>GitGutterPrevHunk
-nmap ]h <Plug>GitGutterNextHunk
-omap ih <Plug>GitGutterTextObjectInnerPending
-omap ah <Plug>GitGutterTextObjectOuterPending
-xmap ih <Plug>GitGutterTextObjectInnerVisual
-xmap ah <Plug>GitGutterTextObjectOuterVisual
+nmap [h <Plug>(GitGutterPrevHunk)
+nmap ]h <Plug>(GitGutterNextHunk)
+omap ih <Plug>(GitGutterTextObjectInnerPending)
+omap ah <Plug>(GitGutterTextObjectOuterPending)
+xmap ih <Plug>(GitGutterTextObjectInnerVisual)
+xmap ah <Plug>(GitGutterTextObjectOuterVisual)
 
 " =========== Shortcuts ========================================================
 
@@ -519,7 +522,7 @@ function! SyntaxName() abort
 endfunction
 
 function! ReflowText() abort
-    if SyntaxName() =~? 'comment$'
+    if SyntaxName() =~? 'comment'
         normal gqac
     else
         normal! gqap
@@ -560,6 +563,9 @@ function! SearchProject(...) abort
     let l:old_dir = getcwd()
     let l:dir = InputDirectory()
     if !empty(l:dir)
+        if l:dir is# '.'
+            let l:dir = '%:h'
+        endif
         try
             silent execute 'cd' l:dir
         catch
@@ -569,7 +575,9 @@ function! SearchProject(...) abort
         endtry
     endif
     try
-        silent execute 'Rg' l:term
+        " Not using silent execute because then pressing enter does not work
+        " (only in vim 8.2; in nvim it works fine either way).
+        execute 'Rg' l:term
     finally
         if !empty(l:dir)
             silent execute 'cd' l:old_dir
