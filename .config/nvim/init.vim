@@ -17,18 +17,17 @@ Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
+Plug 'junegunn/goyo.vim'
 Plug 'junegunn/gv.vim'
 Plug 'justinmk/vim-dirvish'
 Plug 'kana/vim-textobj-user'
-Plug 'ledger/vim-ledger', { 'for': 'ledger' }
-Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
-Plug 'mk12/base16-vim'
+Plug 'ledger/vim-ledger'
+Plug 'mbbill/undotree'
 Plug 'sgur/vim-textobj-parameter'
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
 Plug 'tpope/vim-apathy'
-Plug 'tpope/vim-commentary', { 'on': 'Commentary' }
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
@@ -43,6 +42,12 @@ Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+if isdirectory($PROJECTS . "/base16-vim")
+    set rtp+=$PROJECTS/base16-vim
+else
+    Plug 'mk12/base16-vim'
+endif
+
 call plug#end()
 
 " =========== Plugin settings ==================================================
@@ -52,7 +57,7 @@ let g:AutoPairsShortcutToggle = ''
 
 let g:airline#extensions#default#layout = [['a', 'c'], ['x', 'y']]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_base16_improved_contrast = 0
+let g:airline_base16_improved_contrast = 1
 let g:airline_base16_monotone = 1
 let g:airline_extensions = ['tabline']
 let g:airline_highlighting_cache = 1
@@ -456,11 +461,17 @@ augroup custom
     " Sometimes Airline doesn't clean up properly.
     autocmd BufWipeout * call airline#extensions#tabline#buflist#clean()
 
+    " Exit help window with q.
+    autocmd filetype help nnoremap <buffer> <silent> q :close<cr>
+
     " Exit dirvish with q.
     autocmd filetype dirvish nmap <buffer> <silent> q <Plug>(dirvish_quit)
 
     " Exit fugitive windows consistently with q.
     autocmd BufEnter fugitive://*//* nnoremap <buffer> <silent> q :bdelete<CR>
+
+    " Recognize my .shellrc and .shellrc.local files.
+    autocmd BufNewFile,BufRead .shellrc* setfiletype sh
 augroup END
 
 " =========== Functions ========================================================
