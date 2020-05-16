@@ -830,18 +830,3 @@ function! LoadCustomProjections() abort
         break
     endfor
 endfunction
-
-" =========== Encryption =======================================================
-
-set cryptmethod=blowfish
-
-function! DisableViminfo()
-    if !empty(&key)
-        set viminfo=
-    endif
-endfunction
-
-augroup encryption
-    autocmd!
-    autocmd BufRead * call DisableViminfo()
-augroup END
