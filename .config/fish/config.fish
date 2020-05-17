@@ -50,6 +50,21 @@ function refish --description "Reload fish config files"
     source ~/.config/fish/config.fish
 end
 
+function z --description "Jump around"
+    set -g prev_z_argv $argv
+    __z $argv
+end
+
+function zi --description "Like z, but choose with fzf"
+    if test (count $argv) -ge 1
+        set -g prev_z_argv $argv
+    end
+    if not set result (__z $prev_z_argv -l 2> /dev/null | fzf)
+        return
+    end
+    cd (string split -n -m 1 ' ' $result)[2]
+end
+
 function gg --description "Print git overview"
     git log --oneline -n1; or return
     git branch
@@ -65,7 +80,7 @@ function tm --description "Connect to local or remote tmux session"
 end
 
 function alert --description "Ring the bell without changing exit status"
-    set -l the_status $status
+    set the_status $status
     printf "\a"
     return $the_status
 end
