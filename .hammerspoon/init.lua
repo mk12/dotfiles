@@ -435,9 +435,10 @@ hs.hotkey.bind(hyper, "F",
 hs.hotkey.bind({"ctrl"}, "space", showOrHideMainKittyInstance)
 hs.hotkey.bind(hyper, "space", displayKittyLaunchChooser)
 hs.hotkey.bind(hyper, "T", launchFullScreenTmuxKitty)
+hs.hotkey.bind(hyper, "C", syncKittyToDarkMode)
 
 -- Toggle Westminster chimes.
-hs.hotkey.bind(hyper, "C", toggleChimesEnabled)
+hs.hotkey.bind(hyper, "M", toggleChimesEnabled)
 
 -- ========== Timers ===========================================================
 
