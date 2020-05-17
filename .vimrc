@@ -10,7 +10,18 @@ if empty(glob('~/.vim/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+function! MyPlugin(name)
+    let l:path = expand('~/Projects/') . a:name
+    if isdirectory(l:path)
+        return l:path
+    endif
+    return 'mk12/' . a:name
+endfunction
+
 call plug#begin()
+
+Plug MyPlugin('base16-vim')
+Plug MyPlugin('vim-fish')
 
 Plug 'Clavelito/indent-awk.vim'
 Plug 'airblade/vim-gitgutter'
@@ -44,7 +55,6 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug '~/Projects/base16-vim'
 
 Plug 'tpope/vim-sensible'
 filetype plugin indent on
@@ -67,6 +77,8 @@ let g:airline_theme = 'base16_vim'
 let g:dispatch_no_maps = 1
 
 let g:gitgutter_map_keys = 0
+
+let g:polyglot_disabled = ['fish']
 
 let g:VimuxPromptString = "Vimux: "
 let g:VimuxHeight = "30"
@@ -105,6 +117,9 @@ set undofile
 set visualbell
 set wildmode=longest,full
 
+" Avoid highlighting searches when reloading vimrc.
+nohlsearch
+
 if !exists('g:loaded_sleuth')
     set expandtab
     set shiftwidth=4
@@ -130,15 +145,10 @@ if has('termguicolors')
     set notermguicolors
 end
 
-" TODO: Figure out why applying colorscheme base16 a second time causes weird
-" light colors in the buffer tabs. For now, skip this if the scheme is already
-" base16 so that this doesn't happen when reloading config.
-if get(g:, 'colors_name') isnot# 'base16'
-    " Explicitly set background to avoid auto-detection issues. It doesn't
-    " matter whether it's light or dark for base16.
-    set background=dark
-    colorscheme base16
-endif
+" Explicitly set background to avoid auto-detection issues. It doesn't
+" matter whether it's light or dark for base16.
+set background=dark
+colorscheme base16
 
 " =========== Mappings =========================================================
 
@@ -256,8 +266,6 @@ Shortcut edit shell config (local)
     \ nnoremap <Leader>eS :edit ~/.shellrc.local<CR>
 Shortcut edit vimrc or init.vim
     \ nnoremap <Leader>ev :edit $MYVIMRC<CR>
-Shortcut source vimrc or init.vim
-    \ nnoremap <Leader>eV :source $MYVIMRC<CR>
 
 Shortcut format code
     \ nnoremap <Leader>f :call FormatCode('%')<CR>
@@ -296,20 +304,26 @@ Shortcut git update/pull (autostash)
 Shortcut find help
     \ nnoremap <Leader>h :Helptags<CR>
 
-Shortcut jump to line in any buffer
-    \ nnoremap <Leader>ja :Lines<CR>
 Shortcut jump to commit
-    \ nnoremap <Leader>jc :Commits<CR>
+    \ nnoremap <Leader>jc :Commits!<CR>
+Shortcut jump to commit in buffer
+    \ nnoremap <Leader>jC :BCommits!<CR>
 Shortcut jump/switch to filetype
     \ nnoremap <Leader>jf :Filetypes<CR>
+Shortcut jump to line
+    \ nnoremap <Leader>jl :Lines<CR>
 Shortcut jump to line in buffer
-    \ nnoremap <Leader>jl :BLines<CR>
-Shortcut jump to mark
-    \ nnoremap <Leader>jm :Marks<CR>
-Shortcut jump to symbol/tag in buffer
-    \ nnoremap <Leader>js :BTags<CR>
-Shortcut jump to tag in project
+    \ nnoremap <Leader>jL :BLines<CR>
+Shortcut jump to mapping
+    \ nnoremap <Leader>jm :Maps<CR>
+Shortcut jump to command history
+    \ nnoremap <Leader>jr :History:<CR>
+Shortcut jump to tag
     \ nnoremap <Leader>jt :call BrowseTags()<CR>
+Shortcut jump to tag in buffer
+    \ nnoremap <Leader>jT :BTags<CR>
+Shortcut jump to search history
+    \ nnoremap <Leader>j/ :History/<CR>
 
 Shortcut kill/delete buffer
     \ nnoremap <silent> <leader>k :call KillBuffer('')<CR>
@@ -357,6 +371,9 @@ Shortcut quit
     \ nnoremap <Leader>q :quit<CR>
     Shortcut force quit
     \ nnoremap <Leader>Q :quit!<CR>
+
+Shortcut reload/source vimrc or init.vim
+    \ nnoremap <Leader>r :source $MYVIMRC<CR>
 
 Shortcut save/write file
     \ nnoremap <Leader>s :write<CR>
@@ -467,6 +484,9 @@ augroup custom
 
     " By default GitGutter waits for 'updatetime' ms before updating.
     autocmd BufWritePost,WinEnter * GitGutter
+
+    " The Airline tabline gets messed up when reloading the color scheme.
+    autocmd ColorScheme * AirlineRefresh
 
     " Sometimes Airline doesn't clean up properly.
     autocmd BufWipeout * call airline#extensions#tabline#buflist#clean()
@@ -686,6 +706,8 @@ function! FormatCode(...) abort range
         let l:cmd = 'clang-format'
     elseif &filetype is# 'python'
         let l:cmd = 'black -l ' . &textwidth . ' -'
+    elseif &filetype is# 'fish'
+        let l:cmd = 'fish_indent'
     else
         let l:ft = empty(&filetype) ? '<no filetype>' : &filetype
         call s:Error('Unable to format ' . l:ft . ' file')
