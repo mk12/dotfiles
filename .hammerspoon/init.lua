@@ -369,13 +369,21 @@ end
 local darkModeEnabled
 
 -- Updates the kitty color theme to match the OS Dark Mode setting.
-local function syncKittyToDarkMode()
+local function syncKittyToDarkMode(force)
     local dark = hs.host.interfaceStyle() == "Dark"
-    if dark ~= darkModeEnabled then
+    if force or dark ~= darkModeEnabled then
         log.i("Updating kitty for dark mode = " .. (dark and "on" or "off"))
         setKittyColorTheme(dark and "solarized-dark" or "solarized-light")
     end
     darkModeEnabled = dark
+end
+
+local function syncKittyToDarkModeLazy()
+    syncKittyToDarkMode(false)
+end
+
+local function syncKittyToDarkModeForce()
+    syncKittyToDarkMode(true)
 end
 
 -- ========== Chimes ===========================================================
@@ -435,15 +443,15 @@ hs.hotkey.bind(hyper, "F",
 hs.hotkey.bind({"ctrl"}, "space", showOrHideMainKittyInstance)
 hs.hotkey.bind(hyper, "space", displayKittyLaunchChooser)
 hs.hotkey.bind(hyper, "T", launchFullScreenTmuxKitty)
-hs.hotkey.bind(hyper, "C", syncKittyToDarkMode)
+hs.hotkey.bind(hyper, "C", syncKittyToDarkModeForce)
 
 -- Toggle Westminster chimes.
 hs.hotkey.bind(hyper, "M", toggleChimesEnabled)
 
 -- ========== Timers ===========================================================
 
-syncKittyToDarkMode()
-hs.timer.doEvery(hs.timer.minutes(1), syncKittyToDarkMode)
+syncKittyToDarkModeForce()
+hs.timer.doEvery(hs.timer.minutes(1), syncKittyToDarkModeLazy)
 
 hs.timer.doAt("00:00", hs.timer.minutes(15), playChimes)
 
