@@ -12,6 +12,7 @@ endif
 
 call plug#begin()
 
+Plug 'Clavelito/indent-awk.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'benmills/vimux'
 Plug 'christoomey/vim-tmux-navigator'
@@ -43,12 +44,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-
-if isdirectory($PROJECTS . "/base16-vim")
-    set rtp+=$PROJECTS/base16-vim
-else
-    Plug 'mk12/base16-vim'
-endif
+Plug '~/Projects/base16-vim'
 
 Plug 'tpope/vim-sensible'
 filetype plugin indent on

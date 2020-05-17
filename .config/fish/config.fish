@@ -120,7 +120,7 @@ set fish_pager_color_completion normal
 set fish_pager_color_description green
 set fish_pager_color_prefix white --bold --underline
 set fish_pager_color_progress cyan --bold
-set fish_color_search_match --background=bryellow
+set fish_color_search_match --background=brgreen
 
 # =========== Other config =====================================================
 
