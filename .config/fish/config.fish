@@ -62,7 +62,7 @@ function zi --description "Like z, but choose with fzf"
     if not set result (__z $prev_z_argv -l 2> /dev/null | fzf)
         return
     end
-    cd (string split -n -m 1 ' ' $result)[2]
+    cd (echo $result | sed -E 's/^[0-9]+[ \t]+//')
 end
 
 function gg --description "Print git overview"
