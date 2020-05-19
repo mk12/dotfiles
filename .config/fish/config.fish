@@ -94,18 +94,30 @@ function add_alert --description "Add '; alert' to the end of the command"
     end
 end
 
+function fzf_open_project --description "Open a project file using fzf"
+    if test -d .git
+        set -g FZF_OPEN_COMMAND 'git ls-files'
+        __fzf_open --editor
+        set -e FZF_OPEN_COMMAND
+    else
+        set -e FZF_OPEN_COMMAND
+        __fzf_open --editor
+    end
+end
+
 # Workaround for https://github.com/fish-shell/fish-shell/issues/6270
 function __fish_describe_command; end
 
 # =========== Keybindings ======================================================
 
-# Use only the fzf bindings Ctrl-o, Ctrl-r, Alt-o.
+# Use only the fzf bindings Ctrl-o, Ctrl-r.
 set -x FZF_LEGACY_KEYBINDINGS 0
-bind -e \ec \eC \eO
-bind -M insert -e \ec \eC \eO
+bind -e \ec \eC \eo \eO
+bind -M insert -e \ec \eC \eo \eO
 
 bind \ea add_alert
 bind \ec kitty-colors "commandline -f repaint"
+bind \eo fzf_open_project
 bind \ek kill-line
 bind \eK backward-kill-bigword
 bind \eD kill-bigword
