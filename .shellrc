@@ -1,3 +1,5 @@
+export PROJECTS=~/Projects
+
 paths=(
     "$HOME/bin"
     "$HOME/brew/bin"
@@ -6,7 +8,7 @@ paths=(
     "$HOME/.cargo/bin"
     "$HOME/.ghcup/bin"
     "$HOME/.cabal/bin"
-    "$HOME/Projects/scripts"
+    "$PROJECTS/scripts"
 )
 
 for p in "${paths[@]}"; do
@@ -15,9 +17,9 @@ for p in "${paths[@]}"; do
     fi
 done
 
-export GOPATH=$HOME/Projects/go
+export GOPATH=$PROJECTS/go
 
-export LEDGER_FILE=$HOME/Projects/finance/journal.ledger
+export LEDGER_FILE=$PROJECTS/finance/journal.ledger
 
 export CLICOLOR=true
 export PAGER=less

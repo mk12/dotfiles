@@ -11,7 +11,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 function! MyPlugin(name)
-    let l:path = expand('~/Projects/') . a:name
+    let l:path = $PROJECTS . '/' . a:name
     if isdirectory(l:path)
         return l:path
     endif
