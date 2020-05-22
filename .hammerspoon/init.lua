@@ -6,11 +6,19 @@ local log = hs.logger.new("init", "info")
 
 -- Executes a command with the user environment. This loads dotfiles and sets
 -- the PATH correctly. It incurs a small overhead, but it's worth it to not have
--- to hardcode the binary paths. Also, it might be unexpected if the shortcuts
--- use programs like tmux and ssh from /usr/bin if there are newer versions that
--- take precedence according to the PATH in /usr/local/bin.
+-- to hardcode the binary paths.
+--
+-- NOTE: I am using this instead of hs.execute(cmd, true) for two reasons.
+-- First, that function uses $SHELL, but I don't want to use fish for this.
+-- Second, that function puts double quotes around the command, meaning
+-- variables are expanded by the *outer* sh that io.popen uses.
 local function executeWithUserEnv(cmd)
-    return hs.execute(cmd, true)
+    -- Use an interactive login shell so that we source /etc/profile (which
+    -- sets PATH based on /etc/paths) and ~/.bash_profile.
+    local f = io.popen("/bin/bash -lic '" .. cmd .. "'")
+    local s = f:read('*a')
+    local status, exit_type, rc = f:close()
+    return s, status, exit_type, rc
 end
 
 -- Creates a temporary file, writes the given text to it, and returns the path.
@@ -43,6 +51,8 @@ local function openAppFn(app, target)
     end
 end
 
+local projectsDir = executeWithUserEnv("echo $PROJECTS"):match("[^\r\n]+")
+
 -- ========== Kitty ============================================================
 
 -- Kitty files and directories.
@@ -52,7 +62,7 @@ local kittySocketDir = os.getenv("HOME") .. "/.local/share/kitty"
 os.execute("mkdir -p '" .. kittySocketDir .. "'")
 local kittyRemotesFile = kittyConfigDir .. "/" .. "remotes"
 local kittyColorsFile = kittyConfigDir .. "/" .. "colors.conf"
-local kittyColorsDir = os.getenv("HOME") .. "/Projects/base16-kitty/colors"
+local kittyColorsDir = projectsDir .. "/base16-kitty/colors"
 
 -- Returns a Unix socket to use for the given kitty configuration.
 local function kittySocketAddress(config)
@@ -104,7 +114,7 @@ local function launchKitty(config, options)
     end
 
     log.i("Launching kitty: " .. cmd)
-    local output, success = executeWithUserEnv(cmd)
+    local output, success = hs.execute(cmd)
     if not success then
         log.e("Command failed: " .. output)
     end
@@ -413,7 +423,7 @@ local function playChimes()
     if chimesEnabled then
         -- Must use os.execute and & to avoid blocking the main thread.
         local cmd =
-            "~/Projects/minster/minster.sh -t '" .. timidityBinary .. "' &"
+            projectsDir .. "/minster/minster.sh -t '" .. timidityBinary .. "' &"
         log.i("Playing chimes: " .. cmd)
         os.execute(cmd)
     else
@@ -433,11 +443,11 @@ hs.hotkey.bind(hyper, "R", hs.reload)
 hs.hotkey.bind(hyper, "J",
     openAppFn("iA Writer", "~/ia/Journal/Today.txt"))
 hs.hotkey.bind(hyper, "D",
-    openAppFn("Visual Studio Code", "~/Projects/dotfiles"))
+    openAppFn("Visual Studio Code", projectsDir .. "/dotfiles"))
 hs.hotkey.bind(hyper, "S",
-    openAppFn("Visual Studio Code", "~/Projects/scripts"))
+    openAppFn("Visual Studio Code", projectsDir .. "/scripts"))
 hs.hotkey.bind(hyper, "F",
-    openAppFn("Visual Studio Code", "~/Projects/finance"))
+    openAppFn("Visual Studio Code", projectsDir .. "/finance"))
 
 -- Shortcuts for kitty.
 hs.hotkey.bind({"ctrl"}, "space", showOrHideMainKittyInstance)
