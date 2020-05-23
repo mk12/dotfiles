@@ -32,7 +32,6 @@ export LESS=-FQRXi
 export BAT_THEME=base16
 
 export FZF_DEFAULT_OPTS="--history=$HOME/.fzf/history \
---preview='$HOME/.vim/plugged/fzf.vim/bin/preview.sh {}' \
 --preview-window=top:50% \
 --color=bg+:10,bg:0,fg+:13,fg:12,header:4,hl+:4,hl:4,info:3,marker:6,pointer:6,\
 prompt:3,spinner:6"

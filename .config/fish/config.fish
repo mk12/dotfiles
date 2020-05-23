@@ -95,14 +95,17 @@ function add_alert --description "Add '; alert' to the end of the command"
 end
 
 function fzf_open_project --description "Open a project file using fzf"
+    set -g FZF_OPEN_OPTS \
+        "--preview='$HOME/.vim/plugged/fzf.vim/bin/preview.sh {}'"
     if test -d .git
         set -g FZF_OPEN_COMMAND 'git ls-files'
         __fzf_open --editor
-        set -e FZF_OPEN_COMMAND
     else
         set -e FZF_OPEN_COMMAND
         __fzf_open --editor
     end
+    set -e FZF_OPEN_COMMAND
+    set -e FZF_OPEN_OPTS
 end
 
 function code --description "Open in VS Code"
