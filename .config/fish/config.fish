@@ -97,6 +97,11 @@ end
 function fzf_open_project --description "Open a project file using fzf"
     set -g FZF_OPEN_OPTS \
         "--preview='$HOME/.vim/plugged/fzf.vim/bin/preview.sh {}'"
+    if test $COLUMNS -ge 179
+        set -a FZF_OPEN_OPTS " --preview-window=right:50%"
+    else
+        set -a FZF_OPEN_OPTS " --preview-window=top:50%"
+    end
     if test -d .git
         set -g FZF_OPEN_COMMAND 'git ls-files'
         __fzf_open --editor
