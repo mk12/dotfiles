@@ -33,12 +33,22 @@ I use [fish][] as my primary shell, but I still like to have a usable bash envir
 - [.profile](.profile): Written in POSIX sh. This file only sets environment variables. It also sources `.profile.local`.
 - `.profile.local`: Machine-specific extension to `.profile`. Not checked in, but stored in the repository directory and symlinked like the rest.
 
-The end result:
+Here are the files sourced  for (non)login and (non)interactive shells, assuming `sh` is `bash` invoked as `sh`, with parentheses for files that exit early because the shell is non-interactive:
 
-- `.profile` is **always** sourced, except by a non-login `sh`. There is no way around that because a non-login `sh` only sources `$ENV`.
-- `.profile` is never sourced multiple times (understanding this requires a careful reading of `man bash`).
-- bash and fish are configured consistently in login and non-login shells.
-- I can store machine-specific information (e.g. API keys) in local files not checked into the repository.
+| Shell | Neither | `-l`  | `-i` | `-il` |
+| ----- | ------- | ----- | ---- | ----- |
+| sh    |         | P     |      | P     |
+| bash  |         | B(R)P | RP   | BRP   |
+| fish  | (F)P    | (F)P  | FP   | FP    |
+
+Legend:
+
+| Letter | File            |
+| ------ | --------------- |
+| P      | `.profile`      |
+| B      | `.bash_profile` |
+| R      | `.bashrc`       |
+| F      | `config.fish`   |
 
 ## Vim
 
