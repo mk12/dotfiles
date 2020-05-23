@@ -261,15 +261,22 @@ local function launchFullScreenTmuxKitty()
         launchCommand = addTmuxToCommand(cmd, "0"),
         newInstance = not getKittyApp(config),
     })
-    local app = getKittyApp(config)
-    local function fullScreen()
-        app:mainWindow():setFullScreen(true)
-    end
     -- When launching for the first time, wait for the window to be ready.
     if app and app:mainWindow() then
-        fullScreen()
+        app:mainWindow():setFullScreen(true)
     else
-        hs.timer.doAfter(1, fullScreen)
+        hs.timer.doAfter(1, function()
+            local app = getKittyApp(config)
+            if not app then
+                log.e("Still no tmux kitty app after 1s")
+                return
+            end
+            if not app:mainWindow() then
+                log.e("Still no tmux kitty main window after 1s")
+                return
+            end
+            app:mainWindow():setFullScreen(true)
+        end)
     end
 end
 
