@@ -105,6 +105,19 @@ function fzf_open_project --description "Open a project file using fzf"
     end
 end
 
+function code --description "Open in VS Code"
+    if test (uname -s) = Darwin
+        if not test -e $argv[1]
+            touch $argv[1]
+        end
+        # The code CLI causes duplicate icons in the Dock:
+        # https://github.com/microsoft/vscode/issues/60579
+        open -b com.microsoft.VSCode $argv[1]
+    else
+        command code $argv
+    end
+end
+
 function totp --description "Copy TOTP code to clipboard"
     set -l secret (grep '^'$argv[1] < ~/.totp | cut -d' ' -f2)
     if test -z $secret
