@@ -1,4 +1,11 @@
-# If not running interactively, don't do anything.
+# =========== Shared config ====================================================
+
+if functions -q fenv
+    fenv source ~/.profile
+else
+    echo (status -f): "fenv unavailable, not sourcing .profile"
+end
+
 if not status --is-interactive
     exit
 end
@@ -14,15 +21,6 @@ if not functions -q fisher
 end
 
 set pure_separate_prompt_on_error true
-
-# =========== Shared config ====================================================
-
-# Source configuration shared with bashrc.
-if functions -q fenv
-    fenv source ~/.shellrc
-else
-    echo (status -f): "fenv unavailable, not sourcing shellrc"
-end
 
 # =========== Shortcuts ========================================================
 
@@ -107,6 +105,15 @@ function fzf_open_project --description "Open a project file using fzf"
     end
 end
 
+function totp --description "Copy TOTP code to clipboard"
+    set -l secret (grep '^'$argv[1] < ~/.totp | cut -d' ' -f2)
+    if test -z $secret
+        echo "invalid label"
+        return 1
+    end
+    oathtool --totp -b $secret | pbcopy
+end
+
 # Workaround for https://github.com/fish-shell/fish-shell/issues/6270
 function __fish_describe_command; end
 
@@ -151,16 +158,6 @@ set fish_pager_color_prefix white --bold --underline
 set fish_pager_color_progress cyan --bold
 set fish_color_search_match --background=brgreen
 
-# =========== Other config =====================================================
+# =========== Local config =====================================================
 
-# OS-specific configuration
-set specific ~/.config/fish/(uname -s | tr "[A-Z]" "[a-z]").fish
-if test -e $specific
-    source $specific
-end
-
-# Local configuration
-set local ~/.config/fish/local.fish
-if test -e $local
-    source $local
-end
+source ~/.config/fish/local.fish

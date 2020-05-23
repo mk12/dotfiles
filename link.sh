@@ -5,7 +5,7 @@ set -eufo pipefail
 readonly prog=$(basename "$0")
 
 readonly local_files=(
-    ".shellrc.local"
+    ".profile.local"
     ".config/fish/local.fish"
     ".config/kitty/colors.conf"
     ".config/kitty/remotes"
@@ -45,7 +45,7 @@ touch_local_files() {
 link_file() {
     dir=$1
     file=$2
-    mkdir -p "$(dirname $HOME/$file)"
+    mkdir -p "$(dirname "$HOME/$file")"
     ln -s "$dir/$file" "$HOME/$file" > /dev/null
     echo "symlinked $HOME/$file -> $dir/$file"
 }

@@ -2,28 +2,72 @@
 
 These are my humble dotfiles.
 
-Right now they configure:
+I actively use and update the following files:
 
-- (Neo)vim
-- Bash
-- Fish
-- Git
-- Ledger
-- Spacemacs
-- Zsh
+- sh: [.profile](.profile)
+- bash: [.bash_profile](.bash_profile), [.bashrc](.bashrc)
+- fish: [config.fish](.config/fish/config.fish), [fishfile](.config/fish/fishfile)
+- vim: [.vimrc](.vimrc)
+- nvim: [init.vim](.config/nvim/init.vim)
+- kitty: [kitty.conf](.config/kitty/kitty.conf), [tmux.conf](.config/kitty/tmux.conf)
+- tmux: [.tmux.conf](.tmux.conf)
+- git: [.gitconfig](.gitconfig), [.gitignore](.gitignore)
+- ledger: [.ledgerrc](.ledgerrc)
+- hammerspoon: [init.lua](.hammerspoon/init.lua)
 
 ## Usage
 
-Executing the `link.sh` script will symlink all the dotfiles into your home directory. It will not overwrite anything, so you will have to manually delete or move dotfiles that are already there. You should only link once, and forget about it afterwards. Use `vim ~/.bashrc` just like you used to, and just be aware that you are actually modifying the file in the folder where you cloned this repository.
+Run `make install` to symlink dotfiles in `$HOME`. It will prompt `y/N` for confirmation for each file.
+
+Run `make lint` to run lint shell scripts with [ShellCheck][].
+
+## Shell
+
+I use [fish][] as my primary shell, but I still like to have a usable bash environment. To that end, I have my shell config set up like this:
+
+- [config.fish](.config/fish/config.fish): Fish configuration. Sources `.profile` using [fenv][]. If interactive, defines functions, aliases, etc. and sources `local.fish`.
+- `local.fish`: Machine-specific extension to `config.fish`. Not checked in, but stored in the repository directory and symlinked like the rest.
+- [fishfile](.config/fish/fishfile): Fish plugins installed by [fisher][].
+- [.bash_profile](.bash_profile): Simply sources `.bashrc`.
+- [.bashrc](.bashrc): Sources `.profile`. If interactive, sets bash-specific options.
+- [.profile](.profile): Written in POSIX sh. This file only sets environment variables. It also sources `.profile.local`.
+- `.profile.local`: Machine-specific extension to `.profile`. Not checked in, but stored in the repository directory and symlinked like the rest.
+
+The end result:
+
+- `.profile` is **always** sourced, except by a non-login `sh`. There is no way around that because a non-login `sh` only sources `$ENV`.
+- `.profile` is never sourced multiple times (understanding this requires a careful reading of `man bash`).
+- bash and fish are configured consistently in login and non-login shells.
+- I can store machine-specific information (e.g. API keys) in local files not checked into the repository.
+
+## Vim
+
+I keep my Vim and Neovim config in sync.
+
+To check the difference between them:
+
+```sh
+git diff --no-index .config/nvim/init.vim .vimrc
+```
+
+To copy changes from `init.vim` to `.vimrc`:
+
+```sh
+./patch_vimrc.sh
+```
 
 ## Credit
 
-I got the idea for this from [GitHub does dotfiles][1] and received inspiration from several of the repositories linked there.
-
-[1]: http://dotfiles.github.com
+I got the idea for this from [GitHub does dotfiles][gdd] and received inspiration from several of the repositories linked there.
 
 ## License
 
-© 2019 Mitchell Kember
+© 2020 Mitchell Kember
 
 Dotfiles is available under the MIT License; see [LICENSE](LICENSE.md) for details.
+
+[ShellCheck]: https://www.shellcheck.net
+[fish]: https://fishshell.com
+[fenv]: https://github.com/oh-my-fish/plugin-foreign-env
+[fisher]: https://github.com/jorgebucaran/fisher
+[gdd]: http://dotfiles.github.com

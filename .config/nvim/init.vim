@@ -247,9 +247,9 @@ Shortcut edit new buffer
 Shortcut reload current buffer
     \ nnoremap <Leader>er :edit!<CR>
 Shortcut edit shell config
-    \ nnoremap <Leader>es :edit ~/.shellrc<CR>
+    \ nnoremap <Leader>es :edit ~/.profile<CR>
 Shortcut edit shell config (local)
-    \ nnoremap <Leader>eS :edit ~/.shellrc.local<CR>
+    \ nnoremap <Leader>eS :edit ~/.profile.local<CR>
 Shortcut edit vimrc or init.vim
     \ nnoremap <Leader>ev :edit $MYVIMRC<CR>
 
@@ -486,8 +486,8 @@ augroup custom
     " Exit fugitive windows consistently with q.
     autocmd BufEnter fugitive://*//* nnoremap <buffer> <silent> q :bdelete<CR>
 
-    " Recognize my .shellrc and .shellrc.local files.
-    autocmd BufNewFile,BufRead .shellrc* setfiletype sh
+    " Recognize my .profile.local file.
+    autocmd BufNewFile,BufRead .profile.local setfiletype sh
 augroup END
 
 " =========== Functions ========================================================
