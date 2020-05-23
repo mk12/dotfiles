@@ -4,21 +4,43 @@ local log = hs.logger.new("init", "info")
 
 -- ========== Utilities ========================================================
 
--- Executes a command with the user environment. This loads dotfiles and sets
--- the PATH correctly. It incurs a small overhead, but it's worth it to not have
--- to hardcode the binary paths.
+-- Executes a command with the user profile (/etc/profile and ~/.profile) so
+-- that PATH and other environment variables are set correctly. It is slower
+-- than the other execute functions because of this. In order of time:
 --
--- NOTE: I am using this instead of hs.execute(cmd, true) for two reasons.
+--     os.execute(cmd) < hs.execute(cmd) < executeWithProfile(cmd)
+--
+-- The first option, os.execute(cmd), does not return the output, only the exit
+-- status. Both of the others return the output and other information.
+--
+-- NOTE: I wrote this instead of using hs.execute(cmd, true) for two reasons.
 -- First, that function uses $SHELL, but I don't want to use fish for this.
 -- Second, that function puts double quotes around the command, meaning
--- variables are expanded by the *outer* sh that io.popen uses.
-local function executeWithUserEnv(cmd)
-    -- Use an interactive login shell so that we source /etc/profile (which
-    -- sets PATH based on /etc/paths) and ~/.bash_profile.
-    local f = io.popen("/bin/bash -lic '" .. cmd .. "'")
+-- variables are expanded by the *outer* sh invocation that io.popen uses.
+local function executeWithProfile(cmd)
+    local f = io.popen("/bin/sh -lc '" .. cmd .. "'")
     local s = f:read('*a')
     local status, exit_type, rc = f:close()
     return s, status, exit_type, rc
+end
+
+-- Returns the value of an environment variable after loading the user profile.
+-- Prefer os.getenv(var) when the user profile is unnecessary (e.g., for $HOME).
+local function getUserEnv(var)
+    local value = executeWithProfile("echo $" .. var):match("[^\r\n]+")
+    if not value then
+        log.e("Environment variable not defined: " .. var)
+    end
+    return value
+end
+
+-- Returns the path to a binary. Looks in $PATH after loading the user profile.
+local function getUserBinary(name)
+    local path = executeWithProfile("which " .. name):match("[^\r\n]+")
+    if not path then
+        log.e("Binary not found: " .. name)
+    end
+    return path
 end
 
 -- Creates a temporary file, writes the given text to it, and returns the path.
@@ -51,12 +73,13 @@ local function openAppFn(app, target)
     end
 end
 
-local projectsDir = executeWithUserEnv("echo $PROJECTS"):match("[^\r\n]+")
+-- Directory containing my coding projects.
+local projectsDir = getUserEnv("PROJECTS")
 
 -- ========== Kitty ============================================================
 
 -- Kitty files and directories.
-local kittyBinary = executeWithUserEnv("which kitty"):match("[^\r\n]+")
+local kittyBinary = getUserBinary("kitty")
 local kittyConfigDir = os.getenv("HOME") .. "/.config/kitty"
 local kittySocketDir = os.getenv("HOME") .. "/.local/share/kitty"
 os.execute("mkdir -p '" .. kittySocketDir .. "'")
@@ -114,7 +137,13 @@ local function launchKitty(config, options)
     end
 
     log.i("Launching kitty: " .. cmd)
-    local output, success = hs.execute(cmd)
+    -- We *could* use full paths to tmux and ssh, and then use hs.execute
+    -- instead of executeWithProfile. However, we actually need the user profile
+    -- for the kitty process so that it can locate kitty-bell-notify.sh, and for
+    -- the tmux process so that it can locate tmux-session.sh (this won't help a
+    -- remote tmux -- we assume ssh will start a login shell that loads the
+    -- remote user profile and runs tmux in that).
+    local output, success = executeWithProfile(cmd)
     if not success then
         log.e("Command failed: " .. output)
     end
@@ -203,12 +232,12 @@ local function showOrHideMainKittyInstance()
 end
 
 -- Returns a new command that starts in the given tmux session.
-local function addTmuxToCommand(command, tmuxSession)
-    local result = "tmux new -A -s " .. tmuxSession
-    if command then
-        return command .. " -t '" .. result .. "'"
+local function addTmuxToCommand(sshCommand, tmuxSession)
+    local tmux = "tmux new -A -s " .. tmuxSession
+    if sshCommand then
+        return sshCommand .. " -t '" .. tmux .. "'"
     end
-    return result
+    return tmux
 end
 
 -- Opens a fullscreen kitty window attaching to tmux on the default host. The
@@ -399,7 +428,7 @@ end
 -- ========== Chimes ===========================================================
 
 -- Path to the timidity binary.
-local timidityBinary = executeWithUserEnv("which timidity"):match("[^\r\n]+")
+local timidityBinary = getUserBinary("timidity")
 
 -- Flag indicating whether to play chimes every quarter hour.
 local chimesEnabled = true
