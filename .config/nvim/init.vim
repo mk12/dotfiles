@@ -24,7 +24,6 @@ Plug MyPlugin('vim-fish')
 Plug 'Clavelito/indent-awk.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'benmills/vimux'
-Plug 'christoomey/vim-tmux-navigator'
 Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
@@ -38,6 +37,7 @@ Plug 'mbbill/undotree'
 Plug 'sgur/vim-textobj-parameter'
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
+Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-apathy'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
@@ -127,6 +127,8 @@ endif
 
 " =========== Color scheme =====================================================
 
+" I use terminal colors so that I can swap base16 themes and have everything
+" update immediately. That doesn't work with hardcoded 24-bit color.
 if has('termguicolors')
     set notermguicolors
 end
@@ -149,21 +151,28 @@ inoremap kj <Esc>
 noremap ; :
 noremap : ;
 
+" Jump between open windows.
+nnoremap <C-J> <C-W>w
+
 nnoremap Y y$
 
+" Stay in visual mode when indenting/dedenting.
 xnoremap < <gv
 xnoremap > >gv
 
+" Use gv to select last selection, gV to select last insertion.
 nnoremap gV `[v`]
 
 inoremap <C-U> <C-G>u<C-U>
 
+" Use C-N and C-P to keep search results centred.
 nnoremap <C-N> nzz
 nnoremap <C-P> Nzz
 
 nnoremap <silent> & :&&<CR>
 xnoremap <silent> & :&&<CR>
 
+" Maintain register when pasting over something else.
 xnoremap <expr> p VisualReplaceExpr()
 
 nnoremap <silent> zS :echo SyntaxName()<CR>
@@ -185,6 +194,48 @@ omap ih <Plug>(GitGutterTextObjectInnerPending)
 omap ah <Plug>(GitGutterTextObjectOuterPending)
 xmap ih <Plug>(GitGutterTextObjectInnerVisual)
 xmap ah <Plug>(GitGutterTextObjectOuterVisual)
+
+" Emacs style bindings. In concert with kitty config, this provides C-A and
+" Cmd-Left, C-E and Cmd-Right, C-U and Cmd-Backspace, C-K and Cmd-Delete,
+" Alt-Left and Alt-Right (like b and el), Alt-Shift-Left and Alt-Shift-Right
+" (like B and El), Alt-Backspace and Alt-Delete (like db and de), and
+" Alt-Shift-Backspace and Alt-Shift-Delete (like dB and dE).
+noremap <C-A> <Home>
+noremap! <C-A> <Home>
+noremap <C-E> <End>
+noremap! <C-E> <End>
+inoremap <expr> <C-K> col('.') is col('$') ? '' : '<C-O>D'
+cnoremap <C-K> <C-\>e getcmdpos() is 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
+noremap <M-Left> b
+inoremap <M-Left> <C-O>b
+cnoremap <M-Left> <C-\>e CmdLineNavigate('b')<CR>
+noremap <expr> <M-Right> col('.') is 1
+    \ ? 'wge<Right>'
+    \ : col('.') is col('$') - 1 ? 'e<Right>' : '<Left>e<Right>'
+inoremap <expr> <M-Right> col('.') is 1
+    \ ? '<C-O>w<C-O>ge<Right>'
+    \ : '<Left><C-O>e<Right>'
+cnoremap <M-Right> <C-\>e CmdLineNavigate('e')<CR>
+noremap <M-S-Left> B
+inoremap <M-S-Left> <C-O>B
+cnoremap <M-S-Left> <C-Left>
+noremap <expr> <M-S-Right> col('.') is 1
+    \ ? 'WgE<Right>'
+    \ : col('.') is col('$') - 1 ? 'E<Right>' : '<Left>E<Right>'
+inoremap <expr> <M-S-Right> col('.') is 1
+    \ ? '<C-O>W<C-O>gE<Right>'
+    \ : '<Left><C-O>E<Right>'
+cnoremap <M-S-Right> <C-Right>
+noremap! <M-BS> <C-W>
+inoremap <M-Del> <C-O>de
+cnoremap <M-Del> <C-\>e CmdLineDelete('e')<CR>
+inoremap <M-B> x<C-O>dB<BS>
+cnoremap <M-B> <C-\>e CmdLineDelete('B')<CR>
+inoremap <M-S-Del> <C-O>dE
+cnoremap <M-S-Del> <C-\>e CmdLineDelete('E')<CR>
+
+" New mapping for <C-E> scroll down.
+nnoremap <C-H> <C-E>
 
 " =========== Shortcuts ========================================================
 
@@ -216,6 +267,8 @@ Shortcut toggle comment
     \ nnoremap <Leader>c :Commentary<CR>
     \|xnoremap <Leader>c :Commentary<CR>
 
+Shortcut fix mouse after terminal reset
+    \ nnoremap <Leader>da :set mouse=<Bar>set mouse=a<CR>
 Shortcut indent lines
     \ nnoremap <Leader>di =ip
     \|xnoremap <Leader>di =
@@ -467,6 +520,7 @@ augroup custom
 
     " Don't do syntax highlighting in diffs.
     autocmd BufEnter * call DisableSyntaxForDiff()
+    autocmd OptionSet diff call DisableSyntaxForDiff()
 
     " By default GitGutter waits for 'updatetime' ms before updating.
     autocmd BufWritePost,WinEnter * GitGutter
@@ -488,6 +542,11 @@ augroup custom
 
     " Recognize my .profile.local file.
     autocmd BufNewFile,BufRead .profile.local setfiletype sh
+
+    " Redraw after leaving the command-line window to close it.
+    " https://vi.stackexchange.com/a/18178
+    autocmd CmdWinEnter * nnoremap <buffer><expr><nowait> <C-C>
+        \ '<C-C>'.timer_start(0, {-> execute('redraw')})[-1]
 augroup END
 
 " =========== Functions ========================================================
@@ -522,7 +581,7 @@ function! s:ExecuteRestoringView(cmd) abort
         let &shellredir = l:old_shellredir
         call winrestview(l:view)
     endtry
-    if v:shell_error != 0
+    if v:shell_error isnot 0
         call s:Error(readfile(l:errfile)[0])
     endif
 endfunction
@@ -565,11 +624,56 @@ function! NextBufOrTab() abort
 endfunction
 
 function! PrevBufOrTab() abort
-    if tabpagenr('$') > 1
+    if tabpagenr('$')   > 1
         tabprevious
     else
         bprevious
     endif
+endfunction
+
+function! CmdLineNavigate(char) abort
+    let l:cmd = getcmdline()
+    if a:char is# 'b'
+        let l:i = getcmdpos() - 1
+        while l:i > 0
+            let l:i = l:i - 1
+            if match(l:cmd[l:i], '\k') isnot -1
+                break
+            endif
+        endwhile
+        while l:i > 0 && match(l:cmd[l:i - 1], '\k') isnot -1
+            let l:i = l:i - 1
+        endwhile
+        call setcmdpos(l:i + 1)
+    elseif a:char is# 'e'
+        let l:i = getcmdpos() - 1
+        let l:max = len(l:cmd) - 1
+        while l:i < l:max && match(l:cmd[l:i], '\k') is -1
+            let l:i = l:i + 1
+        endwhile
+        while l:i < l:max
+            let l:i = l:i + 1
+            if match(l:cmd[l:i], '\k') is -1
+                break
+            endif
+        endwhile
+        if match(l:cmd[l:i], '\k') isnot -1
+            let l:i = l:i + 1
+        endif
+        call setcmdpos(l:i + 1)
+    end
+    return l:cmd
+endfunction
+
+function! CmdLineDelete(char) abort
+    let l:cmd = getcmdline()
+    " TODO!
+    " let l:i = getcmdpos() - 1
+    " if a:char is# 'B'
+    " elseif a:char is# 'E'
+    " elseif a:char is# 'e'
+    " end
+    return l:cmd
 endfunction
 
 function! ProjectFiles() abort
@@ -634,7 +738,7 @@ function! AlternateFile() abort
             endif
         endfor
     endif
-    if exists(':A') == 2
+    if exists(':A') is 2
         try
             A
         catch
