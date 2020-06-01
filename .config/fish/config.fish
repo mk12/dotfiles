@@ -139,11 +139,12 @@ bind -M insert -e \ec \eC \eo \eO
 bind \ea add_alert
 bind \ec kitty-colors "commandline -f repaint"
 bind \eo fzf_open_project
-bind \ek kill-line
-bind \eK backward-kill-bigword
-bind \eD kill-bigword
-bind \e\[1\;4D backward-bigword
+
 bind \e\[1\;4C forward-bigword
+bind \e\[1\;4D backward-bigword
+bind \e\[3\;3~ kill-word
+bind \e\[3\;4~ kill-bigword
+bind \eB backward-kill-bigword
 
 # =========== Variables ========================================================
 

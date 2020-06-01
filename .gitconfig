@@ -16,6 +16,7 @@
     unamend = reset --soft HEAD@{1}
     fx = commit --amend --reuse-message=HEAD
     rb = rebase
+    rbo = rebase HEAD~ --onto
     cp = cherry-pick
     sh = stash
     unstage = reset HEAD --
@@ -26,6 +27,9 @@
     ui = auto
 [core]
     excludesfile = ~/.gitignore
+    pager = delta.sh
+[interactive]
+    diffFilter = delta.sh --color-only
 [diff]
     algorithm = minimal
     compactionHeuristic = true
@@ -42,7 +46,3 @@
     rebase = true
 [apply]
     whitespace = fix
-[pager]
-    log = diff-highlight | less
-    show = diff-highlight | less
-    diff = diff-highlight | less
