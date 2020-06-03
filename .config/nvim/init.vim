@@ -218,14 +218,16 @@ inoremap <expr> <M-Right> col('.') is 1
 cnoremap <M-Right> <C-\>e CmdLineNavigate('e')<CR>
 noremap <M-S-Left> B
 inoremap <M-S-Left> <C-O>B
-cnoremap <M-S-Left> <C-Left>
+" We could just use <C-Left>, but it doesn't skip over multiple spaces.
+cnoremap <M-S-Left> <C-\>e CmdLineNavigate('B')<CR>
 noremap <expr> <M-S-Right> col('.') is 1
     \ ? 'WgE<Right>'
     \ : col('.') is col('$') - 1 ? 'E<Right>' : '<Left>E<Right>'
 inoremap <expr> <M-S-Right> col('.') is 1
     \ ? '<C-O>W<C-O>gE<Right>'
     \ : '<Left><C-O>E<Right>'
-cnoremap <M-S-Right> <C-Right>
+" We could just use <C-Right>, but it doesn't skip over multiple spaces.
+cnoremap <M-S-Right> <C-\>e CmdLineNavigate('E')<CR>
 noremap! <M-BS> <C-W>
 inoremap <M-Del> <C-O>de
 cnoremap <M-Del> <C-\>e CmdLineDelete('e')<CR>
@@ -236,6 +238,20 @@ cnoremap <M-S-Del> <C-\>e CmdLineDelete('E')<CR>
 
 " New mapping for <C-E> scroll down.
 nnoremap <C-H> <C-E>
+
+" VS Code style bindings. a-b a b
+nmap <M-Up> [e
+xmap <M-Up> [egv
+imap <M-Up> <C-O>[e
+nmap <M-Down> ]e
+xmap <M-Down> ]egv
+imap <M-Down> <C-O>]e
+nnoremap <M-S-Up> "zyyP
+nnoremap <M-S-Down> "zyyp
+xnoremap <M-S-Up> "zy`>pgv
+xnoremap <M-S-Down> "zyPgv
+inoremap <M-S-Up> <C-O>"zyy<C-O>P
+inoremap <M-S-Down> <C-O>"zyy<C-O>p
 
 " =========== Shortcuts ========================================================
 
@@ -586,6 +602,67 @@ function! s:ExecuteRestoringView(cmd) abort
     endif
 endfunction
 
+function! s:CmdLineIndex(char) abort
+    let l:cmd = getcmdline()
+    if a:char is? 'B'
+        let l:i = getcmdpos() - 1
+        while l:i > 0
+            let l:i = l:i - 1
+            if match(l:cmd[l:i], '\s') is -1
+                break
+            endif
+        endwhile
+        if a:char is# 'B'
+            while l:i > 0 && match(l:cmd[l:i - 1], '\s') is -1
+                let l:i = l:i - 1
+            endwhile
+        else
+            if match(l:cmd[l:i], '\k') isnot -1
+                while l:i > 0 && match(l:cmd[l:i - 1], '\k') isnot -1
+                    let l:i = l:i - 1
+                endwhile
+            else
+                while l:i > 0 && match(l:cmd[l:i - 1], '\k\|\s') is -1
+                    let l:i = l:i - 1
+                endwhile
+            endif
+        endif
+    elseif a:char is? 'E'
+        let l:i = getcmdpos() - 1
+        let l:max = len(l:cmd) - 1
+        while l:i < l:max && match(l:cmd[l:i], '\s') isnot -1
+            let l:i = l:i + 1
+        endwhile
+        if a:char is# 'E'
+            while l:i < l:max + 1
+                let l:i = l:i + 1
+                if l:i == l:max + 1 || match(l:cmd[l:i], '\s') isnot -1
+                    break
+                endif
+            endwhile
+        else
+            if match(l:cmd[l:i], '\k') isnot -1
+                while l:i <= l:max
+                    let l:i = l:i + 1
+                    if l:i == l:max + 1 || match(l:cmd[l:i], '\k') is -1
+                        break
+                    endif
+                endwhile
+            else
+                while l:i <= l:max
+                    let l:i = l:i + 1
+                    if l:i == l:max + 1 || match(l:cmd[l:i], '\k\|\s') isnot -1
+                        break
+                    endif
+                endwhile
+            endif
+        endif
+    else
+        call s:Error("Invalid CmdLineIndex arg: " . a:char)
+    end
+    return l:i + 1
+endfunction
+
 function! InputDirectory() abort
     let l:default_dir = get(s:, 'last_input_dir', '')
     let l:dir = input('From dir: ', l:default_dir, 'dir')
@@ -632,48 +709,20 @@ function! PrevBufOrTab() abort
 endfunction
 
 function! CmdLineNavigate(char) abort
-    let l:cmd = getcmdline()
-    if a:char is# 'b'
-        let l:i = getcmdpos() - 1
-        while l:i > 0
-            let l:i = l:i - 1
-            if match(l:cmd[l:i], '\k') isnot -1
-                break
-            endif
-        endwhile
-        while l:i > 0 && match(l:cmd[l:i - 1], '\k') isnot -1
-            let l:i = l:i - 1
-        endwhile
-        call setcmdpos(l:i + 1)
-    elseif a:char is# 'e'
-        let l:i = getcmdpos() - 1
-        let l:max = len(l:cmd) - 1
-        while l:i < l:max && match(l:cmd[l:i], '\k') is -1
-            let l:i = l:i + 1
-        endwhile
-        while l:i < l:max
-            let l:i = l:i + 1
-            if match(l:cmd[l:i], '\k') is -1
-                break
-            endif
-        endwhile
-        if match(l:cmd[l:i], '\k') isnot -1
-            let l:i = l:i + 1
-        endif
-        call setcmdpos(l:i + 1)
-    end
-    return l:cmd
+    call setcmdpos(s:CmdLineIndex(a:char))
+    return getcmdline()
 endfunction
 
 function! CmdLineDelete(char) abort
     let l:cmd = getcmdline()
-    " TODO!
-    " let l:i = getcmdpos() - 1
-    " if a:char is# 'B'
-    " elseif a:char is# 'E'
-    " elseif a:char is# 'e'
-    " end
-    return l:cmd
+    let l:i = getcmdpos() - 1
+    let l:j = s:CmdLineIndex(a:char) - 1
+    if a:char is? 'B'
+        return (l:j is 0 ? '' : l:cmd[:l:j-1]) . l:cmd[l:i:]
+    endif
+    if a:char is? 'E'
+        return (l:i is 0 ? '' : l:cmd[:l:i-1]) . l:cmd[l:j:]
+    endif
 endfunction
 
 function! ProjectFiles() abort
