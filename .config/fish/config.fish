@@ -154,12 +154,12 @@ set fish_color_autosuggestion brblack
 set fish_color_cancel --reverse
 set fish_color_command blue
 set fish_color_comment brblack
-set fish_color_end magenta
+set fish_color_end yellow
 set fish_color_error red
 set fish_color_escape red
 set fish_color_history_current --bold
 set fish_color_normal normal
-set fish_color_operator yellow
+set fish_color_operator magenta
 set fish_color_param normal
 set fish_color_quote green
 set fish_color_redirection cyan
