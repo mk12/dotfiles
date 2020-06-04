@@ -288,9 +288,6 @@ Shortcut fix mouse after terminal reset
 Shortcut indent lines
     \ nnoremap <Leader>di =ip
     \|xnoremap <Leader>di =
-Shortcut run shellcheck
-    \ nnoremap <Leader>dc :!shellcheck %<CR>
-    \|xnoremap <Leader>dc :w !shellcheck -<CR>
 Shortcut show number of search matches
     \ nnoremap <Leader>dm :%s/<C-R>///n<CR>
     \|xnoremap <Leader>dm "zy:%s/<C-R>z//n<CR>
@@ -384,6 +381,10 @@ Shortcut kill/delete buffer
     \ nnoremap <silent> <leader>k :call KillBuffer('')<CR>
 Shortcut force kill/delete buffer
     \ nnoremap <silent> <Leader>K :call KillBuffer('!')<CR>
+
+Shortcut lint code
+    \ nnoremap <silent> <Leader>l :call LintCode('%')<CR>
+    \|xnoremap <silent> <Leader>l :call LintCode()<CR>
 
 Shortcut open console
     \ nnoremap <Leader>mc :Console<CR>
@@ -914,6 +915,25 @@ function! KillBuffer(bang) abort
         silent execute 'bdelete' . a:bang l:btarget
     endif
     silent execute l:wcurrent 'wincmd w'
+endfunction
+
+function! LintCode(...) abort range
+    if exists('b:lint_command')
+        let l:cmd = b:lint_command
+    elseif &filetype is# 'sh'
+        let l:cmd = 'shellcheck -'
+    else
+        let l:ft = empty(&filetype) ? '<no filetype>' : &filetype
+        call s:Error('Unable to lint ' . l:ft . ' file')
+        return
+    endif
+    let l:first = split(l:cmd)[0]
+    if !executable(l:first)
+        call s:Error('Executable not found: ' . l:first)
+        return
+    endif
+    let l:range = get(a:, 1, a:firstline . ',' . a:lastline)
+    execute l:range . 'w !' . l:cmd
 endfunction
 
 function! GenerateTags() abort
