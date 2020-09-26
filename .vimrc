@@ -12,20 +12,18 @@ endif
 
 function! MyPlugin(name)
     let l:path = $PROJECTS . '/' . a:name
-    if isdirectory(l:path)
-        return l:path
-    endif
-    return 'mk12/' . a:name
+    return isdirectory(l:path) ? l:path : 'mk12/' . a:name
 endfunction
 
 call plug#begin()
 
 Plug MyPlugin('base16-vim')
-Plug MyPlugin('vim-fish')
+Plug MyPlugin('vim-meta')
 
 Plug 'Clavelito/indent-awk.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'benmills/vimux'
+Plug 'georgewitteman/vim-fish'
 Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
@@ -36,6 +34,7 @@ Plug 'justinmk/vim-dirvish'
 Plug 'kana/vim-textobj-user'
 Plug 'ledger/vim-ledger'
 Plug 'mbbill/undotree'
+Plug 'michaeljsmith/vim-indent-object'
 Plug 'sgur/vim-textobj-parameter'
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
@@ -168,6 +167,10 @@ noremap : ;
 " Jump between open windows.
 nnoremap <C-J> <C-W>w
 
+" Save quickly.
+nnoremap <C-s> :write<CR>
+inoremap <C-s> <C-o>:write<CR>
+
 nnoremap Y y$
 
 " Stay in visual mode when indenting/dedenting.
@@ -189,6 +192,9 @@ xnoremap <silent> & :&&<CR>
 " Maintain register when pasting over something else.
 xnoremap <expr> p VisualReplaceExpr()
 
+" Use * in visual mode to search for the selection (then cgn and . to repeat).
+xnoremap * "zy:let @/='\V'.escape(@z, '\')<Bar>set hls<CR>
+
 nnoremap <silent> zS :echo SyntaxName()<CR>
 
 nnoremap <silent> Q :call ReflowText()<CR>
@@ -208,64 +214,6 @@ omap ih <Plug>(GitGutterTextObjectInnerPending)
 omap ah <Plug>(GitGutterTextObjectOuterPending)
 xmap ih <Plug>(GitGutterTextObjectInnerVisual)
 xmap ah <Plug>(GitGutterTextObjectOuterVisual)
-
-" Emacs style bindings. In concert with kitty config, this provides C-A and
-" Cmd-Left, C-E and Cmd-Right, C-U and Cmd-Backspace, C-K and Cmd-Delete,
-" Alt-Left and Alt-Right (like b and el), Alt-Shift-Left and Alt-Shift-Right
-" (like B and El), Alt-Backspace and Alt-Delete (like db and de), and
-" Alt-Shift-Backspace and Alt-Shift-Delete (like dB and dE).
-noremap <C-A> <Home>
-noremap! <C-A> <Home>
-noremap <C-E> <End>
-noremap! <C-E> <End>
-inoremap <expr> <C-K> col('.') is col('$') ? '' : '<C-O>D'
-cnoremap <C-K> <C-\>e getcmdpos() is 1 ? '' : getcmdline()[:getcmdpos()-2]<CR>
-noremap <M-Left> b
-inoremap <M-Left> <C-O>b
-cnoremap <M-Left> <C-\>e CmdLineNavigate('b')<CR>
-noremap <expr> <M-Right> col('.') is 1
-    \ ? 'wge<Right>'
-    \ : col('.') is col('$') - 1 ? 'e<Right>' : '<Left>e<Right>'
-inoremap <expr> <M-Right> col('.') is 1
-    \ ? '<C-O>w<C-O>ge<Right>'
-    \ : '<Left><C-O>e<Right>'
-cnoremap <M-Right> <C-\>e CmdLineNavigate('e')<CR>
-noremap <M-S-Left> B
-inoremap <M-S-Left> <C-O>B
-" We could just use <C-Left>, but it doesn't skip over multiple spaces.
-cnoremap <M-S-Left> <C-\>e CmdLineNavigate('B')<CR>
-noremap <expr> <M-S-Right> col('.') is 1
-    \ ? 'WgE<Right>'
-    \ : col('.') is col('$') - 1 ? 'E<Right>' : '<Left>E<Right>'
-inoremap <expr> <M-S-Right> col('.') is 1
-    \ ? '<C-O>W<C-O>gE<Right>'
-    \ : '<Left><C-O>E<Right>'
-" We could just use <C-Right>, but it doesn't skip over multiple spaces.
-cnoremap <M-S-Right> <C-\>e CmdLineNavigate('E')<CR>
-noremap! <M-BS> <C-W>
-inoremap <M-Del> <C-O>de
-cnoremap <M-Del> <C-\>e CmdLineDelete('e')<CR>
-inoremap <M-B> x<C-O>dB<BS>
-cnoremap <M-B> <C-\>e CmdLineDelete('B')<CR>
-inoremap <M-S-Del> <C-O>dE
-cnoremap <M-S-Del> <C-\>e CmdLineDelete('E')<CR>
-
-" New mapping for <C-E> scroll down.
-nnoremap <C-H> <C-E>
-
-" VS Code style bindings. a-b a b
-nmap <M-Up> [e
-xmap <M-Up> [egv
-imap <M-Up> <C-O>[e
-nmap <M-Down> ]e
-xmap <M-Down> ]egv
-imap <M-Down> <C-O>]e
-nnoremap <M-S-Up> "zyyP
-nnoremap <M-S-Down> "zyyp
-xnoremap <M-S-Up> "zy`>pgv
-xnoremap <M-S-Down> "zyPgv
-inoremap <M-S-Up> <C-O>"zyy<C-O>P
-inoremap <M-S-Down> <C-O>"zyy<C-O>p
 
 " =========== Shortcuts ========================================================
 
@@ -320,16 +268,16 @@ Shortcut delete hidden buffers
     \ nnoremap <Leader>eh :call DeleteHiddenBuffers()<CR>
 Shortcut edit journal file
     \ nnoremap <Leader>ej :edit ~/ia/Journal/Journal.txt<CR>
-Shortcut resolve symlinks
-    \ nnoremap <Leader>el :call ResolveSymlinks()<CR>
 Shortcut edit new buffer
     \ nnoremap <Leader>en :enew<CR>
+Shortcut edit shell config/profile
+    \ nnoremap <Leader>ep :edit ~/.profile<CR>
+Shortcut edit shell config/profile (local)
+    \ nnoremap <Leader>eP :edit ~/.profile.local<CR>
 Shortcut reload current buffer
     \ nnoremap <Leader>er :edit!<CR>
-Shortcut edit shell config
-    \ nnoremap <Leader>es :edit ~/.profile<CR>
-Shortcut edit shell config (local)
-    \ nnoremap <Leader>eS :edit ~/.profile.local<CR>
+Shortcut resolve symlinks
+    \ nnoremap <Leader>es :call ResolveSymlinks()<CR>
 Shortcut edit vimrc or init.vim
     \ nnoremap <Leader>ev :edit $MYVIMRC<CR>
 
@@ -546,6 +494,10 @@ augroup custom
     autocmd FileType text,markdown setlocal textwidth=0 colorcolumn=0
     autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
 
+    autocmd FileType j let b:AutoPairs = {}
+    autocmd FileType lisp,scheme
+        \ let b:AutoPairs = AutoPairsDefine({"'": "", "'''": ""})
+
     " Fix it so that crontab -e can save properly.
     autocmd filetype crontab setlocal nobackup nowritebackup textwidth=0
 
@@ -563,7 +515,7 @@ augroup custom
     autocmd BufWipeout * call airline#extensions#tabline#buflist#clean()
 
     " Exit help window with q.
-    autocmd filetype help nnoremap <buffer> <silent> q :close<cr>
+    autocmd filetype help nnoremap <buffer> <silent> q :close<CR>
 
     " Exit dirvish with q.
     autocmd filetype dirvish nmap <buffer> <silent> q <Plug>(dirvish_quit)
@@ -617,67 +569,6 @@ function! s:ExecuteRestoringView(cmd) abort
     endif
 endfunction
 
-function! s:CmdLineIndex(char) abort
-    let l:cmd = getcmdline()
-    if a:char is? 'B'
-        let l:i = getcmdpos() - 1
-        while l:i > 0
-            let l:i = l:i - 1
-            if match(l:cmd[l:i], '\s') is -1
-                break
-            endif
-        endwhile
-        if a:char is# 'B'
-            while l:i > 0 && match(l:cmd[l:i - 1], '\s') is -1
-                let l:i = l:i - 1
-            endwhile
-        else
-            if match(l:cmd[l:i], '\k') isnot -1
-                while l:i > 0 && match(l:cmd[l:i - 1], '\k') isnot -1
-                    let l:i = l:i - 1
-                endwhile
-            else
-                while l:i > 0 && match(l:cmd[l:i - 1], '\k\|\s') is -1
-                    let l:i = l:i - 1
-                endwhile
-            endif
-        endif
-    elseif a:char is? 'E'
-        let l:i = getcmdpos() - 1
-        let l:max = len(l:cmd) - 1
-        while l:i < l:max && match(l:cmd[l:i], '\s') isnot -1
-            let l:i = l:i + 1
-        endwhile
-        if a:char is# 'E'
-            while l:i < l:max + 1
-                let l:i = l:i + 1
-                if l:i == l:max + 1 || match(l:cmd[l:i], '\s') isnot -1
-                    break
-                endif
-            endwhile
-        else
-            if match(l:cmd[l:i], '\k') isnot -1
-                while l:i <= l:max
-                    let l:i = l:i + 1
-                    if l:i == l:max + 1 || match(l:cmd[l:i], '\k') is -1
-                        break
-                    endif
-                endwhile
-            else
-                while l:i <= l:max
-                    let l:i = l:i + 1
-                    if l:i == l:max + 1 || match(l:cmd[l:i], '\k\|\s') isnot -1
-                        break
-                    endif
-                endwhile
-            endif
-        endif
-    else
-        call s:Error("Invalid CmdLineIndex arg: " . a:char)
-    end
-    return l:i + 1
-endfunction
-
 function! InputDirectory() abort
     let l:default_dir = get(s:, 'last_input_dir', '')
     let l:dir = input('From dir: ', l:default_dir, 'dir')
@@ -720,23 +611,6 @@ function! PrevBufOrTab() abort
         tabprevious
     else
         bprevious
-    endif
-endfunction
-
-function! CmdLineNavigate(char) abort
-    call setcmdpos(s:CmdLineIndex(a:char))
-    return getcmdline()
-endfunction
-
-function! CmdLineDelete(char) abort
-    let l:cmd = getcmdline()
-    let l:i = getcmdpos() - 1
-    let l:j = s:CmdLineIndex(a:char) - 1
-    if a:char is? 'B'
-        return (l:j is 0 ? '' : l:cmd[:l:j-1]) . l:cmd[l:i:]
-    endif
-    if a:char is? 'E'
-        return (l:i is 0 ? '' : l:cmd[:l:i-1]) . l:cmd[l:j:]
     endif
 endfunction
 
@@ -858,6 +732,8 @@ function! FormatCode(...) abort range
         let l:cmd = b:format_command
     elseif &filetype is# 'c' || &filetype is# 'cpp'
         let l:cmd = 'clang-format'
+    elseif &filetype is# 'rust'
+        let l:cmd = 'rustfmt'
     elseif &filetype is# 'python'
         let l:cmd = 'black -l ' . &textwidth . ' -'
     elseif &filetype is# 'fish'
