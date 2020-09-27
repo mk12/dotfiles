@@ -38,7 +38,6 @@
 (straight-use-package 'dtrt-indent)
 (straight-use-package 'expand-region)
 (straight-use-package 'fill-column-indicator)
-(straight-use-package 'lispy)
 (straight-use-package 'magit)
 (straight-use-package 'move-text)
 (straight-use-package 'projectile)
@@ -67,7 +66,7 @@
       message-log-max 8192
       projectile-completion-system 'ivy
       require-final-newline t
-      ring-bell-function 'ignore
+      ring-bell-function #'ignore
       sentence-end-double-space nil
       truncate-partial-width-windows nil
       vc-follow-symlinks t)
@@ -132,23 +131,28 @@
 
 (menu-bar-mode -1)
 
-(add-hook 'text-mode-hook
-          (lambda ()
-            (visual-line-mode 1)))
-
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (display-line-numbers-mode 1)
-            (dtrt-indent-mode 1)
-            (fci-mode 1)))
-
-(add-hook 'lisp-mode-hook
-          (lambda ()
-            (lispy-mode 1)))
-
 (diminish 'counsel-mode)
 (diminish 'ivy-mode)
 (diminish 'projectile-mode)
+
+(defun setup-text-mode ()
+  (visual-line-mode 1))
+
+(defun setup-prog-mode ()
+  (display-line-numbers-mode 1)
+  (dtrt-indent-mode 1)
+  (fci-mode 1))
+
+(defun setup-lisp-mode ()
+  ; (lispy-mode 1)
+  )
+
+(add-hook 'text-mode-hook #'setup-text-mode)
+(add-hook 'prog-mode-hook #'setup-prog-mode)
+(add-hook 'lisp-mode-hook #'setup-lisp-mode)
+(add-hook 'lisp-interaction-mode-hook #'setup-lisp-mode)
+(add-hook 'emacs-lisp-mode-hook #'setup-lisp-mode)
+(add-hook 'scheme-mode-hook #'setup-lisp-mode)
 
 ;; ========== Color scheme =====================================================
 
