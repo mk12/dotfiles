@@ -1,5 +1,27 @@
 set shell=sh
 
+" =========== Plugin settings ==================================================
+
+let g:AutoPairsMultilineClose = 0
+let g:AutoPairsShortcutToggle = ''
+
+let g:airline#extensions#default#layout = [['a', 'c'], ['x', 'y']]
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline_base16_improved_contrast = 1
+let g:airline_base16_monotone = 1
+let g:airline_extensions = ['tabline']
+let g:airline_highlighting_cache = 1
+let g:airline_theme = 'base16_vim'
+
+let g:dispatch_no_maps = 1
+
+let g:gitgutter_map_keys = 0
+
+let g:polyglot_disabled = ['fish']
+
+let g:VimuxPromptString = "Vimux: "
+let g:VimuxHeight = "30"
+
 " =========== Plugins ==========================================================
 
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
@@ -54,28 +76,6 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 call plug#end()
-
-" =========== Plugin settings ==================================================
-
-let g:AutoPairsMultilineClose = 0
-let g:AutoPairsShortcutToggle = ''
-
-let g:airline#extensions#default#layout = [['a', 'c'], ['x', 'y']]
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_base16_improved_contrast = 1
-let g:airline_base16_monotone = 1
-let g:airline_extensions = ['tabline']
-let g:airline_highlighting_cache = 1
-let g:airline_theme = 'base16_vim'
-
-let g:dispatch_no_maps = 1
-
-let g:gitgutter_map_keys = 0
-
-let g:polyglot_disabled = ['fish']
-
-let g:VimuxPromptString = "Vimux: "
-let g:VimuxHeight = "30"
 
 " =========== Options ==========================================================
 
