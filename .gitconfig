@@ -28,19 +28,17 @@
 [core]
     excludesfile = ~/.gitignore
     pager = delta
-[interactive]
-    diffFilter = delta --color-only
 [delta]
-    hunk-header-style = "normal"
     zero-style = "normal"
     minus-style = "red"
     minus-emph-style = "black red"
     plus-style = "green"
     plus-emph-style = "black green"
+    hunk-header-style = "normal"
     file-style = "bold blue"
     file-decoration-style = "bold blue underline"
-    minus-empty-line-marker-style = "black brightcyan"
-    plus-empty-line-marker-style = "black yellow"
+    minus-empty-line-marker-style = "black black"
+    plus-empty-line-marker-style = "black black"
 [diff]
     algorithm = minimal
     compactionHeuristic = true
