@@ -383,9 +383,8 @@ Shortcut quit
     Shortcut force quit
     \ nnoremap <Leader>Q :quit!<CR>
 
-" Reset filetype after sourcing to retain filetype-specific options.
 Shortcut reload/source vimrc or init.vim
-    \ nnoremap <Leader>r :source $MYVIMRC<Bar>let &l:ft=&ft<CR>
+    \ nnoremap <Leader>r :source $MYVIMRC<CR>
 
 Shortcut save/write file
     \ nnoremap <Leader>s :write<CR>
@@ -884,6 +883,10 @@ function! LoadCustomProjections() abort
     endfor
     for [l:root, l:value] in projectionist#query('format_command')
         let b:format_command = l:value
+        break
+    endfor
+    for [l:root, l:value] in projectionist#query('lint_command')
+        let b:lint_command = l:value
         break
     endfor
     for [l:root, l:value] in projectionist#query('tags_command')
