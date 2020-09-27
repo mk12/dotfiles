@@ -151,6 +151,12 @@ inoremap kj <Esc>
 noremap ; :
 noremap : ;
 
+" Top/bottom mappings compatible with less and emacs.
+noremap <M-<> <C-Home>
+noremap <M->> <C-End>
+inoremap <M-<> <C-O><C-Home>
+inoremap <M->> <C-O><C-End>
+
 " Jump between open windows.
 nnoremap <C-J> <C-W>w
 
