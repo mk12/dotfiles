@@ -85,6 +85,7 @@ let g:VimuxHeight = "30"
 " =========== Options ==========================================================
 
 set backup
+set belloff=all
 set cmdheight=2
 set colorcolumn=+1
 set cursorline
@@ -193,7 +194,7 @@ xnoremap <silent> & :&&<CR>
 xnoremap <expr> p VisualReplaceExpr()
 
 " Use * in visual mode to search for the selection (then cgn and . to repeat).
-xnoremap * "zy:let @/='\V'.escape(@z, '\')<Bar>set hls<CR>
+xnoremap * y:let @/='\V'.escape(@", '\')<Bar>set hls<CR>
 
 nnoremap <silent> zS :echo SyntaxName()<CR>
 
@@ -236,7 +237,7 @@ Shortcut project-wide search
     \ nnoremap <silent> <Leader>/ :call SearchProject()<CR>
 Shortcut project-wide search with input
     \ nnoremap <silent> <Leader>* :call SearchProject(expand('<cword>'))<CR>
-    \|xnoremap <silent> <Leader>* "zy:call SearchProject(@z)<CR>
+    \|xnoremap <silent> <Leader>* y:call SearchProject(@")<CR>
 
 Shortcut go to alternate file
     \ nnoremap <Leader>a :call AlternateFile()<CR>
@@ -252,7 +253,7 @@ Shortcut indent lines
     \|xnoremap <Leader>di =
 Shortcut show number of search matches
     \ nnoremap <Leader>dm :%s/<C-R>///n<CR>
-    \|xnoremap <Leader>dm "zy:%s/<C-R>z//n<CR>
+    \|xnoremap <Leader>dm y:%s/<C-R>"//n<CR>
 Shortcut sort lines
     \ nnoremap <Leader>ds vip:sort<CR>
     \|xnoremap <Leader>ds :sort<CR>
@@ -390,8 +391,9 @@ Shortcut quit
     Shortcut force quit
     \ nnoremap <Leader>Q :quit!<CR>
 
+" Reset filetype after sourcing to retain filetype-specific options.
 Shortcut reload/source vimrc or init.vim
-    \ nnoremap <Leader>r :source $MYVIMRC<CR>
+    \ nnoremap <Leader>r :source $MYVIMRC<Bar>let &l:ft=&ft<CR>
 
 Shortcut save/write file
     \ nnoremap <Leader>s :write<CR>
