@@ -29,6 +29,7 @@ abbr v vim
 
 alias vi=$EDITOR
 alias vim=$EDITOR
+alias e='emacsclient -t -a ""'
 
 if command -qv exa
     alias l=exa
@@ -140,6 +141,7 @@ bind \ea add_alert
 bind \ec kitty-colors "commandline -f repaint"
 bind \eo fzf_open_project
 
+# These bindings match https://github.com/mk12/vim-meta.
 bind \e\[1\;4C forward-bigword
 bind \e\[1\;4D backward-bigword
 bind \e\[3\;3~ kill-word
