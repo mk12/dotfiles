@@ -266,6 +266,10 @@ Shortcut sort lines
 Shortcut remove trailing whitespace
     \ nnoremap <Leader>dw :%s/\s\+$//e<CR>
     \|xnoremap <Leader>dw :s/\s\+$//e<CR>
+Shortcut set file executable bit
+    \ nnoremap <Leader>dx :Chmod +x<CR>
+Shortcut unset file executable bit
+    \ nnoremap <Leader>dX :Chmod -x<CR>
 
 Shortcut edit fish config
     \ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
