@@ -74,6 +74,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'wsdjeg/vim-fetch'
 
 call plug#end()
 
@@ -327,6 +328,8 @@ Shortcut jump to line in buffer
     \ nnoremap <Leader>jL :BLines<CR>
 Shortcut jump to mapping
     \ nnoremap <Leader>jm :Maps<CR>
+Shortcut jump to project directory
+    \ nnoremap <silent> <Leader>jp :call SwitchProject()<CR>
 Shortcut jump to command history
     \ nnoremap <Leader>jr :History:<CR>
 Shortcut jump to tag
@@ -747,6 +750,20 @@ function! FormatCode(...) abort range
     endif
     let l:range = get(a:, 1, a:firstline . ',' . a:lastline)
     call s:ExecuteRestoringView(l:range . '!' . l:cmd)
+endfunction
+
+function! SwitchProject() abort
+    call fzf#run(fzf#wrap({
+        \ 'source': 'z-projects.sh',
+        \ 'options': '--prompt "Projects> "',
+        \ 'sink': {dir -> s:SwitchProjectSink(dir)},
+        \ }))
+endfunction
+
+function! s:SwitchProjectSink(dir) abort
+    execute 'cd ' . $PROJECTS . '/' . a:dir
+    let l:cwd = substitute(getcwd(), '\V\^' . $HOME . '/', '~/', '')
+    echomsg 'Switched to ' . l:cwd
 endfunction
 
 function! BrowseTags() abort
