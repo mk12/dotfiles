@@ -755,9 +755,12 @@ endfunction
 function! SwitchProject() abort
     call fzf#run(fzf#wrap({
         \ 'source': 'z-projects.sh',
-        \ 'options': '--prompt "Projects> "',
+        \ 'options': [
+            \ '--prompt', 'Projects> ',
+            \ '--preview', 'bat --color=always --plain $PROJECTS/{}/README.md',
+        \ ],
         \ 'sink': {dir -> s:SwitchProjectSink(dir)},
-        \ }))
+    \ }))
 endfunction
 
 function! s:SwitchProjectSink(dir) abort
