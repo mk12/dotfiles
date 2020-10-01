@@ -71,7 +71,6 @@ Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
-Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-airline/vim-airline'
@@ -88,11 +87,9 @@ call plug#end()
 set backup
 set belloff=all
 set cmdheight=2
-set colorcolumn=+1
 set cursorline
 set gdefault
 set hidden
-set hlsearch
 set ignorecase
 set lazyredraw
 set linebreak
@@ -118,11 +115,11 @@ set undofile
 set visualbell
 set wildmode=longest,full
 
-" Avoid highlighting searches when reloading vimrc.
-nohlsearch
-
-if !exists('g:loaded_sleuth')
+" Only set these options on startup.
+if has('vim_starting')
+    set colorcolumn=+1
     set expandtab
+    set hlsearch
     set shiftwidth=4
 endif
 
