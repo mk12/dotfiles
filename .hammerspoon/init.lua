@@ -174,7 +174,8 @@ local function getKittyApp(config)
             if line:find(config, 1, true) then
                 local pid = line:match("[0-9]+")
                 log.i("Found kitty process with PID " .. pid)
-                kittyApps[config] = hs.application.applicationForPID(pid)
+                kittyApps[config] =
+                    hs.application.applicationForPID(tonumber(pid))
                 if kittyApps[config] then
                     break
                 end
