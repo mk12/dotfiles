@@ -115,6 +115,12 @@ function fzf_open_project --description "Open a project file using fzf"
 end
 
 function code --description "Open in VS Code"
+    # Only invoke code differently if opening files, not e.g. if passing flags
+    # like --help or --install-extension.
+    switch $argv[1]
+        case '-*'
+            command code $argv
+    end
     if test (uname -s) = Darwin
         if not test -e $argv[1]
             touch $argv[1]
