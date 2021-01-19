@@ -26,6 +26,7 @@ set pure_separate_prompt_on_error true
 
 abbr g git
 abbr v vim
+abbr xd hexyl
 
 alias vi=$EDITOR
 alias vim=$EDITOR
