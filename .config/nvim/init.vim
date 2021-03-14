@@ -262,7 +262,7 @@ Shortcut edit fish config (local)
 Shortcut delete hidden buffers
     \ nnoremap <Leader>eh :call DeleteHiddenBuffers()<CR>
 Shortcut edit journal file
-    \ nnoremap <Leader>ej :edit ~/ia/Journal/Journal.txt<CR>
+    \ nnoremap <Leader>ej :edit $PROJECTS/journal/Journal.txt<CR>
 Shortcut edit new buffer
     \ nnoremap <Leader>en :enew<CR>
 Shortcut edit shell config/profile

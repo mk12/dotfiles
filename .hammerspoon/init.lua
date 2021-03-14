@@ -478,7 +478,7 @@ hs.hotkey.bind(hyper, "R", hs.reload)
 
 -- Commonly-used files and projects.
 hs.hotkey.bind(hyper, "J",
-    openAppFn("iA Writer", "~/ia/Journal/Today.txt"))
+    openAppFn("iA Writer", projectsDir .. "/journal/Today.txt"))
 hs.hotkey.bind(hyper, "D",
     openAppFn("Visual Studio Code", projectsDir .. "/dotfiles"))
 hs.hotkey.bind(hyper, "S",
