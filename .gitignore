@@ -10,6 +10,7 @@ a.out
 *.dylib
 *.pyc
 *.hi
+*.dSYM/
 
 # Packages
 *.7z
