@@ -27,10 +27,12 @@ set pure_separate_prompt_on_error true
 abbr g git
 abbr v vim
 abbr xd hexyl
+abbr zb 'zig build'
 
 alias vi=$EDITOR
 alias vim=$EDITOR
 alias e='emacsclient -t -a ""'
+alias zig=$PROJECTS/zig/build/bin/zig
 
 if command -qv exa
     alias l=exa
