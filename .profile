@@ -24,6 +24,7 @@ unset -f set_path
 export GOPATH=$PROJECTS/go
 
 export LEDGER_FILE=$PROJECTS/finance/journal.ledger
+export LEDGER_PRICE_DB=$PROJECTS/finance/pricedb
 
 export CLICOLOR=true
 export PAGER=less
