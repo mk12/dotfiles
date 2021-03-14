@@ -107,7 +107,8 @@ function fzf_open_project --description "Open a project file using fzf"
         set -a FZF_OPEN_OPTS " --preview-window=top:50%"
     end
     if test -d .git
-        set -g FZF_OPEN_COMMAND 'git ls-files'
+        # TODO: Replace with --deduplicate once git 3.21 is widespread.
+        set -g FZF_OPEN_COMMAND 'git ls-files | uniq'
         __fzf_open --editor
     else
         set -e FZF_OPEN_COMMAND
