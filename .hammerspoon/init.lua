@@ -497,10 +497,16 @@ hs.hotkey.bind(hyper, "M", toggleChimesEnabled)
 
 -- ========== Timers ===========================================================
 
-syncKittyToDarkModeForce()
-hs.timer.doEvery(hs.timer.minutes(1), syncKittyToDarkModeLazy)
+-- Note: Recurring timers must be assigned to global variables, otherwise GC
+-- will reclaim them and they stop working!
+globalTimers = {}
 
-hs.timer.doAt("00:00", hs.timer.minutes(15), playChimes)
+syncKittyToDarkModeForce()
+table.insert(globalTimers,
+    hs.timer.doEvery(hs.timer.minutes(1), syncKittyToDarkModeLazy))
+
+table.insert(globalTimers,
+    hs.timer.doAt("00:00", hs.timer.minutes(15), playChimes))
 
 -- ========== Misc =============================================================
 
