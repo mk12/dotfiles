@@ -489,7 +489,7 @@ augroup custom
     autocmd FileType sql setlocal commentstring=--\ %s
 
     autocmd FileType text,markdown setlocal textwidth=0 colorcolumn=0
-    autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
+    autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81,101,121
 
     autocmd FileType j let b:AutoPairs = {}
     autocmd FileType lisp,scheme
