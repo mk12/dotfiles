@@ -12,14 +12,6 @@ end
 
 # =========== Plugins ==========================================================
 
-# Install fisher if it isn't already installed.
-if not functions -q fisher
-    set -q XDG_CONFIG_HOME; or set XDG_CONFIG_HOME ~/.config
-    curl https://git.io/fisher --create-dirs -sLo \
-        $XDG_CONFIG_HOME/fish/functions/fisher.fish
-    fish -c fisher
-end
-
 set pure_separate_prompt_on_error true
 
 # =========== Shortcuts ========================================================
@@ -149,6 +141,7 @@ bind -M insert -e \ec \eC \eo \eO
 
 bind \ea add_alert
 bind \ec kitty-colors "commandline -f repaint"
+bind \ed __fzf_cd
 bind \eo fzf_open_project
 
 # These bindings match https://github.com/mk12/vim-meta.
