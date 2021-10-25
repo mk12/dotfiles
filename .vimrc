@@ -765,7 +765,7 @@ endfunction
 
 function! SwitchProject() abort
     call fzf#run(fzf#wrap({
-        \ 'source': 'z-projects.sh',
+        \ 'source': 'z-projects',
         \ 'options': [
             \ '--prompt', 'Projects> ',
             \ '--preview', 'bat --color=always --plain $PROJECTS/{}/README.md',

@@ -139,8 +139,8 @@ local function launchKitty(config, options)
     log.i("Launching kitty: " .. cmd)
     -- We *could* use full paths to tmux and ssh, and then use hs.execute
     -- instead of executeWithProfile. However, we actually need the user profile
-    -- for the kitty process so that it can locate kitty-bell-notify.sh, and for
-    -- the tmux process so that it can locate tmux-session.sh (this won't help a
+    -- for the kitty process so that it can locate kitty-bell-notify, and for
+    -- the tmux process so that it can locate tmux-session (this won't help a
     -- remote tmux -- we assume ssh will start a login shell that loads the
     -- remote user profile and runs tmux in that).
     local output, success = executeWithProfile(cmd)

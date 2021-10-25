@@ -2,14 +2,9 @@ export PROJECTS=~/Projects
 
 set_path() {
     set -- \
-        "$HOME/bin" \
-        "$HOME/brew/bin" \
-        "$HOME/.linuxbrew/bin" \
-        "$HOME/.fzf/bin" \
+        "$HOME/.local/bin" \
         "$HOME/.cargo/bin" \
-        "$HOME/.ghcup/bin" \
-        "$HOME/.cabal/bin" \
-        "$PROJECTS/scripts"
+        "$HOME/.fzf/bin"
     for p in "$@"; do
         case $PATH in
             *"$p"*) ;;
@@ -20,8 +15,6 @@ set_path() {
 
 set_path
 unset -f set_path
-
-export GOPATH=$PROJECTS/go
 
 export LEDGER_FILE=$PROJECTS/finance/journal.ledger
 export LEDGER_PRICE_DB=$PROJECTS/finance/pricedb

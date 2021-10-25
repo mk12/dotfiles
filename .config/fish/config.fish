@@ -38,8 +38,6 @@ if command -qv bat
     alias cat=bat
 end
 
-alias td=tmux-set-cwd.sh
-
 # =========== Functions ========================================================
 
 function refish --description "Reload fish config files"
