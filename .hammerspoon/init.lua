@@ -149,7 +149,8 @@ local function launchKitty(config, options)
     end
     if sessionPath then
         -- Give the app time to read the file before deleting it.
-        hs.timer.doAfter(10, function()
+        launchKittyTimer = hs.timer.doAfter(10, function()
+            launchKittyTimer = nil
             os.remove(sessionPath)
         end)
     end
@@ -266,7 +267,8 @@ local function launchFullScreenTmuxKitty()
     if app and app:mainWindow() then
         app:mainWindow():setFullScreen(true)
     else
-        hs.timer.doAfter(1, function()
+        launchFullScreenTmuxKittyTimer = hs.timer.doAfter(1, function()
+            launchFullScreenTmuxKittyTimer = nil
             local app = getKittyApp(config)
             if not app then
                 log.e("Still no tmux kitty app after 1s")
@@ -459,8 +461,10 @@ end
 local function playChimes()
     if chimesEnabled then
         -- Must use os.execute and & to avoid blocking the main thread.
-        local cmd =
-            projectsDir .. "/minster/minster.sh -t '" .. timidityBinary .. "' &"
+        local cmd = (
+            projectsDir .. "/minster/minster.sh -t '" .. timidityBinary .. "'"
+            .. " >> /tmp/minster.log 2>&1 &"
+        )
         log.i("Playing chimes: " .. cmd)
         os.execute(cmd)
     else
