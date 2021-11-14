@@ -16,6 +16,9 @@ set_path() {
 set_path
 unset -f set_path
 
+# Or maybe ~/.go, and have ~/.go/bin in PATH?
+export GOPATH=$HOME/.local/share/go
+
 export LEDGER_FILE=$PROJECTS/finance/journal.ledger
 export LEDGER_PRICE_DB=$PROJECTS/finance/pricedb
 
