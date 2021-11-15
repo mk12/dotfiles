@@ -1,10 +1,2 @@
 disable = ["system", "emacs", "node"]
-git_repos = [
-    "~/Projects/base16-kitty",
-    "~/Projects/base16-solarized-scheme",
-    "~/Projects/base16-vim",
-    "~/Projects/dotfiles",
-    "~/Projects/scripts",
-]
 predefined_git_repos = false
-git_arguments = "--rebase --autostash"
