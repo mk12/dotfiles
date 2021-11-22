@@ -1,23 +1,38 @@
 export PROJECTS=~/Projects
 
 set_path() {
+    # Note: These paths are ordered from lowest to highest precedence.
     set -- \
-        "$HOME/.local/bin" \
-        "$HOME/.cargo/bin" \
-        "$HOME/.fzf/bin"
+        /opt/homebrew \
+        "$HOME/.fzf" \
+        "$HOME/.go" \
+        "$HOME/.cargo" \
+        "$HOME/.local"
     for p in "$@"; do
-        case $PATH in
-            *"$p"*) ;;
-            *) [ -d "$p" ] && PATH=$PATH:$p ;;
-        esac
+        for vd in PATH:sbin PATH:bin MANPATH:share/man INFOPATH:share/info; do
+            var=${vd%:*}
+            dir=$p/${vd#*:}
+            eval "val=\$$var"
+            case $val in
+                *"$dir"*) ;;
+                *) [ -d "$dir" ] && eval "$var=\$dir:\$$var" ;;
+            esac
+        done
     done
+    unset p vd var dir val
 }
 
 set_path
 unset -f set_path
 
-# Or maybe ~/.go, and have ~/.go/bin in PATH?
-export GOPATH=$HOME/.local/share/go
+if [ -d /opt/homebrew ]; then
+    export HOMEBREW_PREFIX=/opt/homebrew
+    export HOMEBREW_SHELLENV_PREFIX=/opt/homebrew
+    export HOMEBREW_REPOSITORY=/opt/homebrew
+    export HOMEBREW_CELLAR=/opt/homebrew/Cellar
+fi
+
+export GOPATH=$HOME/.go
 
 export LEDGER_FILE=$PROJECTS/finance/journal.ledger
 export LEDGER_PRICE_DB=$PROJECTS/finance/pricedb
