@@ -1,6 +1,5 @@
 [user]
     name = Mitchell Kember
-    email = mk12360@gmail.com
 [alias]
     s = status -s
     b = branch
@@ -22,11 +21,22 @@
     unstage = reset HEAD --
     l = log
     last = log -1 HEAD
-    lol = log --oneline --graph --decorate
+    lol = log --oneline --graph --
 [color]
     ui = auto
+[init]
+	defaultBranch = main
+[push]
+    default = simple
+[pull]
+    rebase = true
+[apply]
+    whitespace = fix
+[diff]
+    algorithm = minimal
+    compactionHeuristic = true
+    renames = true
 [core]
-    excludesfile = ~/.gitignore
     pager = delta
 [delta]
     zero-style = "normal"
@@ -39,19 +49,11 @@
     file-decoration-style = "bold blue underline"
     minus-empty-line-marker-style = "black black"
     plus-empty-line-marker-style = "black black"
-[diff]
-    algorithm = minimal
-    compactionHeuristic = true
-    renames = true
 [merge]
     tool = vimdiff
     conflictstyle = diff3
 [mergetool "vimdiff"]
     cmd = $EDITOR -d $LOCAL $BASE $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
     prompt = false
-[push]
-    default = simple
-[pull]
-    rebase = true
-[apply]
-    whitespace = fix
+[include]
+    path = local.gitconfig

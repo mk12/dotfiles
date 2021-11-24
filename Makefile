@@ -1,3 +1,6 @@
+shell_files := \
+	.profile .profile.local .bash_profile .bashrc patch_vimrc.sh link.sh
+
 .PHONY: help install lint
 
 help:
@@ -7,9 +10,7 @@ help:
 	@echo "lint     lint shell files"
 
 install:
-	./link.sh
+	@./link.sh -cy
 
 lint:
-	shellcheck -s sh -e SC1090 .profile .profile.local
-	shellcheck -s bash -e SC1090 .bash_profile .bashrc
-	shellcheck patch_vimrc.sh link.sh
+	shellcheck $(shell_files)

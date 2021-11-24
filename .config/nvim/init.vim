@@ -268,7 +268,7 @@ Shortcut edit new buffer
 Shortcut edit shell config/profile
     \ nnoremap <Leader>ep :edit ~/.profile<CR>
 Shortcut edit shell config/profile (local)
-    \ nnoremap <Leader>eP :edit ~/.profile.local<CR>
+    \ nnoremap <Leader>eP :edit ~/.local.profile<CR>
 Shortcut reload current buffer
     \ nnoremap <Leader>er :edit!<CR>
 Shortcut resolve symlinks
@@ -519,9 +519,6 @@ augroup custom
 
     " Exit fugitive windows consistently with q.
     autocmd BufEnter fugitive://*//* nnoremap <buffer> <silent> q :bdelete<CR>
-
-    " Recognize my .profile.local file.
-    autocmd BufNewFile,BufRead .profile.local setfiletype sh
 
     " Redraw after leaving the command-line window to close it.
     " https://vi.stackexchange.com/a/18178

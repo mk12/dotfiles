@@ -516,4 +516,8 @@ table.insert(globalTimers,
 
 -- Install the hs binary. This just copies a symlink, so there's no harm in
 -- repeating it every reload. Doing it in setupmacos.sh is too complicated.
-hs.ipc.cliInstall()
+hs.ipc.cliInstall(os.getenv("HOME") .. ".local/bin")
+
+-- ========== Local config =====================================================
+
+require("local")
