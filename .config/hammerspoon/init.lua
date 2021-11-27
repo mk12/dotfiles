@@ -76,6 +76,60 @@ end
 -- Directory containing my coding projects.
 local projectsDir = getUserEnv("PROJECTS")
 
+-- ========== SSH ==============================================================
+
+local sshConfigFile = os.getenv("HOME") .. "/.ssh/config"
+
+-- Array of {alias, user, hostname} records parsed from sshConfigFile.
+local allSshHosts = {}
+-- One of the elements of allSshHosts, or nil.
+local defaultSshHost
+
+(function()
+    local file = io.open(sshConfigFile)
+    if not file then
+        log.i("no ssh config file")
+        return
+    end
+    local default, alias, user, hostname
+    local flush = function()
+        if not alias then
+            return
+        end
+        local host = {
+            alias = alias,
+            user = user or os.getenv("USER"),
+            hostname = hostname or alias,
+        }
+        table.insert(allSshHosts, host)
+        if default then
+            defaultSshHost = host
+        end
+        default, alias, user, hostname = false, nil, nil, nil
+    end
+    for line in file:lines() do
+        if line == "# Default" then
+            default = true
+        elseif not alias then
+            alias = line:match("^Host ([^*]+)$")
+        elseif line == "" then
+            flush()
+        else
+            user = user or line:match("^%s*User (%g+)$")
+            hostname = hostname or line:match("^%s*Host[Nn]ame (%g+)$")
+        end
+    end
+    flush()
+    file:close()
+end)()
+
+-- Returns a shell command to ssh into one of the hosts in allSshHosts.
+local function sshCommand(host)
+    if host then
+        return "ssh " .. host.alias
+    end
+end
+
 -- ========== Kitty ============================================================
 
 -- Kitty files and directories.
@@ -83,7 +137,6 @@ local kittyBinary = getUserBinary("kitty")
 local kittyConfigDir = os.getenv("HOME") .. "/.config/kitty"
 local kittySocketDir = os.getenv("HOME") .. "/.local/share/kitty"
 os.execute("mkdir -p '" .. kittySocketDir .. "'")
-local kittyRemotesFile = kittyConfigDir .. "/" .. "remotes"
 local kittyColorsFile = kittyConfigDir .. "/" .. "colors.conf"
 local kittyColorsDir = projectsDir .. "/base16-kitty/colors"
 
@@ -92,13 +145,11 @@ local function kittySocketAddress(config)
     return "unix:" .. kittySocketDir .. "/" .. config .. ".sock"
 end
 
--- Returns the addresses for all Unix sockets used by kitty instances.
-local function allKittySocketAddresses()
-    return {
-        kittySocketAddress("kitty.conf"),
-        kittySocketAddress("tmux.conf"),
-    }
-end
+-- Addresses for all Unix sockets used by kitty instances.
+local allKittySocketAddresses = {
+    kittySocketAddress("kitty.conf"),
+    kittySocketAddress("tmux.conf"),
+}
 
 -- Launches kitty using the given config and options. Interprets config as a
 -- path relative to kittyConfigDir. If options.lanchCommand is present, uses it
@@ -149,8 +200,7 @@ local function launchKitty(config, options)
     end
     if sessionPath then
         -- Give the app time to read the file before deleting it.
-        launchKittyTimer = hs.timer.doAfter(10, function()
-            launchKittyTimer = nil
+        hs.timer.doAfter(10, function()
             os.remove(sessionPath)
         end)
     end
@@ -243,32 +293,18 @@ local function addTmuxToCommand(sshCommand, tmuxSession)
 end
 
 -- Opens a fullscreen kitty window attaching to tmux on the default host. The
--- default host is the one prefixed with an asterisk in the remotes file, or the
--- local machine if none is.
+-- default host is the one marked "# Default", or the local machine if none is.
 local function launchFullScreenTmuxKitty()
-    local cmd
-    local file = io.open(kittyRemotesFile)
-    if file then
-        for line in file:lines() do
-            local name = line:match("^[^:]+")
-            if name:sub(1, 1) == "*" then
-                cmd = line:sub(#name + 2)
-                break
-            end
-        end
-        file:close()
-    end
     local config = "tmux.conf"
     launchKitty(config, {
-        launchCommand = addTmuxToCommand(cmd, "0"),
+        launchCommand = addTmuxToCommand(sshCommand(defaultSshHost), "0"),
         newInstance = not getKittyApp(config),
     })
     -- When launching for the first time, wait for the window to be ready.
     if app and app:mainWindow() then
         app:mainWindow():setFullScreen(true)
     else
-        launchFullScreenTmuxKittyTimer = hs.timer.doAfter(1, function()
-            launchFullScreenTmuxKittyTimer = nil
+        hs.timer.doAfter(1, function()
             local app = getKittyApp(config)
             if not app then
                 log.e("Still no tmux kitty app after 1s")
@@ -283,33 +319,29 @@ local function launchFullScreenTmuxKitty()
     end
 end
 
--- Returns a list of terminal host choices, to be used with hs.chooser.
-local function getHostChoices()
+-- List of terminal host choices, to be used with hs.chooser.
+local hostChoices = (function ()
     local choices = {
         {
-            text = "Localhost",
+            text = "localhost",
             subText = os.getenv("SHELL"),
             remote = false,
             command = nil,
         },
     }
-    local file = io.open(kittyRemotesFile)
-    if file then
-        for line in file:lines() do
-            local name = line:match("^[^:]+")
-            local cmd = line:sub(#name + 2)
-            name = name:gsub("^%*", "", 1)
-            table.insert(choices, {
-                text = name, subText = cmd, remote = true, command = cmd
-            })
-        end
-        file:close()
+    for _, host in ipairs(allSshHosts) do
+        table.insert(choices, {
+            text = host.alias,
+            subText = "ssh " .. host.user .. "@" .. host.hostname,
+            remote = true,
+            command = sshCommand(host),
+        })
     end
     return choices
-end
+end)()
 
 -- Returns a list of terminal session choices for the given host choice (one of
--- the items from getHostChoices), to be used with hs.chooser.
+-- the items from hostChoices), to be used with hs.chooser.
 local function getSessionChoices(host)
     local function text(localText, remoteText)
         return host.remote and remoteText or localText
@@ -353,7 +385,7 @@ local function displayKittyLaunchChooser()
 
     function showChooser()
         local chooser = hs.chooser.new(onChooseHost)
-        chooser:choices(getHostChoices())
+        chooser:choices(hostChoices)
         chooser:placeholderText("Choose a host")
         chooser:show()
     end
@@ -391,7 +423,7 @@ end
 local function setKittyColorTheme(theme)
     local path = kittyColorsDir .. "/base16-" .. theme .. ".conf"
     local cmd = ""
-    for _, socket in ipairs(allKittySocketAddresses()) do
+    for _, socket in ipairs(allKittySocketAddresses) do
         -- Run the commands in the background with & so that all kitty instances
         -- change color simultaneously.
         cmd = (

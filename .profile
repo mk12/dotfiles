@@ -21,14 +21,15 @@ set_paths() {
 set_paths
 unset -f set_paths
 
-export PROJECTS=~/Code
+PROJECTS=$HOME/$(cat ~/.projects)
+export PROJECTS
 
 export BAT_THEME=base16
 export CLICOLOR=true
 export GOPATH=~/.go
 export LEDGER_EXPLICIT=true
-export LEDGER_FILE=$PROJECTS/finance/journal.ledger
-export LEDGER_PRICE_DB=$PROJECTS/finance/pricedb
+export LEDGER_FILE="$PROJECTS/finance/journal.ledger"
+export LEDGER_PRICE_DB="$PROJECTS/finance/pricedb"
 export LEDGER_STRICT=true
 export LESS=-FQRXi
 export PAGER=less

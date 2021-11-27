@@ -3,16 +3,12 @@
 if functions -q fenv
     fenv source ~/.profile
 else
-    echo (status -f): "fenv unavailable, not sourcing .profile"
+    echo (status -f): "fenv unavailable, not sourcing ~/.profile"
 end
 
 if not status --is-interactive
     exit
 end
-
-# =========== Plugins ==========================================================
-
-set pure_separate_prompt_on_error true
 
 # =========== Shortcuts ========================================================
 
@@ -59,12 +55,6 @@ function zi --description "Like z, but choose with fzf"
     cd (echo $result | sed -E 's/^[0-9.]+[ \t]+//')
 end
 
-function gg --description "Print git overview"
-    git log --oneline -n1; or return
-    git branch
-    git status -s
-end
-
 function tm --description "Connect to local or remote tmux session"
     if test (count $argv) -ge 1
         ssh $argv -t 'tmux new -A -s 0'
@@ -108,28 +98,6 @@ function fzf_open_project --description "Open a project file using fzf"
     set -e FZF_OPEN_OPTS
 end
 
-function code --description "Open in VS Code"
-    # Only invoke code differently if opening files, not e.g. if passing flags
-    # like --help or --install-extension.
-    switch $argv[1]
-        case '-*'
-            command code $argv
-    end
-    if test (uname -s) = Darwin
-        if not test -e $argv[1]
-            touch $argv[1]
-        end
-        # The code CLI causes duplicate icons in the Dock:
-        # https://github.com/microsoft/vscode/issues/60579
-        open -b com.microsoft.VSCode $argv[1]
-    else
-        command code $argv
-    end
-end
-
-# Workaround for https://github.com/fish-shell/fish-shell/issues/6270
-function __fish_describe_command; end
-
 # =========== Keybindings ======================================================
 
 # Use only the fzf bindings Ctrl-o, Ctrl-r.
@@ -138,8 +106,10 @@ bind -e \ec \eC \eo \eO
 bind -M insert -e \ec \eC \eo \eO
 
 bind \ea add_alert
-bind \ec kitty-colors "commandline -f repaint"
+bind \ec __fzf_cd
 bind \ed __fzf_cd
+bind \ef __fzf_find_file
+bind \ek kitty-colors "commandline -f repaint"
 bind \eo fzf_open_project
 
 # These bindings match https://github.com/mk12/vim-meta.
@@ -173,6 +143,8 @@ set fish_pager_color_description green
 set fish_pager_color_prefix white --bold --underline
 set fish_pager_color_progress cyan --bold
 set fish_color_search_match --background=brgreen
+
+set pure_separate_prompt_on_error true
 
 # =========== Local config =====================================================
 

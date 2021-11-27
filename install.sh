@@ -2,18 +2,6 @@
 
 set -eufo pipefail
 
-# These are not checked into the dotfiles repository, but I still want them in
-# the repository directory and symlinked so that everything is together.
-readonly local_files=(
-    ".config/fish/local.fish"
-    ".config/git/local.gitconfig"
-    ".config/hammerspoon/local.lua"
-    ".config/kitty/colors.conf"
-    ".config/kitty/remotes"
-    ".config/tmux/local.conf"
-    ".local.profile"
-)
-
 # Options
 clean=false
 yes=false
@@ -54,25 +42,19 @@ main() {
 }
 
 link_dotfiles() {
-    # Create local files and ignore them in the repo.
-    exclude=".git/info/exclude"
-    for f in "${local_files[@]}"; do
-        if ! [[ -f "$f" ]]; then
-            run touch "$f"
-            [[ "$f" == .profile.local ]] && echo "# shellcheck shell=sh" > "$f"
-        fi
-        if ! grep -qxF "/$f" "$exclude"; then
-            echo "/$f" >> "$exclude"
-        fi
-    done
-
-    # Symlink dotfiles.
     while read -r f; do
+        [[ "$f" != /* ]] && continue
+        f=${f#/}
+        [[ -f "$f" ]] && continue
+        run touch "$f"
+        case "$f" in
+            .local.profile) echo "# shellcheck shell=sh" > "$f" ;;
+        esac
+    done < .gitignore
+
+    while read -r f; do
+        [[ "$f" != .* ]] && continue
         f=${f#./}
-        # Skip if it's ignored by .gitignore (not by .git/info/exclude).
-        if git check-ignore -v "$f" | awk -F: '$1 ~ /exclude$/ { exit 1 }'; then
-            continue
-        fi
         if [[ $yes != true ]]; then
             echo -n "link ~/$f? (y/N) "
             read -r reply
@@ -83,7 +65,7 @@ link_dotfiles() {
         say=
         [[ "$(readlink ~/"$f")" != "$dest" ]] && say=run
         $say ln -sf "$dest" ~/"$f"
-    done < <(find . -type f -path './.*' -not -path './.git/*')
+    done < <(git ls-files -cdo -X .config/git/ignore -x .gitignore)
 }
 
 clean_dotfiles() {

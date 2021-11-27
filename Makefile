@@ -10,7 +10,7 @@ help:
 	@echo "lint     lint shell files"
 
 install:
-	@./link.sh -cy
+	@./install.sh -cy
 
 lint:
 	shellcheck $(shell_files)

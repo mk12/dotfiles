@@ -1,0 +1,10 @@
+# This .gitignore is for the dofiles repository itself. It is not one of the
+# dotfiles being managed. For the global ignore file, see .config/git/ignore.
+
+/.config/fish/local.fish
+/.config/git/local.gitconfig
+/.config/hammerspoon/local.lua
+/.config/kitty/colors.conf
+/.config/tmux/local.conf
+/.local.profile
+/.projects
