@@ -276,13 +276,13 @@ Shortcut edit fish config (local)
 Shortcut delete hidden buffers
     \ nnoremap <Leader>eh :call DeleteHiddenBuffers()<CR>
 Shortcut edit journal file
-    \ nnoremap <Leader>ej :edit ~/ia/Journal/Journal.txt<CR>
+    \ nnoremap <Leader>ej :edit $PROJECTS/journal/Journal.txt<CR>
 Shortcut edit new buffer
     \ nnoremap <Leader>en :enew<CR>
 Shortcut edit shell config/profile
     \ nnoremap <Leader>ep :edit ~/.profile<CR>
 Shortcut edit shell config/profile (local)
-    \ nnoremap <Leader>eP :edit ~/.profile.local<CR>
+    \ nnoremap <Leader>eP :edit ~/.local.profile<CR>
 Shortcut reload current buffer
     \ nnoremap <Leader>er :edit!<CR>
 Shortcut resolve symlinks
@@ -503,7 +503,7 @@ augroup custom
     autocmd FileType sql setlocal commentstring=--\ %s
 
     autocmd FileType text,markdown setlocal textwidth=0 colorcolumn=0
-    autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81
+    autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81,101,121
 
     autocmd FileType j let b:AutoPairs = {}
     autocmd FileType lisp,scheme
@@ -533,9 +533,6 @@ augroup custom
 
     " Exit fugitive windows consistently with q.
     autocmd BufEnter fugitive://*//* nnoremap <buffer> <silent> q :bdelete<CR>
-
-    " Recognize my .profile.local file.
-    autocmd BufNewFile,BufRead .profile.local setfiletype sh
 
     " Redraw after leaving the command-line window to close it.
     " https://vi.stackexchange.com/a/18178
