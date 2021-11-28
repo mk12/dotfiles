@@ -17,9 +17,12 @@ let g:airline_theme = 'base16_vim'
 
 let g:dispatch_no_maps = 1
 
-let g:gitgutter_map_keys = 0
+" Remove once https://github.com/blankname/vim-fish/pull/6 is merged.
+let g:fish_indent_cont = 4
 
-let g:polyglot_disabled = ['fish']
+let g:fugitive_legacy_commands = 0
+
+let g:gitgutter_map_keys = 0
 
 let g:VimuxPromptString = "Vimux: "
 let g:VimuxHeight = "30"
@@ -45,10 +48,9 @@ Plug MyPlugin('vim-meta')
 Plug 'Clavelito/indent-awk.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'benmills/vimux'
-Plug 'georgewitteman/vim-fish'
 Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/gv.vim'
@@ -59,7 +61,7 @@ Plug 'mbbill/undotree'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'sgur/vim-textobj-parameter'
 Plug 'sheerun/vim-polyglot'
-Plug 'sunaku/vim-shortcut', { 'on' : ['Shortcut', 'Shortcut!', 'Shortcuts'] }
+Plug 'sunaku/vim-shortcut', { 'on' : 'Shortcut' }
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-apathy'
 Plug 'tpope/vim-commentary'
@@ -261,6 +263,8 @@ Shortcut show number of search matches
 Shortcut sort lines
     \ nnoremap <Leader>ds vip:sort<CR>
     \|xnoremap <Leader>ds :sort<CR>
+Shortcut generate project tags
+    \ nnoremap <Leader>dt :call GenerateTags()<CR>
 Shortcut remove trailing whitespace
     \ nnoremap <Leader>dw :%s/\s\+$//e<CR>
     \|xnoremap <Leader>dw :s/\s\+$//e<CR>
@@ -295,34 +299,34 @@ Shortcut format code
     \|xnoremap <Leader>f :call FormatCode()<CR>
 
 Shortcut git blame
-    \ nnoremap <Leader>gb :Gblame<CR>
+    \ nnoremap <Leader>gb :Git blame<CR>
 Shortcut git diff
-    \ nnoremap <Leader>gd :Gtabedit! diff<CR>
+    \ nnoremap <Leader>gd :tab Git diff<CR>
 Shortcut git diff current file
-    \ nnoremap <Leader>gD :Gdiff<CR>
+    \ nnoremap <Leader>gD :tab Gvdiffsplit<CR>
 Shortcut git status
-    \ nnoremap <Leader>gg :Gstatus<CR>
+    \ nnoremap <Leader>gg :Git<CR>
 Shortcut browse on GitHub
-    \ nnoremap <Leader>gh :Gbrowse<CR>
+    \ nnoremap <Leader>gh :GBrowse<CR>
 Shortcut git diff staged/cached/index
-    \ nnoremap <Leader>gi :Gtabedit! diff --staged<CR>
+    \ nnoremap <Leader>gi :tab Git diff --staged<CR>
 Shortcut git diff staged/cached/index current file
-    \ nnoremap <Leader>gI :Gtabedit @:%<Bar>Gdiff :<CR>
+    \ nnoremap <Leader>gI :Gtabedit :%<Bar>Gvdiffsplit @<CR>
 Shortcut git log
     \ nnoremap <Leader>gl :GV<CR>
     \|xnoremap <Leader>gl :GV<CR>
 Shortcut git log current file
     \ nnoremap <Leader>gL :GV!<CR>
 Shortcut git push
-    \ nnoremap <Leader>gp :Gpush<CR>
+    \ nnoremap <Leader>gp :Git push<CR>
 Shortcut git show HEAD
-    \ nnoremap <Leader>gs :Gtabedit! show<CR>
+    \ nnoremap <Leader>gs :tab Git show<CR>
 Shortcut git show HEAD current file
-    \ nnoremap <Leader>gS :Gtabedit @~:%<Bar>Gdiff @<CR>
+    \ nnoremap <Leader>gS :Gtabedit @:%<Bar>Gvdiffsplit @~<CR>
 Shortcut git update/pull
-    \ nnoremap <Leader>gu :Gpull<CR>
+    \ nnoremap <Leader>gu :Git pull<CR>
 Shortcut git update/pull (autostash)
-    \ nnoremap <Leader>gU :Gpull --autostash<CR>
+    \ nnoremap <Leader>gU :Git pull --autostash<CR>
 
 Shortcut find help
     \ nnoremap <Leader>h :Helptags<CR>
@@ -359,32 +363,10 @@ Shortcut lint code
     \ nnoremap <silent> <Leader>l :call LintCode('%')<CR>
     \|xnoremap <silent> <Leader>l :call LintCode()<CR>
 
-Shortcut open console
-    \ nnoremap <Leader>mc :Console<CR>
-Shortcut open console in background
-    \ nnoremap <Leader>mC :Console!<CR>
 Shortcut dispatch default task
-    \ nnoremap <Leader>md :Dispatch<CR>
-Shortcut dispatch default task in background
-    \ nnoremap <Leader>mD :Dispatch!<CR>
+    \ nnoremap <Leader>m :Dispatch<CR>
 Shortcut select default dispatch task
-    \ nnoremap <Leader>mf :FocusDispatch<Space>
-Shortcut clear default dispatch task
-    \ nnoremap <Leader>mF :FocusDispatch<CR>
-Shortcut make/build project
-    \ nnoremap <Leader>mm :Make<CR>
-Shortcut make/build project in background
-    \ nnoremap <Leader>mM :Make!<CR>
-Shortcut open build results
-    \ nnoremap <Leader>mo :Copen<CR>
-Shortcut open catch-all build results
-    \ nnoremap <Leader>mO :Copen<CR>
-Shortcut start project
-    \ nnoremap <Leader>ms :Start<CR>
-Shortcut start project in background
-    \ nnoremap <Leader>mS :Start!<CR>
-Shortcut generate project tags
-    \ nnoremap <Leader>mt :call GenerateTags()<CR>
+    \ nnoremap <Leader>M :FocusDispatch<Space>
 
 Shortcut stop highlighting the search
     \ nnoremap <Leader>n :nohlsearch<CR>
@@ -398,7 +380,7 @@ Shortcut update plugins
 
 Shortcut quit
     \ nnoremap <Leader>q :quit<CR>
-    Shortcut force quit
+Shortcut force quit
     \ nnoremap <Leader>Q :quit!<CR>
 
 Shortcut reload/source vimrc or init.vim
@@ -525,14 +507,10 @@ augroup custom
     " Sometimes Airline doesn't clean up properly.
     autocmd BufWipeout * call airline#extensions#tabline#buflist#clean()
 
-    " Exit help window with q.
-    autocmd filetype help nnoremap <buffer> <silent> q :close<CR>
-
-    " Exit dirvish with q.
+    " Exit things with q.
+    autocmd filetype help,git,fugitive* nnoremap <buffer> <silent> q :close<CR>
     autocmd filetype dirvish nmap <buffer> <silent> q <Plug>(dirvish_quit)
-
-    " Exit fugitive windows consistently with q.
-    autocmd BufEnter fugitive://*//* nnoremap <buffer> <silent> q :bdelete<CR>
+    autocmd BufEnter fugitive://*//* nnoremap <buffer> <silent> q :tabclose<CR>
 
     " Redraw after leaving the command-line window to close it.
     " https://vi.stackexchange.com/a/18178
