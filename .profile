@@ -1,25 +1,31 @@
 # shellcheck shell=sh
 
-set_paths() {
-    # Note: These go from lowest to highest precedence.
-    set -- /opt/homebrew ~/.fzf ~/.go ~/.cargo ~/.local
+# =========== PATH =============================================================
+
+set_path() {
+    path=:
     for prefix in "$@"; do
-        for x in PATH:sbin PATH:bin MANPATH:share/man INFOPATH:share/info; do
-            var=${x%:*}
-            dir=$prefix/${x#*:}
-            eval "val=\$$var"
-            # shellcheck disable=SC2154
-            case $val in
-                *"$dir"*) ;;
-                *) [ -d "$dir" ] && eval "$var=\$dir:\$$var" ;;
-            esac
+        for dir in "$prefix/bin" "$prefix/sbin"; do
+            [ -d "$dir" ] && path=$path$dir:
         done
     done
-    unset prefix x var dir val
+    saved_ifs=$IFS
+    IFS=:
+    for dir in $PATH; do
+        case $path in
+            *:$dir:*) ;;
+            *) path=$path$dir:
+        esac
+    done
+    IFS=$saved_ifs
+    path=${path#:}
+    path=${path%:}
+    export PATH="$path"
+    unset path prefix saved_ifs dir
 }
 
-set_paths
-unset -f set_paths
+set_path ~/.local ~/.cargo ~/.go /opt/homebrew
+unset -f set_path
 
 PROJECTS=$HOME/$(cat ~/.projects)
 export PROJECTS
