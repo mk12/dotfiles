@@ -27,36 +27,35 @@ set_path() {
 set_path ~/.local ~/.cargo ~/.go /opt/homebrew
 unset -f set_path
 
-PROJECTS=$HOME/$(cat ~/.projects)
-export PROJECTS
+# =========== Short variables ==================================================
 
 export BAT_THEME=base16
 export CLICOLOR=true
 export GOPATH=~/.go
-export LEDGER_EXPLICIT=true
-export LEDGER_FILE="$PROJECTS/finance/journal.ledger"
-export LEDGER_PRICE_DB="$PROJECTS/finance/pricedb"
-export LEDGER_STRICT=true
 export LESS=-FQRXi
 export PAGER=less
 
-export FZF_DEFAULT_OPTS="--history=$HOME/.fzf/history \
---color=bg+:10,bg:0,fg+:13,fg:12,header:4,hl+:4,hl:4,info:3,marker:6,pointer:6,\
-prompt:3,spinner:6"
+# =========== Long variables ===================================================
 
 export COQ_COLORS="constr.evar=37:constr.keyword=1:constr.notation=37:\
 constr.path=95:constr.reference=32:constr.type=33:message.debug=35;1:\
 message.error=31;1:message.warning=33;1:module.definition=91;1:\
 module.keyword=1:tactic.keyword=1:tactic.primitive=32:tactic.string=91"
 
+export FZF_DEFAULT_OPTS="--history=$HOME/.local/state/fzf/history \
+--height=95% --layout=reverse --info=inline --border \
+--bind='alt-<:first,alt->:last,alt-p:toggle-preview,\
+alt-/:change-preview-window(right),alt--:change-preview-window(bottom)' \
+--color=bg+:10,bg:0,fg+:13,fg:12,header:4,hl+:4,hl:4,info:3,marker:6,pointer:6,\
+prompt:3,spinner:6"
+
+# =========== Logic variables ==================================================
+
 if command -v fd > /dev/null 2>&1; then
-    export FZF_DEFAULT_COMMAND='fd --type file'
-elif command -v rg > /dev/null 2>&2; then
-    export FZF_DEFAULT_COMMAND='rg --files'
-else
-    export FZF_DEFAULT_COMMAND=''
+    export FZF_DEFAULT_COMMAND="fd --type file --strip-cwd-prefix"
+elif command -v rg > /dev/null 2>&1; then
+    export FZF_DEFAULT_COMMAND="rg --files"
 fi
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 if command -v nvim > /dev/null 2>&1; then
     export EDITOR=nvim
@@ -66,5 +65,12 @@ else
     export VISUAL=vim
 fi
 
+# =========== Local config =====================================================
 
+# shellcheck source=.local.profile
 . ~/.local.profile
+
+if [ -z "$PROJECTS" ]; then
+    # shellcheck disable=SC3028
+    echo "${BASH_SOURCE:-$0}: PROJECTS is unset!" >&2
+fi
