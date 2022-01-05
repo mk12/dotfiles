@@ -21,14 +21,14 @@ run() {
 
 usage() {
     cat <<EOS
-usage: $0 [-hcy]
+Usage: $0 [-hcy]
 
 Symlink dotfiles in the home directory.
 
 Options:
-    -h  show this help message
-    -c  also clean stale symlinks
-    -y  skip yes/no prompts
+    -h  Show this help message
+    -c  Also clean stale symlinks
+    -y  Skip yes/no prompts
 EOS
 }
 
@@ -54,6 +54,7 @@ link_dotfiles() {
 
     while read -r f; do
         [[ "$f" != .* ]] && continue
+        [[ "$f" == .gitignore ]] && continue
         f=${f#./}
         if [[ $yes != true ]]; then
             echo -n "link ~/$f? (y/N) "
@@ -65,7 +66,7 @@ link_dotfiles() {
         say=
         [[ "$(readlink ~/"$f")" != "$dest" ]] && say=run
         $say ln -sf "$dest" ~/"$f"
-    done < <(git ls-files -cdo -X .config/git/ignore -x .gitignore)
+    done < <(git ls-files -cdo -X .config/git/ignore)
 }
 
 clean_dotfiles() {

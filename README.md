@@ -77,7 +77,7 @@ I got the idea for this from [GitHub does dotfiles][gdd].
 
 ## License
 
-© 2021 Mitchell Kember
+© 2022 Mitchell Kember
 
 Dotfiles is available under the MIT License; see [LICENSE](LICENSE.md) for details.
 

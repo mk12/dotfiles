@@ -1,5 +1,6 @@
 # shellcheck shell=bash
 
+# shellcheck source=.profile
 source ~/.profile
 
 [[ $- != *i* ]] && return
