@@ -12,15 +12,14 @@ end
 
 # =========== Shortcuts ========================================================
 
-abbr g git
-abbr v vim
-abbr xd hexyl
-abbr zb 'zig build'
+abbr -g g git
+abbr -g v vim
+abbr -g hex hexyl
+abbr -g zb 'zig build'
 
 alias vi=$EDITOR
 alias vim=$EDITOR
 alias e='emacsclient -t -a ""'
-alias zig=$PROJECTS/zig/build/bin/zig
 
 if command -qv exa
     alias l=exa
@@ -38,21 +37,6 @@ end
 
 function refish --description "Reload fish config files"
     source ~/.config/fish/config.fish
-end
-
-function z --description "Jump around"
-    set -g prev_z_argv $argv
-    __z $argv
-end
-
-function zi --description "Like z, but choose with fzf"
-    if test (count $argv) -ge 1
-        set -g prev_z_argv $argv
-    end
-    if not set result (__z $prev_z_argv -l 2> /dev/null | fzf)
-        return
-    end
-    cd (echo $result | sed -E 's/^[0-9.]+[ \t]+//')
 end
 
 function tm --description "Connect to local or remote tmux session"
@@ -78,39 +62,98 @@ function add_alert --description "Add '; alert' to the end of the command"
     end
 end
 
-function fzf_open_project --description "Open a project file using fzf"
-    set -g FZF_OPEN_OPTS \
-        "--preview='$HOME/.vim/plugged/fzf.vim/bin/preview.sh {}'"
-    if test $COLUMNS -ge 179
-        set -a FZF_OPEN_OPTS " --preview-window=right:50%"
-    else
-        set -a FZF_OPEN_OPTS " --preview-window=top:50%"
+function insert_fzf --description "Insert a file or directory with fzf"
+    set token (commandline -t)
+    set parts (string split -n / $token)
+    set i -1
+    while true
+        set root (string join / $parts[..$i])
+        if test -d "$root" -o -z "$root"
+            set -e parts[..$i]
+            set query (string join / $parts)
+            break
+        end
+        set i (math $i - 1)
     end
-    if test -d .git
-        # TODO: Replace with --deduplicate once git 3.21 is widespread.
-        set -g FZF_OPEN_COMMAND 'git ls-files | uniq'
-        __fzf_open --editor
-    else
-        set -e FZF_OPEN_COMMAND
-        __fzf_open --editor
+    set tmp (mktemp)
+    set side bottom
+    test $COLUMNS -ge 100; and set side right
+    set files (
+        fzf-command-helper $tmp init "$root" $argv \
+        | fzf --query=$query --multi --keep-right \
+        --preview="fzf-preview-helper {}" \
+        --preview-window=$side \
+        --bind="ctrl-o:reload(fzf-command-helper '$tmp' file)" \
+        --bind="alt-o:reload(fzf-command-helper '$tmp' directory)" \
+        --bind="alt-z:reload(fzf-command-helper '$tmp' z)" \
+        --bind="alt-h:reload(fzf-command-helper '$tmp' toggle-hidden)" \
+        --bind="alt-i:reload(fzf-command-helper '$tmp' toggle-ignore)" \
+        --bind="alt-up:reload(fzf-command-helper '$tmp' up)" \
+        --bind="alt-down:reload(fzf-command-helper '$tmp' down {})" \
+    )
+    set files (string split -n \n (string replace -r "^~" $HOME $files))
+    # Workaround for https://github.com/fish-shell/fish-shell/issues/5945
+    printf "\x1b[A"
+    if test (count $files) -eq 0
+        commandline -i " "
+        commandline -f backward-delete-char
+        return
     end
-    set -e FZF_OPEN_COMMAND
-    set -e FZF_OPEN_OPTS
+    for file in $files
+        set escaped $escaped (string escape -- $file)
+    end
+    set escaped (string join ' ' $escaped)
+    if test (commandline) != $token -o (count $files) -gt 1
+        commandline -t $escaped
+    else if test -d $files
+        commandline -r "cd $escaped"
+        commandline -f execute
+    else if test -f $files -a ! -x $files
+        commandline -r "$EDITOR $escaped"
+        commandline -f execute
+    else
+        commandline -t $escaped
+    end
+    rm -f $tmp
+end
+
+function fzf_history --description "Search command history with fzf"
+    history merge
+    history -z \
+        | fzf --read0 \
+        --tiebreak=index \
+        --query=(commandline) \
+        --preview="echo -- {} | fish_indent --ansi" \
+        --preview-window="bottom:3:wrap" \
+        | read -lz cmd
+    and commandline -- $cmd
+    commandline -f repaint
+end
+
+function code --description "Open in VS Code"
+    # If not passing flags, use the open command on macOS because it's faster
+    # and avoids a bouncing animation in the Dock.
+    # https://github.com/microsoft/vscode/issues/60579
+    not string match -q -- "-*" "$argv[1]"
+    and test (uname -s) = Darwin
+    if test $status -eq 0
+        test -e $argv[1]; or touch $argv[1]
+        open -b com.microsoft.VSCode $argv[1]
+    else
+        command code $argv
+    end
 end
 
 # =========== Keybindings ======================================================
 
-# Use only the fzf bindings Ctrl-o, Ctrl-r.
-set -x FZF_LEGACY_KEYBINDINGS 0
-bind -e \ec \eC \eo \eO
-bind -M insert -e \ec \eC \eo \eO
+bind \co "insert_fzf file"
+bind \cr fzf_history
 
 bind \ea add_alert
-bind \ec __fzf_cd
-bind \ed __fzf_cd
-bind \ef __fzf_find_file
-bind \ek kitty-colors "commandline -f repaint"
-bind \eo fzf_open_project
+bind \ec kitty-colors "commandline -f repaint"
+bind \er refish
+bind \eo "insert_fzf directory"
+bind \ez "insert_fzf z"
 
 # These bindings match https://github.com/mk12/vim-meta.
 bind \e\[1\;4C forward-bigword
