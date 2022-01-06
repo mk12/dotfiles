@@ -80,18 +80,20 @@ function insert_fzf --description "Insert a file or directory with fzf"
     test $COLUMNS -ge 100; and set side right
     set files (
         fzf-command-helper $tmp init "$root" $argv \
-        | fzf --query=$query --multi --keep-right \
-        --preview="fzf-preview-helper {}" \
+        | fzf --query=$query --multi --keep-right --header-lines=1 \
+        --preview="fzf-preview-helper {} '$tmp'" \
         --preview-window=$side \
         --bind="ctrl-o:reload(fzf-command-helper '$tmp' file)" \
         --bind="alt-o:reload(fzf-command-helper '$tmp' directory)" \
         --bind="alt-z:reload(fzf-command-helper '$tmp' z)" \
-        --bind="alt-h:reload(fzf-command-helper '$tmp' toggle-hidden)" \
+        --bind="alt-.:reload(fzf-command-helper '$tmp' toggle-hidden)" \
         --bind="alt-i:reload(fzf-command-helper '$tmp' toggle-ignore)" \
-        --bind="alt-up:reload(fzf-command-helper '$tmp' up)" \
-        --bind="alt-down:reload(fzf-command-helper '$tmp' down {})" \
+        --bind="alt-h:reload(fzf-command-helper '$tmp' home)+clear-query" \
+        --bind="alt-up:reload(fzf-command-helper '$tmp' up)+clear-query" \
+        --bind="alt-down:reload(fzf-command-helper '$tmp' down {})+clear-query" \
+        | fzf-command-helper $tmp finish
     )
-    set files (string split -n \n (string replace -r "^~" $HOME $files))
+    set files (string split -n \n $files)
     # Workaround for https://github.com/fish-shell/fish-shell/issues/5945
     printf "\x1b[A"
     if test (count $files) -eq 0
@@ -104,7 +106,7 @@ function insert_fzf --description "Insert a file or directory with fzf"
     end
     set escaped (string join ' ' $escaped)
     if test (commandline) != $token -o (count $files) -gt 1
-        commandline -t $escaped
+        commandline -t "$escaped "
     else if test -d $files
         commandline -r "cd $escaped"
         commandline -f execute
@@ -112,9 +114,8 @@ function insert_fzf --description "Insert a file or directory with fzf"
         commandline -r "$EDITOR $escaped"
         commandline -f execute
     else
-        commandline -t $escaped
+        commandline -t "$escaped "
     end
-    rm -f $tmp
 end
 
 function fzf_history --description "Search command history with fzf"
