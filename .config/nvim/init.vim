@@ -33,22 +33,22 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-function! MyPlugin(name)
-    let l:path = $PROJECTS . '/' . a:name
-    return isdirectory(l:path) ? l:path : 'mk12/' . a:name
+function! LocalPlugin(name)
+    let l:path = substitute(a:name, '^[^/]\+', $PROJECTS, '')
+    return isdirectory(l:path) ? l:path : a:name
 endfunction
 
 call plug#begin()
 
-Plug MyPlugin('base16-vim')
-Plug MyPlugin('vim-meta')
+Plug LocalPlugin('junegunn/fzf')
+Plug LocalPlugin('mk12/base16-vim')
+Plug LocalPlugin('mk12/vim-meta')
 
 Plug 'Clavelito/indent-awk.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'benmills/vimux'
 Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
-Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/gv.vim'
@@ -729,7 +729,7 @@ function! SwitchProject() abort
         \ 'source': 'z-projects',
         \ 'options': [
             \ '--prompt', 'Projects> ',
-            \ '--preview', 'bat --color=always --plain $PROJECTS/{}/README.md',
+            \ '--preview', 'bat --plain --color=always $PROJECTS/{}/README.md',
         \ ],
         \ 'sink': {dir -> s:SwitchProjectSink(dir)},
     \ }))
