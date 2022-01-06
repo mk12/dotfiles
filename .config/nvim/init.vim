@@ -60,15 +60,12 @@ Plug 'michaeljsmith/vim-indent-object'
 Plug 'sgur/vim-textobj-parameter'
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : 'Shortcut' }
-Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-apathy'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
-Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
@@ -249,8 +246,6 @@ Shortcut show number of search matches
 Shortcut sort lines
     \ nnoremap <Leader>ds vip:sort<CR>
     \|xnoremap <Leader>ds :sort<CR>
-Shortcut generate project tags
-    \ nnoremap <Leader>dt :call GenerateTags()<CR>
 Shortcut remove trailing whitespace
     \ nnoremap <Leader>dw :%s/\s\+$//e<CR>
     \|xnoremap <Leader>dw :s/\s\+$//e<CR>
@@ -333,10 +328,6 @@ Shortcut jump to project directory
     \ nnoremap <silent> <Leader>jp :call SwitchProject()<CR>
 Shortcut jump to command history
     \ nnoremap <Leader>jr :History:<CR>
-Shortcut jump to tag
-    \ nnoremap <Leader>jt :call BrowseTags()<CR>
-Shortcut jump to tag in buffer
-    \ nnoremap <Leader>jT :BTags<CR>
 Shortcut jump to search history
     \ nnoremap <Leader>j/ :History/<CR>
 
@@ -464,8 +455,6 @@ Shortcut yank to system clipboard
 
 augroup custom
     autocmd!
-
-    autocmd User ProjectionistActivate call LoadCustomProjections()
 
     autocmd FileType c,cpp setlocal commentstring=//\ %s comments^=:///
     autocmd FileType sql setlocal commentstring=--\ %s
@@ -741,18 +730,6 @@ function! s:SwitchProjectSink(dir) abort
     echomsg 'Switched to ' . l:cwd
 endfunction
 
-function! BrowseTags() abort
-    if empty(tagfiles())
-        call s:Error('No tags file found')
-        return
-    endif
-    try
-        Tags
-    catch
-        call s:EchoException()
-    endtry
-endfunction
-
 " http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window#Script
 function! KillBuffer(bang) abort
     if empty(a:bang) && (&modified is 1 || &buftype is# 'terminal')
@@ -815,16 +792,6 @@ function! LintCode(...) abort range
     execute l:range . 'w !' . l:cmd
 endfunction
 
-function! GenerateTags() abort
-    call s:Warning('Preparing tags')
-    call system(get(b:, 'tags_command', 'ctags -R'))
-    if empty(tagfiles())
-        call s:Error('Failed to create tags')
-    else
-        echomsg 'Finished generating tags'
-    endif
-endfunction
-
 function! ToggleColumnLimit() abort
     if &tw is 0 || empty(&colorcolumn) || &colorcolumn is# '0'
         let &l:textwidth = get(b:, 'ColumnLimit', 80)
@@ -867,26 +834,3 @@ function! DisableSyntaxForDiff() abort
     endif
 endfunction
 
-function! LoadCustomProjections() abort
-    for [l:root, l:value] in projectionist#query('filetype')
-        let &l:filetype = l:value
-        break
-    endfor
-    for [l:root, l:value] in projectionist#query('textwidth')
-        let b:column_limit = l:value
-        let &l:textwidth = l:value
-        break
-    endfor
-    for [l:root, l:value] in projectionist#query('format_command')
-        let b:format_command = l:value
-        break
-    endfor
-    for [l:root, l:value] in projectionist#query('lint_command')
-        let b:lint_command = l:value
-        break
-    endfor
-    for [l:root, l:value] in projectionist#query('tags_command')
-        let b:tags_command = l:value
-        break
-    endfor
-endfunction
