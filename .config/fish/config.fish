@@ -145,6 +145,15 @@ function code --description "Open in VS Code"
     end
 end
 
+function asdf --description "Wrapper for asdf"
+    switch $argv[1]
+        case shell
+            command asdf export-shell-version fish $argv[2..] | source
+        case '*'
+            command asdf $argv
+    end
+end
+
 # =========== Keybindings ======================================================
 
 bind \co "insert_fzf file"
