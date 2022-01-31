@@ -62,75 +62,6 @@ function add_alert --description "Add '; alert' to the end of the command"
     end
 end
 
-function insert_fzf --description "Insert a file or directory with fzf"
-    set token (commandline -t)
-    set parts (string split -n / $token)
-    set i -1
-    while true
-        set root (string join / $parts[..$i])
-        if test -d "$root" -o -z "$root"
-            set -e parts[..$i]
-            set query (string join / $parts)
-            break
-        end
-        set i (math $i - 1)
-    end
-    set tmp (mktemp)
-    set side bottom
-    test $COLUMNS -ge 100; and set side right
-    set files (
-        fzf-command-helper $tmp init "$root" $argv \
-        | fzf --query=$query --multi --keep-right --header-lines=1 \
-        --preview="fzf-preview-helper {} '$tmp'" \
-        --preview-window=$side \
-        --bind="ctrl-o:reload(fzf-command-helper '$tmp' file)" \
-        --bind="alt-o:reload(fzf-command-helper '$tmp' directory)" \
-        --bind="alt-z:reload(fzf-command-helper '$tmp' z)" \
-        --bind="alt-.:reload(fzf-command-helper '$tmp' toggle-hidden)" \
-        --bind="alt-i:reload(fzf-command-helper '$tmp' toggle-ignore)" \
-        --bind="alt-h:reload(fzf-command-helper '$tmp' home)+clear-query" \
-        --bind="alt-up:reload(fzf-command-helper '$tmp' up)+clear-query" \
-        --bind="alt-down:reload(fzf-command-helper '$tmp' down {})+clear-query" \
-        | fzf-command-helper $tmp finish
-    )
-    set files (string split -n \n $files)
-    # Workaround for https://github.com/fish-shell/fish-shell/issues/5945
-    printf "\x1b[A"
-    if test (count $files) -eq 0
-        commandline -i " "
-        commandline -f backward-delete-char
-        return
-    end
-    for file in $files
-        set escaped $escaped (string escape -- $file)
-    end
-    set escaped (string join ' ' $escaped)
-    if test (commandline) != $token -o (count $files) -gt 1
-        commandline -t "$escaped "
-    else if test -d $files
-        commandline -r "cd $escaped"
-        commandline -f execute
-    else if test -f $files -a ! -x $files
-        commandline -r "$EDITOR $escaped"
-        commandline -f execute
-    else
-        commandline -t "$escaped "
-    end
-end
-
-function fzf_history --description "Search command history with fzf"
-    history merge
-    history -z \
-        | fzf --read0 \
-        --tiebreak=index \
-        --query=(commandline) \
-        --preview="echo -- {} | fish_indent --ansi" \
-        --preview-window="bottom:3:wrap" \
-        | read -lz cmd
-    and commandline -- $cmd
-    commandline -f repaint
-end
-
 function code --description "Open in VS Code"
     # If not passing flags, use the open command on macOS because it's faster
     # and avoids a bouncing animation in the Dock.
@@ -156,14 +87,9 @@ end
 
 # =========== Keybindings ======================================================
 
-bind \co "insert_fzf file"
-bind \cr fzf_history
-
 bind \ea add_alert
 bind \ec kitty-colors "commandline -f repaint"
 bind \er refish
-bind \eo "insert_fzf directory"
-bind \ez "insert_fzf z"
 
 # These bindings match https://github.com/mk12/vim-meta.
 bind \e\[1\;4C forward-bigword
