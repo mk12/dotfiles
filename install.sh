@@ -56,16 +56,15 @@ link_dotfiles() {
         [[ "$f" != .* ]] && continue
         [[ "$f" == .gitignore ]] && continue
         f=${f#./}
+        dest="$script_dir/$f"
+        [[ "$(readlink ~/"$f")" == "$dest" ]] && continue
         if [[ $yes != true ]]; then
             echo -n "link ~/$f? (y/N) "
-            read -r reply
+            read -r reply < /dev/tty
             [[ "$reply" =~ ^[Yy]$ ]] || continue
         fi
         mkdir -p "$(dirname ~/"$f")"
-        dest="$script_dir/$f"
-        say=
-        [[ "$(readlink ~/"$f")" != "$dest" ]] && say=run
-        $say ln -sf "$dest" ~/"$f"
+        run ln -sf "$dest" ~/"$f"
     done < <(git ls-files -cdo -X .config/git/ignore)
 }
 
