@@ -117,10 +117,8 @@ if has('vim_starting')
     set shiftwidth=4
 endif
 
+" Don't save backup files in the same directory.
 let &backupdir = $HOME . '/.local/share/nvim/backup'
-if !isdirectory(&backupdir)
-    call mkdir(&backupdir, 'p')
-endif
 
 " =========== Color scheme =====================================================
 
