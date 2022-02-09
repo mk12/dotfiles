@@ -594,7 +594,7 @@ endfunction
 
 function! MyFzf(type, ...) abort
     let l:root = get(a:, 1, '""')
-    let l:helper_dir = $PROJECTS . '/fish-fzf/functions/fzf_helpers'
+    let l:helper_dir = $HOME . '/.config/fish/functions/fzf_helpers'
     if !isdirectory(l:helper_dir)
         call s:Error("Directory not found: " . l:helper_dir)
         return
