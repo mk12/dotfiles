@@ -34,6 +34,7 @@ export BAT_THEME=base16
 export CLICOLOR=true
 export GOPATH=~/.go
 export LESS=-FQRXi
+export LS_COLORS=
 export PAGER=less
 
 # =========== Long variables ===================================================
