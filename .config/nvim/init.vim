@@ -146,6 +146,11 @@ inoremap kj <Esc>
 noremap ; :
 noremap : ;
 
+" Matches https://github.com/mk12/fish-fzf.
+nnoremap <silent> <C-O> :call MyFzf('file')<CR>
+nnoremap <silent> <C-Q> :call MyFzf('directory')<CR>
+nnoremap <silent> <M-Z> :call MyFzf('z')<CR>
+
 " Top/bottom mappings compatible with less and emacs.
 noremap <M-<> <C-Home>
 noremap <M->> <C-End>
@@ -170,10 +175,6 @@ nnoremap gV `[v`]
 
 inoremap <C-U> <C-G>u<C-U>
 
-" Use C-N and C-P to keep search results centred.
-nnoremap <C-N> nzz
-nnoremap <C-P> Nzz
-
 nnoremap <silent> & :&&<CR>
 xnoremap <silent> & :&&<CR>
 
@@ -194,7 +195,7 @@ nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 
 " Since <Tab> and <C-I> are the same, I need a new mapping for <C-I>.
-nnoremap <C-Q> <C-I>
+nnoremap <C-P> <C-I>
 
 nmap [h <Plug>(GitGutterPrevHunk)
 nmap ]h <Plug>(GitGutterNextHunk)
@@ -210,11 +211,9 @@ Shortcut open shortcut menu
     \|nnoremap <silent> <Leader>? :Shortcuts<CR>
 
 Shortcut go to file in project
-    \ nnoremap <silent> <Leader><Leader> :call ProjectFiles()<CR>
+    \ nnoremap <silent> <Leader><Leader> :call MyFzf('file')<CR>
 Shortcut go to file in same directory
-    \ nnoremap <silent> <Leader>. :Files %:h<CR>
-Shortcut go to file in a directory
-    \ nnoremap <silent> <expr> <Leader>, ':Files ' . InputDirectory() . '<CR>'
+    \ nnoremap <silent> <Leader>. :call MyFzf('file', expand('%:h'))<CR>
 Shortcut go to open buffer
     \ nnoremap <silent> <Leader><Tab> :Buffers<CR>
 Shortcut go to last buffer
@@ -573,12 +572,43 @@ function! PrevBufOrTab() abort
     endif
 endfunction
 
-function! ProjectFiles() abort
-    if !empty(glob('.git'))
-        GFiles
-    else
-        Files
+function! s:Edit(file)
+    execute 'edit' a:file
+endfunction
+
+function! MyFzf(type, ...) abort
+    let l:root = get(a:, 1, '""')
+    let l:helper_dir = $PROJECTS . '/fish-fzf/functions/fzf_helpers'
+    if !isdirectory(l:helper_dir)
+        call s:Error("Directory not found: " . l:helper_dir)
+        return
     endif
+    let l:command = l:helper_dir . '/fzf_command.sh'
+    let l:preview = l:helper_dir . '/fzf_preview.sh'
+    let l:temp = tempname()
+    let l:cts = l:command . ' ' . l:temp . ' '
+    try
+        call fzf#run(fzf#wrap({
+            \ 'source': join([l:command, l:temp, 'init', l:root, a:type]),
+            \ 'options': [
+                \ '--keep-right',
+                \ '--header-lines', '1',
+                \ '--preview', l:preview . ' {} ' . l:temp,
+                \ '--bind', 'ctrl-o:reload(' . l:cts . 'file)',
+                \ '--bind', 'ctrl-q:reload(' . l:cts . 'directory)',
+                \ '--bind', 'alt-z:reload(' . l:cts . 'z)',
+                \ '--bind', 'alt-.:reload(' . l:cts . 'toggle-hidden)',
+                \ '--bind', 'alt-i:reload(' . l:cts . 'toggle-ignore)',
+                \ '--bind', 'alt-h:reload(' . l:cts . 'home)+clear-query',
+                \ '--bind', 'alt-up:reload(' . l:cts . 'up)+clear-query',
+                \ '--bind', 'alt-down:reload(' . l:cts . 'down {})+clear-query',
+                \ '--bind', 'alt-enter:accept',
+            \ ],
+            \ 'sink': { choice -> s:Edit(system(l:cts . 'finish', choice)) },
+        \ }))
+    finally
+        call delete(l:temp)
+    endtry
 endfunction
 
 function! SearchProject(...) abort
