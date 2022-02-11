@@ -30,7 +30,7 @@ unset -f set_path
 # =========== Short variables ==================================================
 
 export ASDF_CONFIG_FILE=~/.config/asdf/asdfrc
-export BAT_THEME=base16
+export BAT_THEME=base16-256
 export CLICOLOR=true
 export GOPATH=~/.go
 export LESS=-FQRXi
