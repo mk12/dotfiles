@@ -33,6 +33,10 @@ if command -qv bat
     alias cat=bat
 end
 
+if command -qv git-branchless
+    alias git='git-branchless wrap'
+end
+
 # =========== Functions ========================================================
 
 function refish --description "Reload fish config files"
