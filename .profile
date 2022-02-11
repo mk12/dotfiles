@@ -40,15 +40,15 @@ export PAGER=less
 # =========== Long variables ===================================================
 
 export COQ_COLORS="constr.evar=37:constr.keyword=1:constr.notation=37:\
-constr.path=95:constr.reference=32:constr.type=33:message.debug=35;1:\
-message.error=31;1:message.warning=33;1:module.definition=91;1:\
-module.keyword=1:tactic.keyword=1:tactic.primitive=32:tactic.string=91"
+constr.path=38;5;21:constr.reference=32:constr.type=33:message.debug=35;1:\
+message.error=31;1:message.warning=33;1:module.definition=1;38;5;16:\
+module.keyword=1:tactic.keyword=1:tactic.primitive=32:tactic.string=38;5;16"
 
 export FZF_DEFAULT_OPTS="--history=$HOME/.local/state/fzf/history \
 --height=95% --layout=reverse --info=inline --border \
 --bind='alt-<:first,alt->:last,alt-p:toggle-preview,\
 alt-/:change-preview-window(right),alt--:change-preview-window(bottom)' \
---color=bg+:10,bg:0,fg+:13,fg:12,header:4,hl+:4,hl:4,info:3,marker:6,pointer:6,\
+--color=bg+:18,bg:0,fg+:21,fg:20,header:4,hl+:4,hl:4,info:3,marker:6,pointer:6,\
 prompt:3,spinner:6"
 
 # =========== Logic variables ==================================================

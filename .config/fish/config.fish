@@ -100,6 +100,7 @@ bind \eB backward-kill-bigword
 
 # =========== Variables ========================================================
 
+set fish_term24bit 0
 set fish_emoji_width 2
 
 set fish_color_autosuggestion brblack
@@ -121,7 +122,9 @@ set fish_pager_color_completion normal
 set fish_pager_color_description green
 set fish_pager_color_prefix white --bold --underline
 set fish_pager_color_progress cyan --bold
-set fish_color_search_match --background=brgreen
+
+# These hex colors match the xterm defaults for my base16 colors in slots 16-21.
+set fish_color_search_match "#0000ff" "--background=#000087"
 
 set pure_separate_prompt_on_error true
 

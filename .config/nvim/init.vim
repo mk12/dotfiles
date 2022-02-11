@@ -128,6 +128,10 @@ if has('termguicolors')
     set notermguicolors
 end
 
+" I'm not using chriskempson/base16-shell, but I am using mk12/base16-kitty,
+" which uses color slots 16-21 in the same way.
+let base16colorspace = 256
+
 " Explicitly set background to avoid auto-detection issues. It doesn't
 " matter whether it's light or dark for base16.
 set background=dark
