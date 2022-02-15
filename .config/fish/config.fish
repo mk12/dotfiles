@@ -42,6 +42,7 @@ end
 
 function refish --description "Reload fish config files"
     source ~/.config/fish/config.fish
+    echo "Reloaded fish config!"
 end
 
 function tm --description "Connect to local or remote tmux session"
