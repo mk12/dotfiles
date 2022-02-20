@@ -5,7 +5,7 @@
 set_path() {
     path=:
     for prefix in "$@"; do
-        for dir in "$prefix/bin" "$prefix/sbin" "$prefix/shims"; do
+        for dir in "$prefix/bin" "$prefix/sbin"; do
             [ -d "$dir" ] && path=$path$dir:
         done
     done
@@ -24,12 +24,11 @@ set_path() {
     unset path prefix saved_ifs dir
 }
 
-set_path ~/.asdf ~/.local ~/.cargo ~/.go /opt/homebrew
+set_path ~/.local ~/.cargo ~/.go /opt/homebrew
 unset -f set_path
 
 # =========== Short variables ==================================================
 
-export ASDF_CONFIG_FILE=~/.config/asdf/asdfrc
 export BAT_THEME=base16-256
 export CLICOLOR=true
 export GOPATH=~/.go
