@@ -2,35 +2,43 @@
 
 # =========== PATH =============================================================
 
-set_path() {
-    path=:
-    for prefix in "$@"; do
-        for dir in "$prefix/bin" "$prefix/sbin"; do
-            [ -d "$dir" ] && path=$path$dir:
-        done
-    done
+add_paths() {
+    var=$1; shift
+    dirs=$1; shift
+    new=:
     saved_ifs=$IFS
     IFS=:
-    for dir in $PATH; do
-        case $path in
+    for prefix; do
+        for dir in $dirs; do
+            [ -d "$prefix/$dir" ] && new=$new$prefix/$dir:
+        done
+    done
+    eval "old=\$$var"
+    # shellcheck disable=SC2154
+    for dir in $old; do
+        case $new in
             *:$dir:*) ;;
-            *) path=$path$dir:
+            *) new=$new$dir: ;;
         esac
     done
     IFS=$saved_ifs
-    path=${path#:}
-    path=${path%:}
-    export PATH="$path"
-    unset path prefix saved_ifs dir
+    new=${new#:}
+    new=${new%:}
+    eval "export $var=\$new"
+    unset var dirs new saved_ifs prefix dir old
 }
 
-set_path ~/.local ~/.cargo ~/.go /opt/homebrew
-unset -f set_path
+add_paths PATH bin:sbin ~/.local ~/.cargo ~/.go /opt/homebrew
+add_paths CPATH include ~/.local /opt/homebrew
+add_paths LIBRARY_PATH lib ~/.local /opt/homebrew
+
+unset -f add_paths
 
 # =========== Short variables ==================================================
 
 export BAT_THEME=base16-256
 export CLICOLOR=true
+export DENO_FUTURE_CHECK=1
 export GOPATH=~/.go
 export LESS=-FQRXi
 export LS_COLORS=
