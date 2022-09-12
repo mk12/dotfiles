@@ -106,7 +106,8 @@ set fish_pager_color_description green
 set fish_pager_color_prefix white --bold --underline
 set fish_pager_color_progress cyan --bold
 
-# These hex colors match the xterm defaults for my base16 colors in slots 16-21.
+# Fish doesn't allow a 0-255 color palette number, so I use these hex colors
+# which match xterm defaults in slots 16-21 where I have base16 colors.
 set fish_color_search_match "#0000ff" "--background=#000087"
 
 set pure_separate_prompt_on_error true
