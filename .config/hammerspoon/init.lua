@@ -504,6 +504,75 @@ local function playChimes()
     end
 end
 
+-- ========== Moves windows ====================================================
+
+local function moveFocusedWindowToNextScreen()
+    local w = hs.window.focusedWindow()
+    if not w then
+        log.i("there is no focused window")
+        return
+    end
+    local screens = hs.screen.allScreens()
+    local current = w:screen()
+    local found
+    for i, screen in ipairs(screens) do
+        if screen == current then
+            found = i
+            break
+        end
+    end
+    if not found then
+        log.e("could not find screen for window '" .. w:title() .. "'")
+        return
+    end
+    if w:isFullScreen() then
+        full_screen = true
+        w:setFullScreen(false)
+        hs.timer.doAfter(0.6, function()
+            w:setFullScreen(true)
+        end)
+    end
+    w:moveToScreen(
+        screens[found % #screens + 1],
+        true, -- maintain size
+        true, -- ensure in bounds
+        false
+    )
+end
+
+-- ========== Diffing =========================================================
+
+local diffFileA = "/tmp/hammerspoon-diff-A"
+local diffFileB = "/tmp/hammerspoon-diff-B"
+
+local function startDiff()
+    hs.eventtap.keyStroke({"cmd"}, "C")
+    local file, err = io.open(diffFileA, "w")
+    if not file then
+        log.e("Cannot open file: " .. err)
+        return
+    end
+    file:write(hs.pasteboard.getContents())
+    file:close()
+end
+
+local function endDiff()
+    hs.eventtap.keyStroke({"cmd"}, "C")
+    local file, err = io.open(diffFileB, "w")
+    if not file then
+        log.e("Cannot open file: " .. err)
+        return
+    end
+    file:write(hs.pasteboard.getContents())
+    file:close()
+    local output, success = executeWithProfile(
+        "git diff -w --no-index -- " .. diffFileA .. " " .. diffFileB
+        .. " | diff2html -i stdin -s side")
+    if not success then
+        log.e("diff2html failed:\n\n" .. output)
+    end
+end
+
 -- ========== Shortcuts ========================================================
 
 -- Global modifier combination unlikely to be used by other programs.
@@ -531,6 +600,13 @@ hs.hotkey.bind(hyper, "C", syncKittyToDarkModeForce)
 -- Toggle Westminster chimes.
 hs.hotkey.bind(hyper, "M", toggleChimesEnabled)
 
+-- Shortcuts for moving windows.
+hs.hotkey.bind({"ctrl"}, "§", moveFocusedWindowToNextScreen)
+
+-- Shortcuts for diffing.
+hs.hotkey.bind(hyper, "A", startDiff)
+hs.hotkey.bind(hyper, "B", endDiff)
+
 -- ========== Timers ===========================================================
 
 -- Note: Recurring timers must be assigned to global variables, otherwise GC
@@ -552,4 +628,5 @@ hs.ipc.cliInstall(os.getenv("HOME") .. "/.local")
 
 -- ========== Local config =====================================================
 
+-- TODO: Add way of accessing hyper, executeWithProfile, etc. in local.lua.
 require("local")
