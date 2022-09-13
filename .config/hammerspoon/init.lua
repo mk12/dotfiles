@@ -504,7 +504,7 @@ local function playChimes()
     end
 end
 
--- ========== Moves windows ====================================================
+-- ========== Move windows =====================================================
 
 local function moveFocusedWindowToNextScreen()
     local w = hs.window.focusedWindow()
@@ -540,7 +540,24 @@ local function moveFocusedWindowToNextScreen()
     )
 end
 
--- ========== Diffing =========================================================
+-- ========== Display scaling ==================================================
+
+local function fixBuiltinDisplayScale()
+    local all = hs.screen.allScreens()
+    for _, screen in ipairs(all) do
+        if screen:name() == "Built-in Retina Display" then
+            local mode = screen:currentMode()
+            local alone = #all == 1
+            local w = alone and 1728 or 1496
+            local h = alone and 1117 or 967
+            local scale = 2
+            screen:setMode(w, h, scale, mode.freq, mode.depth)
+            return
+        end
+    end
+end
+
+-- ========== Diffing ==========================================================
 
 local diffFileA = "/tmp/hammerspoon-diff-A"
 local diffFileB = "/tmp/hammerspoon-diff-B"
@@ -584,12 +601,14 @@ hs.hotkey.bind(hyper, "R", hs.reload)
 -- Commonly-used files and projects.
 hs.hotkey.bind(hyper, "J",
     openAppFn("iA Writer", projectsDir .. "/journal/Today.txt"))
-hs.hotkey.bind(hyper, "D",
-    openAppFn("Visual Studio Code", projectsDir .. "/dotfiles"))
-hs.hotkey.bind(hyper, "S",
-    openAppFn("Visual Studio Code", projectsDir .. "/scripts"))
 hs.hotkey.bind(hyper, "F",
     openAppFn("Visual Studio Code", projectsDir .. "/finance"))
+
+-- TODO: Make a single shortcut to choose among git projects.
+-- hs.hotkey.bind(hyper, "D",
+--     openAppFn("Visual Studio Code", projectsDir .. "/dotfiles"))
+-- hs.hotkey.bind(hyper, "S",
+--     openAppFn("Visual Studio Code", projectsDir .. "/scripts"))
 
 -- Shortcuts for kitty.
 hs.hotkey.bind({"ctrl"}, "space", showOrHideMainKittyInstance)
@@ -600,8 +619,11 @@ hs.hotkey.bind(hyper, "C", syncKittyToDarkModeForce)
 -- Toggle Westminster chimes.
 hs.hotkey.bind(hyper, "M", toggleChimesEnabled)
 
--- Shortcuts for moving windows.
+-- Shortcut for moving windows.
 hs.hotkey.bind({"ctrl"}, "§", moveFocusedWindowToNextScreen)
+
+-- Shortcut for fixing display scale ("P" for "pixels").
+hs.hotkey.bind(hyper, "P", fixBuiltinDisplayScale)
 
 -- Shortcuts for diffing.
 hs.hotkey.bind(hyper, "A", startDiff)
