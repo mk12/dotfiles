@@ -16,12 +16,14 @@
     fx = commit --amend --reuse-message=HEAD
     rb = rebase
     rbo = rebase HEAD~ --onto
+    rc = -c core.editor=true rebase --continue
     cp = cherry-pick
     sh = stash
     unstage = reset HEAD --
     l = log
     last = log -1 HEAD
     lol = log --oneline --graph --
+    unmerged = diff --name-only --diff-filter=U
 [color]
     ui = auto
 [init]
