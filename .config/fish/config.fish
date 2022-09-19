@@ -35,6 +35,9 @@ function replug --description "Update plugins, symlinking local ones"
         end
     end
     printf "%s\n" $external | sort >$config_dir/fish_plugins
+    if ! functions -q fisher
+        curl -sL https://git.io/fisher | source
+    end
     fisher update
 end
 
