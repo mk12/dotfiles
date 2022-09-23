@@ -626,6 +626,7 @@ hs.hotkey.bind({"ctrl"}, "§", moveFocusedWindowToNextScreen)
 hs.hotkey.bind(hyper, "P", fixBuiltinDisplayScale)
 
 -- Shortcuts for diffing.
+-- Requires `npm install -g html2diff-cli`.
 hs.hotkey.bind(hyper, "A", startDiff)
 hs.hotkey.bind(hyper, "B", endDiff)
 
