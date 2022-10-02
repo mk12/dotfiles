@@ -53,8 +53,9 @@ module.keyword=1:tactic.keyword=1:tactic.primitive=32:tactic.string=38;5;16"
 
 export FZF_DEFAULT_OPTS="--history=$HOME/.local/state/fzf/history \
 --height=95% --layout=reverse --info=inline --border \
---bind='alt-<:first,alt->:last,alt-p:toggle-preview,\
-alt-/:change-preview-window(right),alt--:change-preview-window(bottom)' \
+--bind='alt-<:first,alt->:last,alt-p:toggle-preview,ctrl-f:preview-page-down,\
+ctrl-b:preview-page-up,alt-/:change-preview-window(right),\
+alt--:change-preview-window(bottom)' \
 --color=bg+:18,bg:0,fg+:21,fg:20,header:4,hl+:4,hl:4,info:3,marker:6,pointer:6,\
 prompt:3,spinner:6"
 
