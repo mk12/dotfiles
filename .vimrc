@@ -177,6 +177,12 @@ noremap <M->> <C-End>
 inoremap <M-<> <C-O><C-Home>
 inoremap <M->> <C-O><C-End>
 
+" Undo/redo compatible with fish.
+nnoremap <C-_> u
+inoremap <C-_> <C-O>u
+nnoremap <M-/> u
+inoremap <M-/> <C-O>u
+
 " Jump between open windows.
 nnoremap <C-J> <C-W>w
 
