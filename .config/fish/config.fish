@@ -113,6 +113,11 @@ bind \e\[3\;4~ kill-bigword
 bind \eB backward-kill-bigword
 bind \e\[107\;6u kill-whole-line
 
+# Use \e\\ for undo instead of the default (\cz, \c/, or \c-) so that vim can
+# use it too and kitty can map cmd+z to it. (Vim needs \c- for navigation.)
+bind \e\\ undo
+bind \e/ redo
+
 # =========== Variables ========================================================
 
 set fish_term24bit 0

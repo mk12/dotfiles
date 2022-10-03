@@ -157,8 +157,8 @@ inoremap <M-<> <C-O><C-Home>
 inoremap <M->> <C-O><C-End>
 
 " Undo/redo compatible with fish.
-nnoremap <C-_> u
-noremap! <C-_> <C-O>u
+nnoremap <M-\> u
+noremap! <M-\> <C-O>u
 nnoremap <M-/> <C-R>
 noremap! <M-/> <C-O><C-R>
 
