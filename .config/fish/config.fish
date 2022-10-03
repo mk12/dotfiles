@@ -111,6 +111,7 @@ bind \e\[1\;4D backward-bigword
 bind \e\[3\;3~ kill-word
 bind \e\[3\;4~ kill-bigword
 bind \eB backward-kill-bigword
+bind \e\[107\;6u kill-whole-line
 
 # =========== Variables ========================================================
 
