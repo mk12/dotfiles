@@ -101,14 +101,12 @@ set sidescrolloff=4
 set smartcase
 set suffixes-=.h
 set tagcase=match
-set textwidth=80
 set undofile
 set visualbell
 set wildmode=longest,full
 
 " Only set these options on startup.
 if has('vim_starting')
-    set colorcolumn=+1
     set expandtab
     set hlsearch
     set shiftwidth=4
@@ -463,8 +461,7 @@ augroup custom
     autocmd FileType c,cpp setlocal commentstring=//\ %s comments^=:///
     autocmd FileType sql setlocal commentstring=--\ %s
 
-    autocmd FileType text,markdown setlocal textwidth=0 colorcolumn=0
-    autocmd FileType ledger setlocal textwidth=0 colorcolumn=61,81,101,121
+    autocmd FileType * call SetTextWidthForFileType()
 
     autocmd FileType j let b:AutoPairs = {}
     autocmd FileType lisp,scheme
@@ -858,6 +855,16 @@ function! YankToSystemClipboard(text) abort
         echoerr l:escape
     else
         call writefile([l:escape], '/dev/tty', 'b')
+    endif
+endfunction
+
+function! SetTextWidthForFileType() abort
+    if empty(&filetype) || &filetype is# 'text' || &filetype is# 'markdown'
+        setlocal textwidth=0 colorcolumn=0
+    elseif &filetype is# 'ledger'
+        setlocal textwidth=0 colorcolumn=61,81,101,121
+    else
+        setlocal textwidth=80 colorcolumn=+1
     endif
 endfunction
 
