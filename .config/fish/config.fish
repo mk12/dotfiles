@@ -99,10 +99,16 @@ function add_alert --description "Add '; alert' to the end of the command"
     end
 end
 
+# Workaround for:
+# https://github.com/fish-shell/fish-shell/issues/6942#issuecomment-984737309
+function try_disable_focus --description "Disable focus if in tmux"
+    functions -q __fish_disable_focus && __fish_disable_focus
+end
+
 # =========== Keybindings ======================================================
 
 bind \ea add_alert
-bind \ec kitty-colors "commandline -f repaint"
+bind \ec try_disable_focus kitty-colors "commandline -f repaint"
 bind \er refish
 
 # These bindings match https://github.com/mk12/vim-meta.
