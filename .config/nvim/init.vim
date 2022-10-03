@@ -200,6 +200,8 @@ nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 
 " Since <Tab> and <C-I> are the same, I need a new mapping for <C-I>.
+" Note: neovim can tell them apart in kitty so maybe get rid of this:
+" https://sw.kovidgoyal.net/kitty/keyboard-protocol/?highlight=modifier#comprehensive-keyboard-handling-in-terminals
 nnoremap <C-P> <C-I>
 
 nmap [h <Plug>(GitGutterPrevHunk)
