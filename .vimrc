@@ -199,8 +199,6 @@ xnoremap > >gv
 " Use gv to select last selection, gV to select last insertion.
 nnoremap gV `[v`]
 
-inoremap <C-U> <C-G>u<C-U>
-
 nnoremap <silent> & :&&<CR>
 xnoremap <silent> & :&&<CR>
 
