@@ -148,7 +148,7 @@ noremap : ;
 " Matches https://github.com/mk12/fish-fzf.
 nnoremap <silent> <C-O> :call MyFzf('file')<CR>
 nnoremap <silent> <C-Q> :call MyFzf('directory')<CR>
-nnoremap <silent> <M-Z> :call MyFzf('z')<CR>
+nnoremap <silent> <M-z> :call MyFzf('z')<CR>
 
 " Top/bottom mappings compatible with less and emacs.
 noremap <M-<> <C-Home>
@@ -159,15 +159,15 @@ inoremap <M->> <C-O><C-End>
 " Undo/redo compatible with fish.
 nnoremap <C-_> u
 noremap! <C-_> <C-O>u
-nnoremap <M-/> u
-noremap! <M-/> <C-O>u
+nnoremap <M-/> <C-R>
+noremap! <M-/> <C-O><C-R>
 
 " Jump between open windows.
 nnoremap <C-J> <C-W>w
 
 " Save quickly.
-nnoremap <C-s> :write<CR>
-inoremap <C-s> <C-o>:write<CR>
+noremap <C-S> :write<CR>
+inoremap <C-S> <C-O>:write<CR>
 
 nnoremap Y y$
 
@@ -189,18 +189,20 @@ xnoremap * y:let @/='\V'.escape(@", '\')<Bar>set hls<CR>
 
 nnoremap <silent> zS :echo SyntaxName()<CR>
 
-nnoremap <silent> Q :call ReflowText()<CR>
-xnoremap Q gq
+nnoremap <silent> <M-q> :call ReflowText()<CR>
+xnoremap <M-q> gq
+imap <M-q> <C-O><M-q>
 
 nnoremap <silent> _ :Dirvish<CR>
 
 nnoremap <silent> <Tab> :call NextBufOrTab()<CR>
 nnoremap <silent> <S-Tab> :call PrevBufOrTab()<CR>
 
-" Since <Tab> and <C-I> are the same, I need a new mapping for <C-I>.
-" Note: neovim can tell them apart in kitty so maybe get rid of this:
-" https://sw.kovidgoyal.net/kitty/keyboard-protocol/?highlight=modifier#comprehensive-keyboard-handling-in-terminals
-nnoremap <C-P> <C-I>
+" Navigate backward and forward like in VS Code.
+noremap <C--> <C-O>
+inoremap <C--> <C-O><C-O>
+noremap <C-S--> <C-I>
+inoremap <C-S--> <C-O><C-I>
 
 nmap [h <Plug>(GitGutterPrevHunk)
 nmap ]h <Plug>(GitGutterNextHunk)
