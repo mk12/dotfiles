@@ -15,9 +15,6 @@ let g:airline_theme = 'base16_vim'
 
 let g:dispatch_no_maps = 1
 
-" Remove once https://github.com/blankname/vim-fish/pull/6 is merged.
-let g:fish_indent_cont = 4
-
 let g:fugitive_legacy_commands = 0
 
 let g:gitgutter_map_keys = 0
