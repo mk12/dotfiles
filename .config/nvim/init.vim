@@ -861,6 +861,11 @@ function! YankToSystemClipboard(text) abort
 endfunction
 
 function! SetTextWidthForFileType() abort
+    " Check if someone else already set it, e.g. for gitcommit.
+    if &l:textwidth != 0
+        setlocal colorcolumn=+1
+        return
+    endif
     if empty(&filetype) || &filetype is# 'text' || &filetype is# 'markdown'
         setlocal textwidth=0 colorcolumn=0
     elseif &filetype is# 'ledger'
