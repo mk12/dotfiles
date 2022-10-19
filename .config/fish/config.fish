@@ -154,6 +154,7 @@ set fish_pager_color_progress cyan --bold
 set fish_color_search_match "#0000ff" "--background=#000087"
 
 set pure_separate_prompt_on_error true
+set pure_enable_git false
 
 # =========== Local config =====================================================
 
