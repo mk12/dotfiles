@@ -50,9 +50,9 @@ local function tempTextFile(text)
         return nil
     end
     local path = os.tmpname()
-    local file = io.open(path, "w")
+    local file, err = io.open(path, "w")
     if not file then
-        log.e("Failed to open temporary file " .. path)
+        log.e("Failed to open temporary file: " .. err)
         return nil
     end
     if not file:write(text) then
@@ -435,13 +435,33 @@ local function setKittyColorTheme(theme)
     if not os.execute(cmd) then
         log.e("Command failed")
     end
-    local file = io.open(kittyColorsFile, "w")
+    local file, err = io.open(kittyColorsFile, "w")
     if not file then
-        log.e("Failed to open file " .. path)
+        log.e("Failed to open kitty colors file: " .. err)
         return nil
     end
     if not file:write("include " .. path .. "\n") then
-        log.e("Failed to write to file " .. path)
+        log.e("Failed to write to file " .. kittyColorsFile)
+    end
+    file:close()
+end
+
+local cbqnConfigFile = os.getenv("HOME") .. "/.config/cbqn_repl.txt"
+
+-- Updates the CBQN color theme by editing the cbqnConfigFile file.
+local function setCbqnColorTheme(dark)
+    local name = dark and "dark" or "light"
+    log.i("Setting theme to " .. name .. " in " .. cbqnConfigFile)
+    local file, err = io.open(cbqnConfigFile, "r+")
+    if not file then
+        log.e("Failed to open CBQN config file: " .. err)
+    end
+    for line in file:lines() do
+        if line:match("^theme=%d$") then
+            file:seek("cur", -2)
+            file:write(dark and "1" or "2")
+            break
+        end
     end
     file:close()
 end
@@ -455,6 +475,7 @@ local function syncKittyToDarkMode(force)
     if force or dark ~= darkModeEnabled then
         log.i("Updating kitty for dark mode = " .. (dark and "on" or "off"))
         setKittyColorTheme(dark and "eighties" or "solarized-light")
+        setCbqnColorTheme(dark)
     end
     darkModeEnabled = dark
 end
@@ -566,7 +587,7 @@ local function startDiff()
     hs.eventtap.keyStroke({"cmd"}, "C")
     local file, err = io.open(diffFileA, "w")
     if not file then
-        log.e("Cannot open file: " .. err)
+        log.e("Failed to open file: " .. err)
         return
     end
     file:write(hs.pasteboard.getContents())
@@ -577,7 +598,7 @@ local function endDiff()
     hs.eventtap.keyStroke({"cmd"}, "C")
     local file, err = io.open(diffFileB, "w")
     if not file then
-        log.e("Cannot open file: " .. err)
+        log.e("Failed to open file: " .. err)
         return
     end
     file:write(hs.pasteboard.getContents())
