@@ -194,6 +194,10 @@ xnoremap > >gv
 " Use gv to select last selection, gV to select last insertion.
 nnoremap gV `[v`]
 
+" Jumping to the line number is more useful.
+noremap gf gF
+noremap gF gf
+
 nnoremap <silent> & :&&<CR>
 xnoremap <silent> & :&&<CR>
 
@@ -367,6 +371,9 @@ Shortcut select default dispatch task
 
 Shortcut stop highlighting the search
     \ nnoremap <Leader>n :nohlsearch<CR>
+
+Shortcut open in VS Code
+    \ nnoremap <Leader>o :call OpenInVSCode()<CR>
 
 Shortcut clean plugins
     \ nnoremap <Leader>pc :PlugClean<CR>
@@ -840,6 +847,11 @@ function! LintCode(...) abort range
     endif
     let l:range = get(a:, 1, a:firstline . ',' . a:lastline)
     execute l:range . 'w !' . l:cmd
+endfunction
+
+function! OpenInVSCode() abort
+    let l:arg = expand('%p') . ':' . line('.') . ':' . col('.')
+    execute '!fish -c "code -g ''' . l:arg . '''"'
 endfunction
 
 function! ToggleColumnLimit() abort
