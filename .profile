@@ -32,8 +32,6 @@ add_paths PATH bin:sbin ~/.local ~/.cargo ~/.go /opt/homebrew
 add_paths CPATH include ~/.local /opt/homebrew
 add_paths LIBRARY_PATH lib ~/.local /opt/homebrew
 
-unset -f add_paths
-
 # =========== Short variables ==================================================
 
 export BAT_THEME=base16-256
@@ -84,3 +82,5 @@ if [ -z "$PROJECTS" ]; then
     # shellcheck disable=SC3028
     echo "${BASH_SOURCE:-$0}: PROJECTS is unset!" >&2
 fi
+
+unset -f add_paths
