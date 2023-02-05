@@ -56,8 +56,8 @@ export FZF_DEFAULT_OPTS="--history=$HOME/.local/state/fzf/history \
 --bind='alt-<:first,alt->:last,alt-p:toggle-preview,ctrl-f:preview-page-down,\
 ctrl-b:preview-page-up,alt-/:change-preview-window(right),\
 alt--:change-preview-window(bottom)' \
---color=bg+:18,bg:0,fg+:21,fg:20,header:4,hl+:4,hl:4,info:3,marker:6,pointer:6,\
-prompt:3,spinner:6"
+--color=bg+:18,bg:0,fg+:21,fg:20,preview-fg:7,header:4,hl+:4,hl:4,info:3,\
+marker:6,pointer:6,prompt:3,spinner:6"
 
 # =========== Logic variables ==================================================
 
