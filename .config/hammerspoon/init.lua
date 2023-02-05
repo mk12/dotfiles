@@ -611,6 +611,14 @@ local function endDiff()
     end
 end
 
+-- ========== Clipboard ========================================================
+
+local function copyAppend()
+    local old = hs.pasteboard.getContents()
+    hs.eventtap.keyStroke({"cmd"}, "C")
+    hs.pasteboard.setContents(old .. "\n" .. hs.pasteboard.getContents())
+end
+
 -- ========== Shortcuts ========================================================
 
 -- Global modifier combination unlikely to be used by other programs.
@@ -650,6 +658,9 @@ hs.hotkey.bind(hyper, "P", fixBuiltinDisplayScale)
 -- Requires `npm install -g html2diff-cli`.
 hs.hotkey.bind(hyper, "A", startDiff)
 hs.hotkey.bind(hyper, "B", endDiff)
+
+-- Shortcut for appending to clipboard.
+hs.hotkey.bind(hyper, "/", copyAppend)
 
 -- ========== Timers ===========================================================
 
