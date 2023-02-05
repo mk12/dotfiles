@@ -48,7 +48,7 @@ abbr -g v vim
 abbr -g c code
 abbr -g hex hexyl
 abbr -g zb 'zig build'
-abbr -g m "make -j$(nproc)"
+abbr -g m "make -j$(nproc || sysctl -n hw.ncpu)"
 
 alias vi=$EDITOR
 alias vim=$EDITOR
