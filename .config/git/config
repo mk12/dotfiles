@@ -24,6 +24,7 @@
     last = log -1 HEAD
     lol = log --oneline --graph --
     unmerged = diff --name-only --diff-filter=U
+    tracked = ls-files --error-unmatch
 [color]
     ui = auto
 [init]
