@@ -43,12 +43,16 @@ end
 
 # =========== Shortcuts ========================================================
 
+function num_cores
+    test (uname -s) = Darwin && sysctl -n hw.ncpu || nproc
+end
+
 abbr -g g git
 abbr -g v vim
 abbr -g c code
 abbr -g hex hexyl
 abbr -g zb 'zig build'
-abbr -g m "make -j$(nproc || sysctl -n hw.ncpu)"
+abbr -g m "make -j$(num_cores)"
 
 alias vi=$EDITOR
 alias vim=$EDITOR
