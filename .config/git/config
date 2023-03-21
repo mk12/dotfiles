@@ -13,7 +13,6 @@
     cma = commit --amend
     cmav = commit --amend --verbose
     unamend = reset --soft HEAD@{1}
-    fx = commit --amend --reuse-message=HEAD
     rb = rebase
     rbo = rebase HEAD~ --onto
     rc = -c core.editor=true rebase --continue
@@ -25,6 +24,12 @@
     lol = log --oneline --graph --
     unmerged = diff --name-only --diff-filter=U
     tracked = ls-files --error-unmatch
+    rs = restack
+    m = move
+    fx = !git merge HEAD && git amend
+    r = record
+    rw = reword
+    sy = sync
 [color]
     ui = auto
 [init]
@@ -50,8 +55,8 @@
     hunk-header-style = "normal"
     file-style = "bold blue"
     file-decoration-style = "bold blue underline"
-    minus-empty-line-marker-style = "black black"
-    plus-empty-line-marker-style = "black black"
+    minus-empty-line-marker-style = "black brightcyan"
+    plus-empty-line-marker-style = "black cyan"
 [merge]
     tool = vimdiff
     conflictstyle = diff3
