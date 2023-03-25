@@ -28,13 +28,14 @@ add_paths() {
     unset var dirs new saved_ifs prefix dir old
 }
 
-add_paths PATH bin:sbin ~/.local ~/.cargo ~/.go /opt/homebrew
+add_paths PATH bin:sbin ~/.local ~/.cargo ~/.go ~/.bun /opt/homebrew
 add_paths CPATH include ~/.local /opt/homebrew
 add_paths LIBRARY_PATH lib ~/.local /opt/homebrew
 
 # =========== Short variables ==================================================
 
 export BAT_THEME=base16-256
+export BUN_INSTALL=~/.bun
 export CLICOLOR=true
 export DENO_FUTURE_CHECK=1
 export GOPATH=~/.go
