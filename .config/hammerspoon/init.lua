@@ -455,6 +455,7 @@ local function setCbqnColorTheme(dark)
     local file, err = io.open(cbqnConfigFile, "r+")
     if not file then
         log.e("Failed to open CBQN config file: " .. err)
+        return
     end
     for line in file:lines() do
         if line:match("^theme=%d$") then
