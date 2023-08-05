@@ -868,7 +868,8 @@ function! YankToSystemClipboard(text) abort
     if v:shell_error
         echoerr l:escape
     else
-        call writefile([l:escape], '/dev/tty', 'b')
+        " https://github.com/neovim/neovim/issues/8450
+        call chansend(v:stderr, l:escape)
     endif
 endfunction
 
