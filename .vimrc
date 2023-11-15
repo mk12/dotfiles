@@ -883,6 +883,9 @@ function! YankToSystemClipboard(text) abort
     let l:escape = system('yank', a:text)
     if v:shell_error
         echoerr l:escape
+    elseif has('nvim')
+        " https://github.com/neovim/neovim/issues/8450#issuecomment-402314394
+        call chansend(v:stderr, l:escape)
     else
         call writefile([l:escape], '/dev/tty', 'b')
     endif
