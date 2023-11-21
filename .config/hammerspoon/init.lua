@@ -664,6 +664,29 @@ hs.hotkey.bind(hyper, "B", endDiff)
 -- Shortcut for appending to clipboard.
 hs.hotkey.bind(hyper, "/", copyAppend)
 
+-- Shortcut to navigate errors in kitty and fix them in VS Code.
+-- I have this bound to the Kinesis Advantage2 "International Key" at work.
+hs.hotkey.bind(hyper, "D", function()
+    hs.eventtap.keyStroke({"cmd"}, "S")
+    local app = getKittyApp("tmux.conf")
+    if not app then
+        log.e("No tmux kitty running")
+        return
+    end
+    app:activate()
+    hs.eventtap.keyStroke({}, "return")
+    hs.application.find("com.microsoft.VSCode", true):activate()
+end)
+
+-- Mouse click with keyboard.
+-- Keycode 145 is F1 without Fn (the lower brightness media key).
+-- hs.hotkey.bind({}, 145, function()
+--     -- hs.eventtap.leftClick(hs.mouse.absolutePosition())
+--     hs.eventtap.event.newMouseEvent(hs.eventtap.event.types["leftMouseDown"], hs.mouse.absolutePosition()):post()
+-- end, function()
+--     hs.eventtap.event.newMouseEvent(hs.eventtap.event.types["leftMouseUp"], hs.mouse.absolutePosition()):post()
+-- end)
+
 -- ========== Timers ===========================================================
 
 -- Note: Recurring timers must be assigned to global variables, otherwise GC
