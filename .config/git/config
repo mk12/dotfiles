@@ -21,7 +21,8 @@
     unstage = reset HEAD --
     l = log
     last = log -1 HEAD
-    lol = log --oneline --graph --
+    dog = log --decorate --oneline --graph --
+    adog = log --all --decorate --oneline --graph --
     unmerged = diff --name-only --diff-filter=U
     tracked = ls-files --error-unmatch
     rs = restack
