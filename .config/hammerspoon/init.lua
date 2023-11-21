@@ -314,6 +314,7 @@ local function launchFullScreenTmuxKitty()
                 log.e("Still no tmux kitty main window after 1s")
                 return
             end
+            app:mainWindow():moveToScreen(hs.screen.primaryScreen())
             app:mainWindow():setFullScreen(true)
         end)
     end
