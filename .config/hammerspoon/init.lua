@@ -141,14 +141,14 @@ local kittyColorsFile = kittyConfigDir .. "/" .. "colors.conf"
 local kittyColorsDir = projectsDir .. "/base16-kitty/colors"
 
 -- Returns a Unix socket to use for the given kitty configuration.
-local function kittySocketAddress(config)
-    return "unix:" .. kittySocketDir .. "/" .. config .. ".sock"
+local function kittySocketPath(config)
+    return kittySocketDir .. "/" .. config .. ".sock"
 end
 
--- Addresses for all Unix sockets used by kitty instances.
-local allKittySocketAddresses = {
-    kittySocketAddress("kitty.conf"),
-    kittySocketAddress("tmux.conf"),
+-- Paths for all Unix sockets used by kitty instances.
+local allKittySocketPaths = {
+    kittySocketPath("kitty.conf"),
+    kittySocketPath("tmux.conf"),
 }
 
 -- Launches kitty using the given config and options. Interprets config as a
@@ -181,7 +181,11 @@ local function launchKitty(config, options)
 
     local cmd
     if options.newInstance then
-        args = args .. " --listen-on '" .. kittySocketAddress(config) .. "'"
+        local socket = kittySocketPath(config)
+        -- Remove the socket first, otherwise I sometimes get "Error parsing
+        -- configuration: Invalid listen_on=unix:/path/to/sock, ignoring".
+        os.remove(socket)
+        args = args .. " --listen-on 'unix:" .. socket .. "'"
         cmd = "open -n -a kitty --args " .. args
     else
         cmd = kittyBinary .. " " .. args
@@ -424,17 +428,17 @@ end
 local function setKittyColorTheme(theme)
     local path = kittyColorsDir .. "/base16-" .. theme .. ".conf"
     local cmd = ""
-    for _, socket in ipairs(allKittySocketAddresses) do
+    for _, socket in ipairs(allKittySocketPaths) do
         -- Run the commands in the background with & so that all kitty instances
         -- change color simultaneously.
         cmd = (
-            cmd .. kittyBinary .. " @ --to '" .. socket .. "'"
+            cmd .. kittyBinary .. " @ --to 'unix:" .. socket .. "'"
             .. " set-colors -a -c '" .. path .. "' & "
         )
     end
     log.i("Sending set-colors to all kitty sockets: " .. cmd)
     if not os.execute(cmd) then
-        log.e("Command failed")
+        log.e("Command to set kitty colors failed")
     end
     local file, err = io.open(kittyColorsFile, "w")
     if not file then
