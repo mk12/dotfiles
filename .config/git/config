@@ -6,6 +6,10 @@
     c = checkout
     d = diff
     dc = diff --cached
+    ds = diff --stat
+    dcs = diff --cached --stat
+    stat = show --stat
+    files = show --pretty= --name-only
     a = add
     ap = add --patch
     cm = commit
