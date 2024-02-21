@@ -10,6 +10,7 @@
     dcs = diff --cached --stat
     stat = show --stat
     files = show --pretty= --name-only
+    tags = !git for-each-ref --sort=creatordate --format '%(creatordate:short) %(refname)' refs/tags | awk '{print $1, substr($2, 11)}'
     a = add
     ap = add --patch
     cm = commit
