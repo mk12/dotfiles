@@ -58,10 +58,10 @@ alias vi=$EDITOR
 alias vim=$EDITOR
 alias e='emacsclient -t -a ""'
 
-if command -qv exa
-    alias l=exa
-    alias ll='exa -l'
-    alias la='exa -la'
+if command -qv eza
+    alias l=eza
+    alias ll='eza -l'
+    alias la='eza -la'
 else
     alias l=ls
 end
