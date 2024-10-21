@@ -36,6 +36,7 @@
     r = record
     rw = reword
     sy = sync
+    b2t = "!sh -c 'set -e;git tag $1 refs/heads/$1;git branch -D $1' -"
 [color]
     ui = auto
 [init]
@@ -63,6 +64,7 @@
     file-decoration-style = "bold blue underline"
     minus-empty-line-marker-style = "black brightcyan"
     plus-empty-line-marker-style = "black cyan"
+    # max-line-length = 0
 [merge]
     tool = vimdiff
     conflictstyle = diff3
