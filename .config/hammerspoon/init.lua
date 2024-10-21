@@ -481,7 +481,8 @@ local function syncKittyToDarkMode(force)
     if force or dark ~= darkModeEnabled then
         log.i("Updating kitty for dark mode = " .. (dark and "on" or "off"))
         setKittyColorTheme(dark and "eighties" or "solarized-light")
-        setCbqnColorTheme(dark)
+        -- Seems that theme=1 looks best in both light and dark mode now.
+        -- setCbqnColorTheme(dark)
     end
     darkModeEnabled = dark
 end
@@ -569,19 +570,27 @@ end
 
 -- ========== Display scaling ==================================================
 
-local function fixBuiltinDisplayScale()
+local function setBuiltinDisplayScale(kind)
     local all = hs.screen.allScreens()
     for _, screen in ipairs(all) do
         if screen:name() == "Built-in Retina Display" then
             local mode = screen:currentMode()
-            local alone = #all == 1
-            local w = alone and 1728 or 1496
-            local h = alone and 1117 or 967
+            local dense = (kind == "auto" and #all == 1) or (kind == "toggle" and mode.w ~= 1728)
+            local w = dense and 1728 or 1496
+            local h = dense and 1117 or 967
             local scale = 2
             screen:setMode(w, h, scale, mode.freq, mode.depth)
             return
         end
     end
+end
+
+local function fixBuiltinDisplayScale()
+    setBuiltinDisplayScale("auto")
+end
+
+local function toggleBuiltinDisplayScale()
+    setBuiltinDisplayScale("toggle")
 end
 
 -- ========== Diffing ==========================================================
@@ -659,6 +668,7 @@ hs.hotkey.bind({"ctrl"}, "§", moveFocusedWindowToNextScreen)
 
 -- Shortcut for fixing display scale ("P" for "pixels").
 hs.hotkey.bind(hyper, "P", fixBuiltinDisplayScale)
+hs.hotkey.bind({"cmd", "option", "ctrl", "shift"}, "P", toggleBuiltinDisplayScale)
 
 -- Shortcuts for diffing.
 -- Requires `npm install -g html2diff-cli`.
@@ -690,6 +700,22 @@ end)
 -- end, function()
 --     hs.eventtap.event.newMouseEvent(hs.eventtap.event.types["leftMouseUp"], hs.mouse.absolutePosition()):post()
 -- end)
+
+hs.hotkey.bind(hyper, "X", function ()
+    local content = hs.pasteboard.getContents()
+    local i = content:find("\n")
+    local line, rest
+    if i then
+        line = content:sub(1, i - 1)
+        rest = content:sub(i + 1)
+    else
+        line = content
+        rest = ""
+    end
+    hs.pasteboard.setContents(line)
+    hs.eventtap.keyStroke({"cmd"}, "V")
+    hs.pasteboard.setContents(rest)
+end)
 
 -- ========== Timers ===========================================================
 
