@@ -4,6 +4,7 @@ set shell=sh
 
 let g:AutoPairsMultilineClose = 0
 let g:AutoPairsShortcutToggle = ''
+let g:AutoPairsShortcutBackInsert = ''
 
 let g:airline#extensions#default#layout = [['a', 'c'], ['x', 'y']]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
