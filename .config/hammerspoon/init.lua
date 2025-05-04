@@ -76,7 +76,10 @@ end
 -- Directory containing my coding projects.
 local projectsDir = getUserEnv("PROJECTS")
 
--- ========== SSH ==============================================================
+-- ========== SSH ============================================================== 
+
+-- This stuff isn't used right now since I got rid of all the kitty stuff in
+-- favor of using ghostty, but I might use it again in the future.
 
 local sshConfigFile = os.getenv("HOME") .. "/.ssh/config"
 
@@ -128,371 +131,6 @@ local function sshCommand(host)
     if host then
         return "ssh " .. host.alias
     end
-end
-
--- ========== Kitty ============================================================
-
--- Kitty files and directories.
-local kittyBinary = getUserBinary("kitty")
-local kittyConfigDir = os.getenv("HOME") .. "/.config/kitty"
-local kittySocketDir = os.getenv("HOME") .. "/.local/share/kitty"
-os.execute("mkdir -p '" .. kittySocketDir .. "'")
-local kittyColorsFile = kittyConfigDir .. "/" .. "colors.conf"
-local kittyColorsDir = projectsDir .. "/base16-kitty/colors"
-
--- Returns a Unix socket to use for the given kitty configuration.
-local function kittySocketPath(config)
-    return kittySocketDir .. "/" .. config .. ".sock"
-end
-
--- Paths for all Unix sockets used by kitty instances.
-local allKittySocketPaths = {
-    kittySocketPath("kitty.conf"),
-    kittySocketPath("tmux.conf"),
-}
-
--- Launches kitty using the given config and options. Interprets config as a
--- path relative to kittyConfigDir. If options.lanchCommand is present, uses it
--- when starting the terminal. If options.newInstance is true, starts a new
--- instance; otherwise, opens a window in the existing instance for this config
--- (which is assumed to exist). If options.hideFromTasks is true, hides the app
--- from the macOS Dock and Cmd-Tab task bar.
-local function launchKitty(config, options)
-    local args = (
-        "--single-instance --instance-group " .. config
-        .. " --directory ~"
-        .. " --config " .. kittyConfigDir .. "/" .. config
-        .. " --override allow_remote_control=socket-only"
-    )
-    if options.hideFromTasks then
-        args = args .. " --override macos_hide_from_tasks=yes"
-    end
-
-    local sessionPath
-    if options.launchCommand then
-        local text = "launch " .. options.launchCommand
-        log.i("Using kitty session: " .. text)
-        sessionPath = tempTextFile(text)
-        if not sessionPath then
-            return
-        end
-        args = args .. " --session " .. sessionPath
-    end
-
-    local cmd
-    if options.newInstance then
-        local socket = kittySocketPath(config)
-        -- Remove the socket first, otherwise I sometimes get "Error parsing
-        -- configuration: Invalid listen_on=unix:/path/to/sock, ignoring".
-        os.remove(socket)
-        args = args .. " --listen-on 'unix:" .. socket .. "'"
-        cmd = "open -n -a kitty --args " .. args
-    else
-        cmd = kittyBinary .. " " .. args
-    end
-
-    log.i("Launching kitty: " .. cmd)
-    -- We *could* use full paths to tmux and ssh, and then use hs.execute
-    -- instead of executeWithProfile. However, we actually need the user profile
-    -- for the kitty process so that it can locate kitty-bell-notify, and for
-    -- the tmux process so that it can locate tmux-session (this won't help a
-    -- remote tmux -- we assume ssh will start a login shell that loads the
-    -- remote user profile and runs tmux in that).
-    local output, success = executeWithProfile(cmd)
-    if not success then
-        log.e("Command failed: " .. output)
-    end
-    if sessionPath then
-        -- Give the app time to read the file before deleting it.
-        hs.timer.doAfter(10, function()
-            os.remove(sessionPath)
-        end)
-    end
-end
-
--- Cached kitty application instances.
-local kittyApps = {}
-
--- Returns the kitty application for the given config, or nil if it's not
--- running. Interprets config as a path relative to kittyConfigDir
-local function getKittyApp(config)
-    if not (kittyApps[config] and kittyApps[config]:isRunning()) then
-        log.i("Refreshing kitty application cache for config: " ..config)
-        kittyApps[config] = nil
-        local output, _, _, rc =
-            hs.execute("pgrep -lf kitty.app/Contents/MacOS/kitty")
-        if not (rc == 0 or rc == 1) then
-            log.e("Failed executing pgrep: " .. output)
-            return nil
-        end
-        for line in output:gmatch("[^\r\n]+") do
-            if line:find(config, 1, true) then
-                local pid = line:match("[0-9]+")
-                log.i("Found kitty process with PID " .. pid)
-                kittyApps[config] =
-                    hs.application.applicationForPID(tonumber(pid))
-                if kittyApps[config] then
-                    break
-                end
-                log.w("Failed to get application for PID " .. pid)
-            end
-        end
-    end
-    return kittyApps[config]
-end
-
--- Sends a notification saying the bell rang in kitty.
-function sendKittyBellNotification(socket, windowID)
-    log.i("Sending bell notification for window " .. windowID)
-    hs.notify.new(function()
-        if not socket or socket == "" then
-            log.e("No socket for bell notification, cannot focus window")
-            return
-        end
-        local cmd = (
-            kittyBinary .. " @ --to '" .. socket .. "'"
-            .. " focus-window --match=id:" .. windowID
-        )
-        log.i("Focusing kitty bell window: " .. cmd)
-        if not os.execute(cmd) then
-            log.e("Failed to focus kitty bell window")
-        end
-    end, {
-        title = "Kitty",
-        informativeText = "🔔 The bell rang!",
-    }):send()
-end
-
--- Shows or hides the main kitty instance (as opposed to the tmux instance).
-local function showOrHideMainKittyInstance()
-    local config = "kitty.conf"
-    local app = getKittyApp(config)
-    if not app then
-        launchKitty(config, {newInstance = true, hideFromTasks = true})
-        return
-    end
-
-    if not app:mainWindow() then
-        log.i("Making a new kitty window")
-        -- Use kitty --single-instance to open a new window. We could also
-        -- select the "New OS Window" menu item, but this doesn't work with the
-        -- macos_hide_from_tasks setting.
-        launchKitty(config, {newInstance = false})
-    elseif app:isFrontmost() then
-        log.i("Hiding kitty")
-        app:hide()
-    else
-        log.i("Showing kitty")
-        app:activate()
-    end
-end
-
--- Returns a new command that starts in the given tmux session.
-local function addTmuxToCommand(sshCommand, tmuxSession)
-    local tmux = "tmux new -A -s " .. tmuxSession
-    if sshCommand then
-        return sshCommand .. " -t '" .. tmux .. "'"
-    end
-    return tmux
-end
-
--- Opens a fullscreen kitty window attaching to tmux on the default host. The
--- default host is the one marked "# Default", or the local machine if none is.
-local function launchFullScreenTmuxKitty()
-    local config = "tmux.conf"
-    launchKitty(config, {
-        launchCommand = addTmuxToCommand(sshCommand(defaultSshHost), "0"),
-        newInstance = not getKittyApp(config),
-    })
-    -- When launching for the first time, wait for the window to be ready.
-    if app and app:mainWindow() then
-        app:mainWindow():setFullScreen(true)
-    else
-        hs.timer.doAfter(1, function()
-            local app = getKittyApp(config)
-            if not app then
-                log.e("Still no tmux kitty app after 1s")
-                return
-            end
-            if not app:mainWindow() then
-                log.e("Still no tmux kitty main window after 1s")
-                return
-            end
-            app:mainWindow():moveToScreen(hs.screen.primaryScreen())
-            app:mainWindow():setFullScreen(true)
-        end)
-    end
-end
-
--- List of terminal host choices, to be used with hs.chooser.
-local hostChoices = (function ()
-    local choices = {
-        {
-            text = "localhost",
-            subText = os.getenv("SHELL"),
-            remote = false,
-            command = nil,
-        },
-    }
-    for _, host in ipairs(allSshHosts) do
-        table.insert(choices, {
-            text = host.alias,
-            subText = "ssh " .. host.user .. "@" .. host.hostname,
-            remote = true,
-            command = sshCommand(host),
-        })
-    end
-    return choices
-end)()
-
--- Returns a list of terminal session choices for the given host choice (one of
--- the items from hostChoices), to be used with hs.chooser.
-local function getSessionChoices(host)
-    local function text(localText, remoteText)
-        return host.remote and remoteText or localText
-    end
-
-    return {
-        {
-            text = "Default",
-            subText = text(
-                "Create a window",
-                "Connect to remote host"
-            ),
-            config = "kitty.conf",
-            command = host.command,
-        },
-        {
-            text = text("Local tmux", "Remote tmux"),
-            subText = text(
-                "Create or attach to local tmux session 0",
-                "Create or attach to remote tmux session 0"
-            ),
-            config = "tmux.conf",
-            command = addTmuxToCommand(host.command, "0"),
-        },
-        {
-            text = text("Local tmux (detached)", "Remote tmux (detached)"),
-            subText = text(
-                "Create a window with tmux keybindings",
-                "Connect to remote host with tmux keybindings"
-            ),
-            config = "tmux.conf",
-            command = host.command,
-        },
-    }
-end
-
--- Launches a new kitty window, prompting the user with chooser menus for the
--- host machine and the session type.
-local function displayKittyLaunchChooser()
-    local showChooser, onChooseHost, onChooseSession
-
-    function showChooser()
-        local chooser = hs.chooser.new(onChooseHost)
-        chooser:choices(hostChoices)
-        chooser:placeholderText("Choose a host")
-        chooser:show()
-    end
-
-    function onChooseHost(choice)
-        if not choice then
-            log.i("No choice made for kitty host")
-            return
-        end
-        log.i("Got host choice: text = " .. choice.text .. ", command = "
-            .. (choice.command or "nil"))
-        local chooser = hs.chooser.new(onChooseSession)
-        chooser:choices(getSessionChoices(choice))
-        chooser:placeholderText("Choose a session")
-        chooser:show()
-    end
-
-    function onChooseSession(choice)
-        if not choice then
-            log.i("No choice made for kitty session")
-            return
-        end
-        log.i("Got session choice: text = " .. choice.text .. ", config = "
-            .. choice.config .. ", command = " .. (choice.command or "nil"))
-        launchKitty(choice.config, {
-            launchCommand = choice.command,
-            newInstance = not getKittyApp(choice.config),
-        })
-    end
-
-    showChooser()
-end
-
--- Sets the color theme persistently for all current and future kitty instances.
-local function setKittyColorTheme(theme)
-    local path = kittyColorsDir .. "/base16-" .. theme .. ".conf"
-    local cmd = ""
-    for _, socket in ipairs(allKittySocketPaths) do
-        -- Run the commands in the background with & so that all kitty instances
-        -- change color simultaneously.
-        cmd = (
-            cmd .. kittyBinary .. " @ --to 'unix:" .. socket .. "'"
-            .. " set-colors -a -c '" .. path .. "' & "
-        )
-    end
-    log.i("Sending set-colors to all kitty sockets: " .. cmd)
-    if not os.execute(cmd) then
-        log.e("Command to set kitty colors failed")
-    end
-    local file, err = io.open(kittyColorsFile, "w")
-    if not file then
-        log.e("Failed to open kitty colors file: " .. err)
-        return nil
-    end
-    if not file:write("include " .. path .. "\n") then
-        log.e("Failed to write to file " .. kittyColorsFile)
-    end
-    file:close()
-end
-
-local cbqnConfigFile = os.getenv("HOME") .. "/.config/cbqn_repl.txt"
-
--- Updates the CBQN color theme by editing the cbqnConfigFile file.
-local function setCbqnColorTheme(dark)
-    local name = dark and "dark" or "light"
-    log.i("Setting theme to " .. name .. " in " .. cbqnConfigFile)
-    local file, err = io.open(cbqnConfigFile, "r+")
-    if not file then
-        log.e("Failed to open CBQN config file: " .. err)
-        return
-    end
-    for line in file:lines() do
-        if line:match("^theme=%d$") then
-            file:seek("cur", -2)
-            file:write(dark and "1" or "2")
-            break
-        end
-    end
-    file:close()
-end
-
--- Global storing whether macOS Dark Mode was enabled when last checked.
-local darkModeEnabled
-
--- Updates the kitty color theme to match the OS Dark Mode setting.
-local function syncKittyToDarkMode(force)
-    local dark = hs.host.interfaceStyle() == "Dark"
-    if force or dark ~= darkModeEnabled then
-        log.i("Updating kitty for dark mode = " .. (dark and "on" or "off"))
-        setKittyColorTheme(dark and "eighties" or "solarized-light")
-        -- Seems that theme=1 looks best in both light and dark mode now.
-        -- setCbqnColorTheme(dark)
-    end
-    darkModeEnabled = dark
-end
-
-local function syncKittyToDarkModeLazy()
-    syncKittyToDarkMode(false)
-end
-
-local function syncKittyToDarkModeForce()
-    syncKittyToDarkMode(true)
 end
 
 -- ========== Chimes ===========================================================
@@ -576,8 +214,8 @@ local function setBuiltinDisplayScale(kind)
         if screen:name() == "Built-in Retina Display" then
             local mode = screen:currentMode()
             local dense = (kind == "auto" and #all == 1) or (kind == "toggle" and mode.w ~= 1728)
-            local w = dense and 1728 or 1496
-            local h = dense and 1117 or 967
+            local w = dense and 1728 or 1312 -- or 1496
+            local h = dense and 1117 or 848 -- or 967
             local scale = 2
             screen:setMode(w, h, scale, mode.freq, mode.depth)
             return
@@ -634,6 +272,87 @@ local function copyAppend()
     hs.pasteboard.setContents(old .. "\n" .. hs.pasteboard.getContents())
 end
 
+-- ========== Other functions ==================================================
+
+-- Shortcut to navigate errors in kitty and fix them in VS Code.
+-- I had this bound to the Kinesis Advantage2 "International Key" at work.
+local function goToNextError()
+    hs.eventtap.keyStroke({"cmd"}, "S")
+    local app = getKittyApp("tmux.conf")
+    if not app then
+        log.e("No tmux kitty running")
+        return
+    end
+    app:activate()
+    hs.eventtap.keyStroke({}, "return")
+    hs.application.find("com.microsoft.VSCode", true):activate()
+end
+
+-- Paste and remove the first line of the text in the clipboard.
+local function pasteFirstLine()
+    local content = hs.pasteboard.getContents()
+    local i = content:find("\n")
+    local line, rest
+    if i then
+        line = content:sub(1, i - 1)
+        rest = content:sub(i + 1)
+    else
+        line = content
+        rest = ""
+    end
+    hs.pasteboard.setContents(line)
+    hs.eventtap.keyStroke({"cmd"}, "V")
+    hs.pasteboard.setContents(rest)
+end
+
+-- Copy, remove newlines, switch to spreadsheet, enter.
+local function copyForTaxFormsOne(i)
+    hs.eventtap.keyStroke({"cmd"}, "C")
+    -- hs.eventtap.keyStroke({}, "tab")
+    local text = hs.pasteboard.getContents()
+    text = text:gsub("\n", " "):match("^%s*(.-)%s*$")
+    hs.pasteboard.setContents(text)
+    hs.application.find("com.apple.Safari", true):activate()
+    -- hs.eventtap.keyStroke({"cmd"}, "`")
+    hs.timer.doAfter(0.05, function()
+        hs.eventtap.keyStroke({}, "return")
+        hs.eventtap.keyStroke({"cmd"}, "a")
+        hs.eventtap.keyStroke({"cmd"}, "v")
+        hs.eventtap.keyStroke({}, "return")
+        hs.application.find("com.apple.Preview", true):activate()
+        -- hs.eventtap.keyStroke({"cmd", "shift"}, "`")
+        -- if i < 6 then
+        --     hs.timer.doAfter(0.05, function()
+        --         copyForTaxFormsOne(i+1)
+        --     end)
+        -- end
+    end)
+end
+
+local function copyForTaxForms()
+    copyForTaxFormsOne(1)
+end
+
+local function toggleSideWindow()
+    local windows = hs.window.orderedWindows()
+    windows[3]:raise()
+    windows[1]:raise()
+end
+
+local function copyToPreviewForm()
+    hs.eventtap.keyStroke({"cmd"}, "C")
+    hs.timer.doAfter(0.05, function()
+        hs.eventtap.keyStroke({}, "down")
+        local text = hs.pasteboard.getContents()
+        text = text:gsub("%.00$", "")
+        hs.pasteboard.setContents(text)
+        hs.application.find("com.apple.Preview", true):activate()
+        hs.eventtap.keyStroke({"cmd"}, "v")
+        hs.eventtap.keyStroke({}, "tab")
+        hs.application.find("com.apple.Safari", true):activate()
+    end)
+end
+
 -- ========== Shortcuts ========================================================
 
 -- Global modifier combination unlikely to be used by other programs.
@@ -644,7 +363,7 @@ hs.hotkey.bind(hyper, "R", hs.reload)
 
 -- Commonly-used files and projects.
 hs.hotkey.bind(hyper, "J",
-    openAppFn("iA Writer", projectsDir .. "/journal/Today.txt"))
+    openAppFn("iA Writer", os.getenv("HOME") .. "/Notes/Today.md"))
 hs.hotkey.bind(hyper, "F",
     openAppFn("Visual Studio Code", projectsDir .. "/finance"))
 
@@ -653,12 +372,6 @@ hs.hotkey.bind(hyper, "F",
 --     openAppFn("Visual Studio Code", projectsDir .. "/dotfiles"))
 -- hs.hotkey.bind(hyper, "S",
 --     openAppFn("Visual Studio Code", projectsDir .. "/scripts"))
-
--- Shortcuts for kitty.
-hs.hotkey.bind({"ctrl"}, "space", showOrHideMainKittyInstance)
-hs.hotkey.bind(hyper, "space", launchFullScreenTmuxKitty)
-hs.hotkey.bind(hyper, "T", displayKittyLaunchChooser)
-hs.hotkey.bind(hyper, "C", syncKittyToDarkModeForce)
 
 -- Toggle Westminster chimes.
 hs.hotkey.bind(hyper, "M", toggleChimesEnabled)
@@ -678,20 +391,6 @@ hs.hotkey.bind(hyper, "B", endDiff)
 -- Shortcut for appending to clipboard.
 hs.hotkey.bind(hyper, "/", copyAppend)
 
--- Shortcut to navigate errors in kitty and fix them in VS Code.
--- I have this bound to the Kinesis Advantage2 "International Key" at work.
-hs.hotkey.bind(hyper, "D", function()
-    hs.eventtap.keyStroke({"cmd"}, "S")
-    local app = getKittyApp("tmux.conf")
-    if not app then
-        log.e("No tmux kitty running")
-        return
-    end
-    app:activate()
-    hs.eventtap.keyStroke({}, "return")
-    hs.application.find("com.microsoft.VSCode", true):activate()
-end)
-
 -- Mouse click with keyboard.
 -- Keycode 145 is F1 without Fn (the lower brightness media key).
 -- hs.hotkey.bind({}, 145, function()
@@ -701,31 +400,15 @@ end)
 --     hs.eventtap.event.newMouseEvent(hs.eventtap.event.types["leftMouseUp"], hs.mouse.absolutePosition()):post()
 -- end)
 
-hs.hotkey.bind(hyper, "X", function ()
-    local content = hs.pasteboard.getContents()
-    local i = content:find("\n")
-    local line, rest
-    if i then
-        line = content:sub(1, i - 1)
-        rest = content:sub(i + 1)
-    else
-        line = content
-        rest = ""
-    end
-    hs.pasteboard.setContents(line)
-    hs.eventtap.keyStroke({"cmd"}, "V")
-    hs.pasteboard.setContents(rest)
-end)
+hs.hotkey.bind(hyper, "Z", copyForTaxForms)
+-- hs.hotkey.bind(hyper, "Z", copyToPreviewForm)
+hs.hotkey.bind(hyper, "X", toggleSideWindow)
 
 -- ========== Timers ===========================================================
 
 -- Note: Recurring timers must be assigned to global variables, otherwise GC
 -- will reclaim them and they stop working!
 globalTimers = {}
-
-syncKittyToDarkModeForce()
-table.insert(globalTimers,
-    hs.timer.doEvery(hs.timer.minutes(1), syncKittyToDarkModeLazy))
 
 table.insert(globalTimers,
     hs.timer.doAt("00:00", hs.timer.minutes(15), playChimes))
