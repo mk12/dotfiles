@@ -43,16 +43,11 @@ end
 
 # =========== Shortcuts ========================================================
 
-function num_cores
-    test (uname -s) = Darwin && sysctl -n hw.ncpu || nproc
-end
-
 abbr -g g git
 abbr -g v vim
 abbr -g c code
 abbr -g hex hexyl
 abbr -g zb 'zig build'
-abbr -g m "make -j$(num_cores)"
 
 alias vi=$EDITOR
 alias vim=$EDITOR
@@ -91,7 +86,11 @@ end
 
 function alert --description "Ring the bell without changing exit status"
     set the_status $status
-    printf "\a"
+    set -l message "succeeded"
+    if test $the_status -ne 0
+        set message "failed with status $the_status"
+    end
+    printf "\x1b]9;Command $message\a"
     return $the_status
 end
 
@@ -125,7 +124,7 @@ bind \eB backward-kill-bigword
 bind \e\[107\;6u kill-whole-line
 
 # Use \e\\ for undo instead of the default (\cz, \c/, or \c-) so that vim can
-# use it too and kitty can map cmd+z to it. (Vim needs \c- for navigation.)
+# use it too and terminal can map cmd+z to it. (Vim needs \c- for navigation.)
 bind \e\\ undo
 bind \e/ redo
 
