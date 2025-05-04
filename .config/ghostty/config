@@ -1,0 +1,21 @@
+theme = light:modern-light,dark:modern-dark
+
+font-family = Iosevka
+font-style = Medium
+font-synthetic-style = false
+font-size = 15
+# font-thicken = true
+# font-thicken-strength = 0
+
+window-padding-x = 6
+
+cursor-style = bar
+cursor-style-blink = false
+shell-integration-features = no-cursor
+
+keybind = global:ctrl+space=toggle_visibility
+keybind = super+delete=text:\x0b
+keybind = cmd+shift+k=text:\x1b[107;6u
+keybind = alt+shift+backspace=text:\x1bB
+keybind = cmd+z=text:\x1b\\
+keybind = cmd+shift+z=text:\x1b/

@@ -1,0 +1,33 @@
+background = #ffffff
+foreground = #3b3b3b
+selection-background = #3b3b3b
+selection-foreground = #ffffff
+cursor-color = #0000ff
+
+# Normal
+palette = 0=#ffffff
+palette = 1=#a31515
+palette = 2=#008000
+palette = 3=#795e26
+palette = 4=#0000ff
+palette = 5=#af00db
+palette = 6=#267f99
+palette = 7=#3b3b3b
+
+# Bright (same as Normal except 8/15)
+palette = 8=#6e7681
+palette = 9=#a31515
+palette = 10=#008000
+palette = 11=#795e26
+palette = 12=#0000ff
+palette = 13=#af00db
+palette = 14=#267f99
+palette = 15=#1f1f1f
+
+# Other (like base16-shell)
+palette = 16=#0451a5
+palette = 17=#ee0000
+palette = 18=#f8f8f8
+palette = 19=#e5ebf1
+palette = 20=#616161
+palette = 21=#1f1f1f
