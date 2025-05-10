@@ -76,7 +76,7 @@ end
 -- Directory containing my coding projects.
 local projectsDir = getUserEnv("PROJECTS")
 
--- ========== SSH ============================================================== 
+-- ========== SSH ==============================================================
 
 -- This stuff isn't used right now since I got rid of all the kitty stuff in
 -- favor of using ghostty, but I might use it again in the future.
@@ -130,6 +130,22 @@ end)()
 local function sshCommand(host)
     if host then
         return "ssh " .. host.alias
+    end
+end
+
+-- ========== Ghostty ==========================================================
+
+local function showOrHideGhostty()
+    local bundleId = "com.mitchellh.ghostty"
+    local app = hs.application.find(bundleId, true)
+    if not app then
+        hs.application.open(bundleId)
+    elseif not app:mainWindow() then
+        app:selectMenuItem({ "File", "New Window" })
+    elseif app:isFrontmost() then
+        app:hide()
+    else
+        app:activate()
     end
 end
 
@@ -215,7 +231,7 @@ local function setBuiltinDisplayScale(kind)
             local mode = screen:currentMode()
             local dense = (kind == "auto" and #all == 1) or (kind == "toggle" and mode.w ~= 1728)
             local w = dense and 1728 or 1312 -- or 1496
-            local h = dense and 1117 or 848 -- or 967
+            local h = dense and 1117 or 848  -- or 967
             local scale = 2
             screen:setMode(w, h, scale, mode.freq, mode.depth)
             return
@@ -237,7 +253,7 @@ local diffFileA = "/tmp/hammerspoon-diff-A"
 local diffFileB = "/tmp/hammerspoon-diff-B"
 
 local function startDiff()
-    hs.eventtap.keyStroke({"cmd"}, "C")
+    hs.eventtap.keyStroke({ "cmd" }, "C")
     local file, err = io.open(diffFileA, "w")
     if not file then
         log.e("Failed to open file: " .. err)
@@ -248,7 +264,7 @@ local function startDiff()
 end
 
 local function endDiff()
-    hs.eventtap.keyStroke({"cmd"}, "C")
+    hs.eventtap.keyStroke({ "cmd" }, "C")
     local file, err = io.open(diffFileB, "w")
     if not file then
         log.e("Failed to open file: " .. err)
@@ -268,7 +284,7 @@ end
 
 local function copyAppend()
     local old = hs.pasteboard.getContents()
-    hs.eventtap.keyStroke({"cmd"}, "C")
+    hs.eventtap.keyStroke({ "cmd" }, "C")
     hs.pasteboard.setContents(old .. "\n" .. hs.pasteboard.getContents())
 end
 
@@ -277,7 +293,7 @@ end
 -- Shortcut to navigate errors in kitty and fix them in VS Code.
 -- I had this bound to the Kinesis Advantage2 "International Key" at work.
 local function goToNextError()
-    hs.eventtap.keyStroke({"cmd"}, "S")
+    hs.eventtap.keyStroke({ "cmd" }, "S")
     local app = getKittyApp("tmux.conf")
     if not app then
         log.e("No tmux kitty running")
@@ -301,13 +317,13 @@ local function pasteFirstLine()
         rest = ""
     end
     hs.pasteboard.setContents(line)
-    hs.eventtap.keyStroke({"cmd"}, "V")
+    hs.eventtap.keyStroke({ "cmd" }, "V")
     hs.pasteboard.setContents(rest)
 end
 
 -- Copy, remove newlines, switch to spreadsheet, enter.
 local function copyForTaxFormsOne(i)
-    hs.eventtap.keyStroke({"cmd"}, "C")
+    hs.eventtap.keyStroke({ "cmd" }, "C")
     -- hs.eventtap.keyStroke({}, "tab")
     local text = hs.pasteboard.getContents()
     text = text:gsub("\n", " "):match("^%s*(.-)%s*$")
@@ -316,8 +332,8 @@ local function copyForTaxFormsOne(i)
     -- hs.eventtap.keyStroke({"cmd"}, "`")
     hs.timer.doAfter(0.05, function()
         hs.eventtap.keyStroke({}, "return")
-        hs.eventtap.keyStroke({"cmd"}, "a")
-        hs.eventtap.keyStroke({"cmd"}, "v")
+        hs.eventtap.keyStroke({ "cmd" }, "a")
+        hs.eventtap.keyStroke({ "cmd" }, "v")
         hs.eventtap.keyStroke({}, "return")
         hs.application.find("com.apple.Preview", true):activate()
         -- hs.eventtap.keyStroke({"cmd", "shift"}, "`")
@@ -340,14 +356,14 @@ local function toggleSideWindow()
 end
 
 local function copyToPreviewForm()
-    hs.eventtap.keyStroke({"cmd"}, "C")
+    hs.eventtap.keyStroke({ "cmd" }, "C")
     hs.timer.doAfter(0.05, function()
         hs.eventtap.keyStroke({}, "down")
         local text = hs.pasteboard.getContents()
         text = text:gsub("%.00$", "")
         hs.pasteboard.setContents(text)
         hs.application.find("com.apple.Preview", true):activate()
-        hs.eventtap.keyStroke({"cmd"}, "v")
+        hs.eventtap.keyStroke({ "cmd" }, "v")
         hs.eventtap.keyStroke({}, "tab")
         hs.application.find("com.apple.Safari", true):activate()
     end)
@@ -356,7 +372,9 @@ end
 -- ========== Shortcuts ========================================================
 
 -- Global modifier combination unlikely to be used by other programs.
-local hyper = {"cmd", "option", "ctrl"}
+local hyper = { "cmd", "option", "ctrl" }
+
+hs.hotkey.bind({ "ctrl" }, "space", showOrHideGhostty)
 
 -- Reload this config file.
 hs.hotkey.bind(hyper, "R", hs.reload)
@@ -365,7 +383,7 @@ hs.hotkey.bind(hyper, "R", hs.reload)
 hs.hotkey.bind(hyper, "J",
     openAppFn("iA Writer", os.getenv("HOME") .. "/Notes/Today.md"))
 hs.hotkey.bind(hyper, "F",
-    openAppFn("Visual Studio Code", projectsDir .. "/finance"))
+    openAppFn("Zed", projectsDir .. "/finance"))
 
 -- TODO: Make a single shortcut to choose among git projects.
 -- hs.hotkey.bind(hyper, "D",
@@ -377,11 +395,11 @@ hs.hotkey.bind(hyper, "F",
 hs.hotkey.bind(hyper, "M", toggleChimesEnabled)
 
 -- Shortcut for moving windows.
-hs.hotkey.bind({"ctrl"}, "§", moveFocusedWindowToNextScreen)
+hs.hotkey.bind({ "ctrl" }, "§", moveFocusedWindowToNextScreen)
 
 -- Shortcut for fixing display scale ("P" for "pixels").
 hs.hotkey.bind(hyper, "P", fixBuiltinDisplayScale)
-hs.hotkey.bind({"cmd", "option", "ctrl", "shift"}, "P", toggleBuiltinDisplayScale)
+hs.hotkey.bind({ "cmd", "option", "ctrl", "shift" }, "P", toggleBuiltinDisplayScale)
 
 -- Shortcuts for diffing.
 -- Requires `npm install -g html2diff-cli`.

@@ -9,7 +9,6 @@ font-size = 15
 
 window-padding-x = 6
 
-keybind = global:ctrl+space=toggle_visibility
 keybind = super+delete=text:\x0b
 keybind = cmd+shift+k=text:\x1b[107;6u
 keybind = alt+shift+backspace=text:\x1bB
