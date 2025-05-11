@@ -45,7 +45,7 @@ end
 
 abbr -g g git
 abbr -g v vim
-abbr -g c code
+abbr -g c zed
 abbr -g hex hexyl
 abbr -g zb 'zig build'
 
