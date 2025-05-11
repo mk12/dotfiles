@@ -4,6 +4,11 @@ local log = hs.logger.new("init", "info")
 
 -- ========== Utilities ========================================================
 
+-- Helper for executeWithProfile.
+local function popenWithProfile(cmd)
+    return io.popen("/bin/sh -lc '" .. cmd .. "'")
+end
+
 -- Executes a command with the user profile (/etc/profile and ~/.profile) so
 -- that PATH and other environment variables are set correctly. It is slower
 -- than the other execute functions because of this. In order of time:
@@ -18,7 +23,7 @@ local log = hs.logger.new("init", "info")
 -- Second, that function puts double quotes around the command, meaning
 -- variables are expanded by the *outer* sh invocation that io.popen uses.
 local function executeWithProfile(cmd)
-    local f = io.popen("/bin/sh -lc '" .. cmd .. "'")
+    local f = popenWithProfile(cmd)
     local s = f:read('*a')
     local status, exit_type, rc = f:close()
     return s, status, exit_type, rc
@@ -73,7 +78,9 @@ local function openAppFn(app, target)
     end
 end
 
--- Directory containing my coding projects.
+-- ========== Paths ============================================================
+
+local homeDir = os.getenv("HOME")
 local projectsDir = getUserEnv("PROJECTS")
 
 -- ========== SSH ==============================================================
@@ -81,7 +88,7 @@ local projectsDir = getUserEnv("PROJECTS")
 -- This stuff isn't used right now since I got rid of all the kitty stuff in
 -- favor of using ghostty, but I might use it again in the future.
 
-local sshConfigFile = os.getenv("HOME") .. "/.ssh/config"
+local sshConfigFile = homeDir .. "/.ssh/config"
 
 -- Array of {alias, user, hostname} records parsed from sshConfigFile.
 local allSshHosts = {}
@@ -149,13 +156,37 @@ local function showOrHideGhostty()
     end
 end
 
+-- ========== Projects =========================================================
+
+local function openProjectPicker()
+    local f = popenWithProfile("z-projects")
+    local choices = {}
+    for line in f:lines() do
+        table.insert(choices, { text = line })
+    end
+    f:close()
+    local function onChoose(choice)
+        if not choice then
+            log.i("No project choice made")
+            return
+        end
+        log.i("Got project choice: " .. choice.text)
+        local path = projectsDir .. "/" .. choice.text
+        os.execute("open -a Zed '" .. path .. "'")
+    end
+    local chooser = hs.chooser.new(onChoose)
+    chooser:choices(choices)
+    chooser:placeholderText("Choose a project")
+    chooser:show()
+end
+
 -- ========== Chimes ===========================================================
 
 -- Path to the timidity binary.
 local timidityBinary = getUserBinary("timidity")
 
 -- Flag indicating whether to play chimes every quarter hour.
-local chimesEnabled = true
+local chimesEnabled = false
 
 -- Toggles the chimesEnabled flag and displays a message on screen.
 local function toggleChimesEnabled()
@@ -374,22 +405,20 @@ end
 -- Global modifier combination unlikely to be used by other programs.
 local hyper = { "cmd", "option", "ctrl" }
 
-hs.hotkey.bind({ "ctrl" }, "space", showOrHideGhostty)
 
--- Reload this config file.
+-- Hammerspoon stuff.
 hs.hotkey.bind(hyper, "R", hs.reload)
+hs.hotkey.bind(hyper, "C", hs.openConsole)
+
+-- Terminal, editor.
+hs.hotkey.bind({ "ctrl" }, "space", showOrHideGhostty)
+hs.hotkey.bind(hyper, "space", openProjectPicker)
 
 -- Commonly-used files and projects.
 hs.hotkey.bind(hyper, "J",
-    openAppFn("iA Writer", os.getenv("HOME") .. "/Notes/Today.md"))
+    openAppFn("iA Writer", homeDir .. "/Notes/Today.md"))
 hs.hotkey.bind(hyper, "F",
     openAppFn("Zed", projectsDir .. "/finance"))
-
--- TODO: Make a single shortcut to choose among git projects.
--- hs.hotkey.bind(hyper, "D",
---     openAppFn("Visual Studio Code", projectsDir .. "/dotfiles"))
--- hs.hotkey.bind(hyper, "S",
---     openAppFn("Visual Studio Code", projectsDir .. "/scripts"))
 
 -- Toggle Westminster chimes.
 hs.hotkey.bind(hyper, "M", toggleChimesEnabled)
@@ -435,7 +464,7 @@ table.insert(globalTimers,
 
 -- Install the hs binary. This just copies a symlink, so there's no harm in
 -- repeating it every reload. Doing it in setupmacos.sh is too complicated.
-hs.ipc.cliInstall(os.getenv("HOME") .. "/.local")
+hs.ipc.cliInstall(homeDir .. "/.local")
 
 -- ========== Local config =====================================================
 
