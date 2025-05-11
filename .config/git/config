@@ -37,6 +37,7 @@
     rw = reword
     sy = sync
     b2t = "!sh -c 'set -e;git tag $1 refs/heads/$1;git branch -D $1' -"
+    pa = "!git push github && git push rpi"
 [color]
     ui = auto
 [init]
