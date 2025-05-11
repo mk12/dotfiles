@@ -2,11 +2,16 @@ theme = light:modern-light,dark:modern-dark
 
 font-family = Iosevka
 font-style = Medium
+font-style-bold = Bold
+font-style-italic = Medium Italic
+font-style-bold-italic = Bold Italic
 font-synthetic-style = false
 font-size = 15
+
 # font-thicken = true
 # font-thicken-strength = 0
 
+window-save-state = never
 window-padding-x = 6
 
 keybind = super+delete=text:\x0b
