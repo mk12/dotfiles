@@ -270,7 +270,7 @@ Shortcut edit fish config (local)
 Shortcut delete hidden buffers
     \ nnoremap <Leader>eh :call DeleteHiddenBuffers()<CR>
 Shortcut edit journal file
-    \ nnoremap <Leader>ej :edit $PROJECTS/journal/Journal.txt<CR>
+    \ nnoremap <expr> <Leader>ej ':edit $PROJECTS/journal/' . strftime("%Y") . '.md<CR>'
 Shortcut edit new buffer
     \ nnoremap <Leader>en :enew<CR>
 Shortcut edit shell config/profile
@@ -899,4 +899,3 @@ function! DisableSyntaxForDiff() abort
         let &l:filetype = &filetype
     endif
 endfunction
-
