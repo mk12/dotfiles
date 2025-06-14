@@ -180,43 +180,6 @@ local function openProjectPicker()
     chooser:show()
 end
 
--- ========== Chimes ===========================================================
-
--- Path to the timidity binary.
-local timidityBinary = getUserBinary("timidity")
-
--- Flag indicating whether to play chimes every quarter hour.
-local chimesEnabled = false
-
--- Toggles the chimesEnabled flag and displays a message on screen.
-local function toggleChimesEnabled()
-    chimesEnabled = not chimesEnabled
-    local onOrOff = chimesEnabled and "on" or "off"
-    log.i("Set chimesEnabled = " .. onOrOff)
-    hs.alert("Chimes " .. onOrOff)
-    if not chimesEnabled then
-        local cmd =
-            "pkill -f 'minster.sh' '" .. timidityBinary .. "'"
-        log.i("Killing minster and timidity: " .. cmd)
-        os.execute(cmd)
-    end
-end
-
--- If chimesEnabled is true, plays Westminster chimes for the current time.
-local function playChimes()
-    if chimesEnabled then
-        -- Must use os.execute and & to avoid blocking the main thread.
-        local cmd = (
-            projectsDir .. "/minster/minster.sh -t '" .. timidityBinary .. "'"
-            .. " >> /tmp/minster.log 2>&1 &"
-        )
-        log.i("Playing chimes: " .. cmd)
-        os.execute(cmd)
-    else
-        log.i("Not playing chimes because they are turned off")
-    end
-end
-
 -- ========== Move windows =====================================================
 
 local function moveFocusedWindowToNextScreen()
@@ -420,9 +383,6 @@ hs.hotkey.bind(hyper, "J",
 hs.hotkey.bind(hyper, "F",
     openAppFn("Zed", projectsDir .. "/finance"))
 
--- Toggle Westminster chimes.
-hs.hotkey.bind(hyper, "M", toggleChimesEnabled)
-
 -- Shortcut for moving windows.
 hs.hotkey.bind({ "ctrl" }, "§", moveFocusedWindowToNextScreen)
 
@@ -456,9 +416,6 @@ hs.hotkey.bind(hyper, "X", toggleSideWindow)
 -- Note: Recurring timers must be assigned to global variables, otherwise GC
 -- will reclaim them and they stop working!
 globalTimers = {}
-
-table.insert(globalTimers,
-    hs.timer.doAt("00:00", hs.timer.minutes(15), playChimes))
 
 -- ========== Misc =============================================================
 
