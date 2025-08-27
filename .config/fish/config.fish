@@ -20,40 +20,6 @@ if not status --is-interactive
     exit
 end
 
-# =========== Plugins ==========================================================
-
-set my_fish_plugins jorgebucaran/fisher mk12/fish-{fzf,vscode}
-
-function replug --description "Update plugins, symlinking local ones"
-    set config_dir (status dirname)
-    for plugin in $my_fish_plugins
-        set local $PROJECTS/(string split / $plugin)[2]
-        if ! test -d $local || ! git -C $local remote -v | grep -q $plugin
-            set -a external $plugin
-            continue
-        end
-        for dir in conf.d functions completions
-            set install $config_dir/$dir
-            if set sources $local/$dir/* && test (count $sources) -gt 0
-                ln -sf $sources $install/
-            end
-            for link in (find $install -type l ! -exec test -e {} \; -print)
-                echo "Removing stale symlink $link"
-                rm -f $link
-            end
-        end
-    end
-    printf "%s\n" $external | sort >$config_dir/fish_plugins
-    if ! functions -q fisher
-        curl -sL https://git.io/fisher | source
-    end
-    fisher update
-end
-
-if command -qv zoxide
-    zoxide init fish | source
-end
-
 # =========== Prompt ===========================================================
 
 function fish_prompt
@@ -108,6 +74,10 @@ end
 
 if command -qv git-branchless
     alias git='git-branchless wrap --'
+end
+
+if command -qv zoxide
+    zoxide init fish | source
 end
 
 # =========== Functions ========================================================
