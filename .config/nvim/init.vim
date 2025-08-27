@@ -44,7 +44,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/goyo.vim'
 Plug 'junegunn/gv.vim'
 Plug 'justinmk/vim-dirvish'
 Plug 'kana/vim-textobj-user'
@@ -379,8 +378,6 @@ Shortcut toggle 80-column marker
     \ nnoremap <Leader>t8 :call ToggleColumnLimit()<CR>
 Shortcut toggle auto-pairs
     \ nnoremap <Leader>ta :call AutoPairsToggle()<CR>
-Shortcut toggle Goyo mode
-    \ nnoremap <Leader>tg :Goyo<CR>
 Shortcut toggle git line highlight
     \ nnoremap <Leader>tl :GitGutterLineHighlightsToggle<CR>
 Shortcut toggle line numbers
