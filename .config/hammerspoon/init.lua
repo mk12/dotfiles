@@ -407,9 +407,9 @@ hs.hotkey.bind(hyper, "/", copyAppend)
 --     hs.eventtap.event.newMouseEvent(hs.eventtap.event.types["leftMouseUp"], hs.mouse.absolutePosition()):post()
 -- end)
 
-hs.hotkey.bind(hyper, "Z", copyForTaxForms)
+-- hs.hotkey.bind(hyper, "Z", copyForTaxForms)
 -- hs.hotkey.bind(hyper, "Z", copyToPreviewForm)
-hs.hotkey.bind(hyper, "X", toggleSideWindow)
+-- hs.hotkey.bind(hyper, "X", toggleSideWindow)
 
 -- ========== Timers ===========================================================
 
