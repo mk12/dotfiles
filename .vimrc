@@ -357,8 +357,8 @@ Shortcut lint code
 Shortcut stop highlighting the search
     \ nnoremap <Leader>n :nohlsearch<CR>
 
-Shortcut open in VS Code
-    \ nnoremap <Leader>o :call OpenInVSCode()<CR>
+Shortcut open in GUI editor
+    \ nnoremap <Leader>o :call OpenInGuiEditor()<CR>
 
 Shortcut clean plugins
     \ nnoremap <Leader>pc :PlugClean<CR>
@@ -810,9 +810,9 @@ function! LintCode(...) abort range
     execute l:range . 'w !' . l:cmd
 endfunction
 
-function! OpenInVSCode() abort
+function! OpenInGuiEditor() abort
     let l:arg = expand('%p') . ':' . line('.') . ':' . col('.')
-    execute '!fish -c "code -g ''' . l:arg . '''"'
+    execute '!fish -c "zed ''' . l:arg . '''"'
 endfunction
 
 function! ToggleColumnLimit() abort
