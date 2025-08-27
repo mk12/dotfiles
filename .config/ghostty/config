@@ -8,10 +8,6 @@ font-style-bold-italic = Bold Italic
 font-synthetic-style = false
 font-size = 14
 
-# font-thicken = true
-# font-thicken-strength = 0
-
-# macos-titlebar-style = tabs
 unfocused-split-opacity = 0.9
 window-save-state = never
 window-padding-x = 6
