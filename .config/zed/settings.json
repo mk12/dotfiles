@@ -21,26 +21,12 @@
   "terminal": {
     "option_as_meta": true
   },
+  "format_on_save": "off",
   "languages": {
-    "CSS": {
-      "format_on_save": "off"
-    },
-    "Markdown": {
-      "format_on_save": "off"
-    },
-    "HTML": {
-      "format_on_save": "off"
-    },
     "Python": {
       // Until they fix the .ropeproject thing:
       // https://github.com/zed-industries/zed/issues/22085
       "enable_language_server": false
-    },
-    "JavaScript": {
-      "format_on_save": "off"
-    },
-    "TypeScript": {
-      "format_on_save": "off"
     }
   }
 }
