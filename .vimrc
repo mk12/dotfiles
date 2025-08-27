@@ -61,7 +61,6 @@ Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
@@ -402,8 +401,6 @@ Shortcut toggle git line highlight
     \ nnoremap <Leader>tl :GitGutterLineHighlightsToggle<CR>
 Shortcut toggle line numbers
     \ nnoremap <Leader>tn :set number!<CR>
-Shortcut toggle obsess/session tracking
-    \ nnoremap <Leader>to :call ToggleObsession()<CR>
 Shortcut toggle paste mode
     \ nnoremap <Leader>tp :set paste!<CR>
 Shortcut toggle relative line numbers
@@ -837,15 +834,6 @@ function! ToggleColumnLimit() abort
         setlocal colorcolumn=+1
     else
         setlocal textwidth=0 colorcolumn=0
-    endif
-endfunction
-
-function! ToggleObsession() abort
-    if empty(ObsessionStatus()) && argc() is 0 && &modified is 0
-                \ && empty(v:this_session) && filereadable('Session.vim')
-        source Session.vim
-    else
-        Obsession!
     endif
 endfunction
 
