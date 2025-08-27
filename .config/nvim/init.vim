@@ -20,9 +20,6 @@ let g:fugitive_legacy_commands = 0
 
 let g:gitgutter_map_keys = 0
 
-let g:VimuxPromptString = "Vimux: "
-let g:VimuxHeight = "30"
-
 " =========== Plugins ==========================================================
 
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
@@ -44,7 +41,6 @@ Plug LocalPlugin('mk12/vim-meta')
 
 Plug 'Clavelito/indent-awk.vim'
 Plug 'airblade/vim-gitgutter'
-Plug 'benmills/vimux'
 Plug 'glts/vim-textobj-comment'
 Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf.vim'
@@ -438,26 +434,6 @@ Shortcut save/write and exit
     \ nnoremap <Leader>x :exit<CR>
 Shortcut save/write all and exit
     \ nnoremap <Leader>X :xall<CR>
-
-Shortcut open horizontal vimux pane
-    \ nnoremap <Leader>v- :call OpenVimux('v')<CR>
-Shortcut open vertical vimux pane
-    \ nnoremap <Leader>v/ :call OpenVimux('h')<CR>
-Shortcut interrupt (Ctrl-C) vimux
-    \ nnoremap <Leader>vc :VimuxInterruptRunner<CR>
-Shortcut inspect vimux pane
-    \ nnoremap <Leader>vi :VimuxInspectRunner<CR>
-Shortcut clear vimux history
-    \ nnoremap <Leader>vk
-        \ :call VimuxSendKeys('C-l')<Bar>VimuxClearRunnerHistory<CR>
-Shortcut run last vimux command
-    \ nnoremap <Leader>vl :VimuxRunLastCommand<CR>
-Shortcut close vimux pane
-    \ nnoremap <Leader>vq :VimuxCloseRunner<CR>
-Shortcut run vimux command
-    \ nnoremap <Leader>vv :VimuxPromptCommand<CR>
-Shortcut zoom vimux pane
-    \ nnoremap <Leader>vz :VimuxZoomRunner<CR>
 
 Shortcut yank to system clipboard
     \ nnoremap <Leader>y :%y+<Bar>call YankToSystemClipboard(@+)<CR>
@@ -855,12 +831,6 @@ function! ToggleObsession() abort
     else
         Obsession!
     endif
-endfunction
-
-function! OpenVimux(orientation) abort
-    VimuxCloseRunner
-    let g:VimuxOrientation = a:orientation
-    call VimuxOpenRunner()
 endfunction
 
 " https://sunaku.github.io/tmux-yank-osc52.html
