@@ -1,10 +1,20 @@
 # =========== Shared config ====================================================
 
-if functions -q fenv
-    fenv source ~/.profile
-else
-    echo (status -f): "fenv unavailable, not sourcing ~/.profile"
+# From https://github.com/oh-my-fish/plugin-foreign-env/blob/master/functions/fenv.main.fish
+# Copyright 2015 Derek Willian Stavis (MIT Licensed)
+function fenv --description "Run bash script and import variables it modifies"
+    bash -c "$argv && env -0 >&31" 31>| while read -l -z env_var
+        set -l kv (string split -m 1 = $env_var) || continue
+        contains $kv[1] _ SHLVL PWD && continue
+        string match -rq '^BASH_.*%%$' $kv[1] && continue
+        if ! set -q $kv[1] || test "$$kv[1]" != $kv[2] || ! set -qx $kv[1]
+            set -gx $kv
+        end
+    end
+    return $pipestatus[1]
 end
+
+fenv source ~/.profile
 
 if not status --is-interactive
     exit
@@ -12,7 +22,7 @@ end
 
 # =========== Plugins ==========================================================
 
-set my_fish_plugins jorgebucaran/fisher oh-my-fish/plugin-foreign-env \
+set my_fish_plugins jorgebucaran/fisher \
     pure-fish/pure jethrokuan/z mk12/fish-{fzf,vscode}
 
 function replug --description "Update plugins, symlinking local ones"

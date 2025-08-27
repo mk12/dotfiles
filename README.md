@@ -24,7 +24,7 @@ Run `make lint` to lint shell scripts with [ShellCheck][].
 
 I use [fish][] as my primary shell, but I still like to have a usable bash environment. To that end, I have my shell config set up like this:
 
-- [config.fish](.config/fish/config.fish): Fish configuration. Sources `.profile` using the [fenv][] plugin. If interactive, defines functions, aliases, etc. and sources `local.fish`.
+- [config.fish](.config/fish/config.fish): Fish configuration. Sources environment variables from `.profile`. If interactive, defines functions, aliases, etc. and sources `local.fish`.
 - `local.fish`: Machine-specific extension to `config.fish`.
 - [fish_plugins](.config/fish/fish_plugins): Fish plugins installed by [fisher][].
 - [.bash_profile](.bash_profile): Simply sources `.bashrc`.
@@ -81,7 +81,6 @@ I got the idea for this from [GitHub does dotfiles][gdd].
 
 Dotfiles is available under the MIT License; see [LICENSE](LICENSE.md) for details.
 
-[fenv]: https://github.com/oh-my-fish/plugin-foreign-env
 [fish]: https://fishshell.com
 [fisher]: https://github.com/jorgebucaran/fisher
 [gdd]: http://dotfiles.github.io
