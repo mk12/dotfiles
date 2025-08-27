@@ -561,28 +561,25 @@ function! MyFzf(type, ...) abort
     let l:preview = l:helper_dir . '/fzf_preview.sh'
     let l:temp = tempname()
     let l:cts = l:command . ' ' . l:temp . ' '
-    try
-        call fzf#run(fzf#wrap({
-            \ 'source': join([l:command, l:temp, 'init', l:root, a:type]),
-            \ 'options': [
-                \ '--keep-right',
-                \ '--header-lines', '1',
-                \ '--preview', l:preview . ' {} ' . l:temp,
-                \ '--bind', 'ctrl-o:reload(' . l:cts . 'file)',
-                \ '--bind', 'ctrl-q:reload(' . l:cts . 'directory)',
-                \ '--bind', 'alt-z:reload(' . l:cts . 'z)',
-                \ '--bind', 'alt-.:reload(' . l:cts . 'toggle-hidden)',
-                \ '--bind', 'alt-i:reload(' . l:cts . 'toggle-ignore)',
-                \ '--bind', 'alt-h:reload(' . l:cts . 'home)+clear-query',
-                \ '--bind', 'alt-up:reload(' . l:cts . 'up)+clear-query',
-                \ '--bind', 'alt-down:reload(' . l:cts . 'down {})+clear-query',
-                \ '--bind', 'alt-enter:accept',
-            \ ],
-            \ 'sink': { choice -> s:Edit(system(l:cts . 'finish', choice)) },
-        \ }))
-    finally
-        call delete(l:temp)
-    endtry
+    call fzf#run(fzf#wrap({
+        \ 'source': join([l:command, l:temp, 'init', l:root, a:type]),
+        \ 'options': [
+            \ '--keep-right',
+            \ '--header-lines', '1',
+            \ '--preview', l:preview . ' {} ' . l:temp,
+            \ '--bind', 'ctrl-o:reload(' . l:cts . 'file)',
+            \ '--bind', 'ctrl-q:reload(' . l:cts . 'directory)',
+            \ '--bind', 'alt-z:reload(' . l:cts . 'z)',
+            \ '--bind', 'alt-.:reload(' . l:cts . 'toggle-hidden)',
+            \ '--bind', 'alt-i:reload(' . l:cts . 'toggle-ignore)',
+            \ '--bind', 'alt-h:reload(' . l:cts . 'home)+clear-query',
+            \ '--bind', 'alt-up:reload(' . l:cts . 'up)+clear-query',
+            \ '--bind', 'alt-down:reload(' . l:cts . 'down {})+clear-query',
+            \ '--bind', 'alt-enter:accept',
+        \ ],
+        \ 'sink': { choice -> s:Edit(system(l:cts . 'finish', choice)) },
+        \ 'exit': { code -> delete(l:temp) }
+    \ }))
 endfunction
 
 function! SearchProject(...) abort
