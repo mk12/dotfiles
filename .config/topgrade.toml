@@ -1,2 +1,0 @@
-disable = ["system", "emacs", "node"]
-predefined_git_repos = false
