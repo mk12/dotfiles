@@ -22,7 +22,7 @@ end
 
 # =========== Plugins ==========================================================
 
-set my_fish_plugins jorgebucaran/fisher jethrokuan/z mk12/fish-{fzf,vscode}
+set my_fish_plugins jorgebucaran/fisher mk12/fish-{fzf,vscode}
 
 function replug --description "Update plugins, symlinking local ones"
     set config_dir (status dirname)
@@ -48,6 +48,10 @@ function replug --description "Update plugins, symlinking local ones"
         curl -sL https://git.io/fisher | source
     end
     fisher update
+end
+
+if command -qv zoxide
+    zoxide init fish | source
 end
 
 # =========== Prompt ===========================================================
