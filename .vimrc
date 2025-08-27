@@ -562,8 +562,11 @@ function! PrevBufOrTab() abort
     endif
 endfunction
 
-function! s:Edit(file)
-    execute 'edit' a:file
+function! s:FinishFzf(temp, choice)
+    call delete(a:temp)
+    if !empty(a:choice)
+        execute 'edit' a:choice
+    endif
 endfunction
 
 function! MyFzf(type, ...) abort
@@ -577,28 +580,26 @@ function! MyFzf(type, ...) abort
     let l:preview = l:helper_dir . '/fzf_preview.sh'
     let l:temp = tempname()
     let l:cts = l:command . ' ' . l:temp . ' '
-    try
-        call fzf#run(fzf#wrap({
-            \ 'source': join([l:command, l:temp, 'init', l:root, a:type]),
-            \ 'options': [
-                \ '--keep-right',
-                \ '--header-lines', '1',
-                \ '--preview', l:preview . ' {} ' . l:temp,
-                \ '--bind', 'ctrl-o:reload(' . l:cts . 'file)',
-                \ '--bind', 'ctrl-q:reload(' . l:cts . 'directory)',
-                \ '--bind', 'alt-z:reload(' . l:cts . 'z)',
-                \ '--bind', 'alt-.:reload(' . l:cts . 'toggle-hidden)',
-                \ '--bind', 'alt-i:reload(' . l:cts . 'toggle-ignore)',
-                \ '--bind', 'alt-h:reload(' . l:cts . 'home)+clear-query',
-                \ '--bind', 'alt-up:reload(' . l:cts . 'up)+clear-query',
-                \ '--bind', 'alt-down:reload(' . l:cts . 'down {})+clear-query',
-                \ '--bind', 'alt-enter:accept',
-            \ ],
-            \ 'sink': { choice -> s:Edit(system(l:cts . 'finish', choice)) },
-        \ }))
-    finally
-        call delete(l:temp)
-    endtry
+    call fzf#run(fzf#wrap({
+        \ 'source': join([l:command, l:temp, 'init', l:root, a:type]),
+        \ 'options': [
+            \ '--keep-right',
+            \ '--header-lines', '1',
+            \ '--preview', l:preview . ' {} ' . l:temp,
+            \ '--bind', 'ctrl-o:reload(' . l:cts . 'file)',
+            \ '--bind', 'ctrl-q:reload(' . l:cts . 'directory)',
+            \ '--bind', 'alt-z:reload(' . l:cts . 'z)',
+            \ '--bind', 'alt-.:reload(' . l:cts . 'toggle-hidden)',
+            \ '--bind', 'alt-i:reload(' . l:cts . 'toggle-ignore)',
+            \ '--bind', 'alt-h:reload(' . l:cts . 'home)+clear-query',
+            \ '--bind', 'alt-up:reload(' . l:cts . 'up)+clear-query',
+            \ '--bind', 'alt-down:reload(' . l:cts . 'down {})+clear-query',
+            \ '--bind', 'alt-enter:accept',
+        \ ],
+        \ 'exit': { code -> code == 0 ? 0 : s:FinishFzf(l:temp, "") },
+        \ 'sink': { choice ->
+        \   s:FinishFzf(l:temp, system(l:cts . 'finish', choice)) },
+    \ }))
 endfunction
 
 function! SearchProject(...) abort

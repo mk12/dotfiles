@@ -546,8 +546,11 @@ function! PrevBufOrTab() abort
     endif
 endfunction
 
-function! s:Edit(file)
-    execute 'edit' a:file
+function! s:FinishFzf(temp, choice)
+    call delete(a:temp)
+    if !empty(a:choice)
+        execute 'edit' a:choice
+    endif
 endfunction
 
 function! MyFzf(type, ...) abort
@@ -577,8 +580,9 @@ function! MyFzf(type, ...) abort
             \ '--bind', 'alt-down:reload(' . l:cts . 'down {})+clear-query',
             \ '--bind', 'alt-enter:accept',
         \ ],
-        \ 'sink': { choice -> s:Edit(system(l:cts . 'finish', choice)) },
-        \ 'exit': { code -> delete(l:temp) }
+        \ 'exit': { code -> code == 0 ? 0 : s:FinishFzf(l:temp, "") },
+        \ 'sink': { choice ->
+        \   s:FinishFzf(l:temp, system(l:cts . 'finish', choice)) },
     \ }))
 endfunction
 
