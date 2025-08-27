@@ -1,6 +1,3 @@
-[user]
-    name = Mitchell Kember
-    # email in local.gitconfig
 [alias]
     s = status -s
     b = branch
@@ -75,4 +72,5 @@
     cmd = $EDITOR -d $LOCAL $BASE $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
     prompt = false
 [include]
+    # user.name and user.email are in here.
     path = local.gitconfig

@@ -422,8 +422,3 @@ globalTimers = {}
 -- Install the hs binary. This just copies a symlink, so there's no harm in
 -- repeating it every reload. Doing it in setupmacos.sh is too complicated.
 hs.ipc.cliInstall(homeDir .. "/.local")
-
--- ========== Local config =====================================================
-
--- TODO: Add way of accessing hyper, executeWithProfile, etc. in local.lua.
-require("local")
