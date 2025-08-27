@@ -1,5 +1,6 @@
 [user]
     name = Mitchell Kember
+    # email in local.gitconfig
 [alias]
     s = status -s
     b = branch
