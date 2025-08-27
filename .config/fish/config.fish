@@ -72,7 +72,7 @@ function fish_prompt
     if test -n "$prompt_status"
         set extra "$extra $prompt_status"
     end
-    set -l line1 "$(set_color blue)$(prompt_pwd)$normal$extra"
+    set -l line1 "$(set_color blue)$(prompt_pwd -d 0)$normal$extra"
     set -l line2 "$(set_color magenta --bold)❯ $normal"
     printf "\n%s\n%s" $line1 $line2
 end
