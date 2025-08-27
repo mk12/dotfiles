@@ -1,4 +1,4 @@
-# =========== Shared config ====================================================
+# =========== Profile ==========================================================
 
 # From https://github.com/oh-my-fish/plugin-foreign-env/blob/master/functions/fenv.main.fish
 # Copyright 2015 Derek Willian Stavis (MIT Licensed)
@@ -22,8 +22,7 @@ end
 
 # =========== Plugins ==========================================================
 
-set my_fish_plugins jorgebucaran/fisher \
-    pure-fish/pure jethrokuan/z mk12/fish-{fzf,vscode}
+set my_fish_plugins jorgebucaran/fisher jethrokuan/z mk12/fish-{fzf,vscode}
 
 function replug --description "Update plugins, symlinking local ones"
     set config_dir (status dirname)
@@ -51,17 +50,45 @@ function replug --description "Update plugins, symlinking local ones"
     fisher update
 end
 
+# =========== Prompt ===========================================================
+
+function fish_prompt
+    set -l last_pipestatus $pipestatus
+    set -lx __fish_last_status $status # Export for __fish_print_pipestatus
+    set -l normal (set_color normal)
+    set -l red (set_color red)
+    set -l extra
+    if set -q SSH_TTY
+        set extra "$extra $(set_color brblack)$USER@$hostname$normal"
+    end
+    if test $CMD_DURATION -gt 5000
+        set extra "$extra $(set_color yellow)$(math -s 0 -m round $CMD_DURATION / 1000)s$normal"
+    end
+    set -l prompt_status (__fish_print_pipestatus "[" "]" "|" "$red" "$red" $last_pipestatus)
+    if test -n "$prompt_status"
+        set extra "$extra $prompt_status"
+    end
+    set -l line1 "$(set_color blue)$(prompt_pwd)$normal$extra"
+    set -l line2 "$(set_color magenta --bold)❯ $normal"
+    printf "\n%s\n%s" $line1 $line2
+end
+
 # =========== Shortcuts ========================================================
 
 abbr -g g git
+abbr -g gs git status
 abbr -g v vim
-abbr -g c zed
-abbr -g hex hexyl
-abbr -g zb 'zig build'
+abbr -g zb zig build
 
 alias vi=$EDITOR
 alias vim=$EDITOR
 alias e='emacsclient -t -a ""'
+
+if command -qv zed
+    abbr -g c zed
+else if command -qv code
+    abbr -g c code
+end
 
 if command -qv eza
     alias l=eza
@@ -116,7 +143,6 @@ end
 # =========== Keybindings ======================================================
 
 bind \ea add_alert
-bind \ec kitty-colors "commandline -f repaint"
 bind \er refish
 
 # These bindings match https://github.com/mk12/vim-meta.
@@ -160,9 +186,6 @@ set fish_pager_color_progress cyan --bold
 # Fish doesn't allow a 0-255 color palette number, so I use these hex colors
 # which match xterm defaults in slots 16-21 where I have base16 colors.
 set fish_color_search_match "#0000ff" "--background=#000087"
-
-set pure_separate_prompt_on_error true
-set pure_enable_git false
 
 # =========== Local config =====================================================
 
