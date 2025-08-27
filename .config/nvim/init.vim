@@ -14,8 +14,6 @@ let g:airline_extensions = ['tabline']
 let g:airline_highlighting_cache = 1
 let g:airline_theme = 'base16_vim'
 
-let g:dispatch_no_maps = 1
-
 let g:fugitive_legacy_commands = 0
 
 let g:gitgutter_map_keys = 0
@@ -54,7 +52,6 @@ Plug 'sgur/vim-textobj-parameter'
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : 'Shortcut' }
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
@@ -341,11 +338,6 @@ Shortcut force kill/delete buffer
 Shortcut lint code
     \ nnoremap <silent> <Leader>l :call LintCode('%')<CR>
     \|xnoremap <silent> <Leader>l :call LintCode()<CR>
-
-Shortcut dispatch default task
-    \ nnoremap <Leader>m :Dispatch<CR>
-Shortcut select default dispatch task
-    \ nnoremap <Leader>M :FocusDispatch<Space>
 
 Shortcut stop highlighting the search
     \ nnoremap <Leader>n :nohlsearch<CR>
