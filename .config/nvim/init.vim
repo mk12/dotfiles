@@ -69,6 +69,7 @@ set backup
 set belloff=all
 set cmdheight=2
 set cursorline
+set formatoptions-=t
 set gdefault
 set hidden
 set ignorecase
