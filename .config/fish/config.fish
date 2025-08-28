@@ -22,6 +22,9 @@ end
 
 # =========== Prompt ===========================================================
 
+# Hide the default greeting.
+set fish_greeting
+
 function fish_prompt
     set -l last_pipestatus $pipestatus
     set -lx __fish_last_status $status # Export for __fish_print_pipestatus
