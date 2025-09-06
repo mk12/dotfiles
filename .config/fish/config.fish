@@ -38,11 +38,13 @@ function fish_prompt
         set extra "$extra $(set_color yellow)$(math -s 0 -m round $CMD_DURATION / 1000)s$normal"
     end
     set -l prompt_status (__fish_print_pipestatus "[" "]" "|" "$red" "$red" $last_pipestatus)
+    set -l marker "$(set_color magenta --bold)❯"
     if test -n "$prompt_status"
         set extra "$extra $prompt_status"
+        set marker "$(set_color red --bold)❯$marker"
     end
     set -l line1 "$(set_color blue)$(prompt_pwd -d 0)$normal$extra"
-    set -l line2 "$(set_color magenta --bold)❯ $normal"
+    set -l line2 "$marker $normal"
     printf "$__prompt_newline%s\n%s" $line1 $line2
     set -g __prompt_newline "\n"
 end
