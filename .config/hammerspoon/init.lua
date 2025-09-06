@@ -363,6 +363,24 @@ local function copyToPreviewForm()
     end)
 end
 
+local function goDownTwoPdfs()
+    local windows = hs.window.orderedWindows()
+    hs.eventtap.keyStroke({}, "down")
+    windows[2]:raise()
+    hs.timer.doAfter(0.05, function()
+        hs.eventtap.keyStroke({}, "down")
+    end)
+end
+
+local function goUpTwoPdfs()
+    local windows = hs.window.orderedWindows()
+    hs.eventtap.keyStroke({}, "up")
+    windows[2]:raise()
+    hs.timer.doAfter(0.05, function()
+        hs.eventtap.keyStroke({}, "up")
+    end)
+end
+
 -- ========== Shortcuts ========================================================
 
 -- Global modifier combination unlikely to be used by other programs.
@@ -407,6 +425,8 @@ hs.hotkey.bind(hyper, "/", copyAppend)
 --     hs.eventtap.event.newMouseEvent(hs.eventtap.event.types["leftMouseUp"], hs.mouse.absolutePosition()):post()
 -- end)
 
+-- hs.hotkey.bind(hyper, "Z", goDownTwoPdfs)
+-- hs.hotkey.bind(hyper, "X", goUpTwoPdfs)
 -- hs.hotkey.bind(hyper, "Z", copyForTaxForms)
 -- hs.hotkey.bind(hyper, "Z", copyToPreviewForm)
 -- hs.hotkey.bind(hyper, "X", toggleSideWindow)
