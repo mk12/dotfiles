@@ -43,7 +43,8 @@ function fish_prompt
     end
     set -l line1 "$(set_color blue)$(prompt_pwd -d 0)$normal$extra"
     set -l line2 "$(set_color magenta --bold)❯ $normal"
-    printf "\n%s\n%s" $line1 $line2
+    printf "$__prompt_newline%s\n%s" $line1 $line2
+    set -g __prompt_newline "\n"
 end
 
 # =========== Shortcuts ========================================================
