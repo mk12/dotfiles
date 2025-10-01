@@ -1,5 +1,3 @@
-shell-integration-features = ssh-terminfo,ssh-env
-
 theme = light:modern-light,dark:modern-dark
 
 font-family = Iosevka
