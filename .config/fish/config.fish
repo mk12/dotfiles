@@ -52,7 +52,7 @@ function fish_prompt
     set -l line1 "$(set_color blue)$(prompt_pwd -d 0)$normal$extra"
     set -l line2 "$marker $normal"
     set -l newline
-    set row (command sh --norc -c 'IFS=\';\' read -sdR -p $\'\E[6n\' row col; echo "${row#*[}"')
+    set row (command bash --norc -c 'IFS=\';\' read -sdR -p $\'\E[6n\' row col; echo "${row#*[}"')
     if test $row -gt 1
         set newline '\n'
     end
