@@ -29,7 +29,7 @@ set fish_greeting
 # the latter tries to first scroll to preserve the existing prompt and includes
 # the blank line at the top which we don't want.
 set __prompt_newline
-bind \cl clear 'set __prompt_newline' 'commandline -f repaint'
+bind \cl clear 'commandline -f repaint'
 
 function fish_prompt
     set -l last_pipestatus $pipestatus
@@ -51,8 +51,12 @@ function fish_prompt
     end
     set -l line1 "$(set_color blue)$(prompt_pwd -d 0)$normal$extra"
     set -l line2 "$marker $normal"
-    printf "$__prompt_newline%s\n%s" $line1 $line2
-    set __prompt_newline '\n'
+    set -l newline
+    set row (command sh --norc -c 'IFS=\';\' read -sdR -p $\'\E[6n\' row col; echo "${row#*[}"')
+    if test $row -gt 1
+        set newline '\n'
+    end
+    printf "$newline%s\n%s" $line1 $line2
 end
 
 # =========== Shortcuts ========================================================
