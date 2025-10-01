@@ -35,8 +35,8 @@
     rw = reword
     sy = sync
     b2t = "!sh -c 'set -e;git tag $1 refs/heads/$1;git branch -D $1' -"
-    pa = "!git push github && git push rpi"
-    pam = "!git push github && git push rpi --mirror"
+    pa = "!git push github && git push hex"
+    pam = "!git push github && git push hex --mirror"
 [color]
     ui = auto
 [init]
