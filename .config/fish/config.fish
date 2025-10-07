@@ -25,12 +25,6 @@ end
 # Hide the default greeting.
 set fish_greeting
 
-# Use real clear for Ctrl-L (and Cmd-K) instead of builtin clear-screen because
-# the latter tries to first scroll to preserve the existing prompt and includes
-# the blank line at the top which we don't want.
-set __prompt_newline
-bind \cl clear 'commandline -f repaint'
-
 function fish_prompt
     set -l last_pipestatus $pipestatus
     set -lx __fish_last_status $status # Export for __fish_print_pipestatus
@@ -51,12 +45,7 @@ function fish_prompt
     end
     set -l line1 "$(set_color blue)$(prompt_pwd -d 0)$normal$extra"
     set -l line2 "$marker $normal"
-    set -l newline
-    set row (command bash --norc -c 'IFS=\';\' read -sdR -p $\'\E[6n\' row col; echo "${row#*[}"')
-    if test $row -gt 1
-        set newline '\n'
-    end
-    printf "$newline%s\n%s" $line1 $line2
+    printf "\n%s\n%s" $line1 $line2
 end
 
 # =========== Shortcuts ========================================================
