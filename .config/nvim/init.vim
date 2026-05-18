@@ -1,15 +1,5 @@
 set shell=sh
 
-" =========== Plugin settings ==================================================
-
-let g:airline#extensions#default#layout = [['a', 'c'], ['x', 'y']]
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_base16_improved_contrast = 1
-let g:airline_base16_monotone = 1
-let g:airline_extensions = ['tabline']
-let g:airline_highlighting_cache = 1
-let g:airline_theme = 'base16_vim'
-
 " =========== Plugins ==========================================================
 
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
@@ -38,8 +28,6 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'wsdjeg/vim-fetch'
 
 call plug#end()
@@ -63,7 +51,7 @@ set noerrorbells
 set nofoldenable
 set nojoinspaces
 set noruler
-set noshowmode
+set showmode
 set nostartofline
 set number
 set scrolloff=4
@@ -342,12 +330,6 @@ augroup custom
     " Don't do syntax highlighting in diffs.
     autocmd BufEnter * call DisableSyntaxForDiff()
     autocmd OptionSet diff call DisableSyntaxForDiff()
-
-    " The Airline tabline gets messed up when reloading the color scheme.
-    autocmd ColorScheme * AirlineRefresh
-
-    " Sometimes Airline doesn't clean up properly.
-    autocmd BufWipeout * call airline#extensions#tabline#buflist#clean()
 
     " Exit things with q.
     autocmd filetype help nnoremap <buffer> <silent> q :close<CR>
