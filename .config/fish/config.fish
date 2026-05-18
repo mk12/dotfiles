@@ -102,7 +102,7 @@ end
 
 function alert --description "Ring the bell without changing exit status"
     set the_status $status
-    set -l message "succeeded"
+    set -l message succeeded
     if test $the_status -ne 0
         set message "failed with status $the_status"
     end
