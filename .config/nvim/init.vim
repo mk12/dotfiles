@@ -229,9 +229,6 @@ Shortcut quit
 Shortcut force quit
     \ nnoremap <Leader>Q :quit!<CR>
 
-Shortcut reload/source vimrc or init.vim
-    \ nnoremap <Leader>r :source $MYVIMRC<CR>
-
 Shortcut toggle 80-column marker
     \ nnoremap <Leader>t8 :call ToggleColumnLimit()<CR>
 Shortcut toggle line numbers
@@ -326,32 +323,6 @@ endfunction
 
 function! s:EchoException() abort
     call s:Error(substitute(v:exception, '^Vim.\{-}:', '', ''))
-endfunction
-
-function! s:ExecuteRestoringView(cmd) abort
-    " http://vim.wikia.com/wiki/Restore_the_cursor_position_after_undoing_text_change_made_by_a_script
-    normal! ix
-    normal! x
-    let l:view = winsaveview()
-    let l:old_shellredir = &shellredir
-    let l:errfile = tempname()
-    let &shellredir = '>%s 2>' . l:errfile
-    try
-        silent execute a:cmd
-    finally
-        let &shellredir = l:old_shellredir
-        call winrestview(l:view)
-    endtry
-    if v:shell_error isnot 0
-        call s:Error(readfile(l:errfile)[0])
-    endif
-endfunction
-
-function! InputDirectory() abort
-    let l:default_dir = get(s:, 'last_input_dir', '')
-    let l:dir = input('From dir: ', l:default_dir, 'dir')
-    let s:last_input_dir = l:dir
-    return l:dir
 endfunction
 
 function! VisualReplaceExpr() abort
