@@ -2,10 +2,6 @@ set shell=sh
 
 " =========== Plugin settings ==================================================
 
-let g:AutoPairsMultilineClose = 0
-let g:AutoPairsShortcutToggle = ''
-let g:AutoPairsShortcutBackInsert = ''
-
 let g:airline#extensions#default#layout = [['a', 'c'], ['x', 'y']]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_base16_improved_contrast = 1
@@ -13,10 +9,6 @@ let g:airline_base16_monotone = 1
 let g:airline_extensions = ['tabline']
 let g:airline_highlighting_cache = 1
 let g:airline_theme = 'base16_vim'
-
-let g:fugitive_legacy_commands = 0
-
-let g:gitgutter_map_keys = 0
 
 " =========== Plugins ==========================================================
 
@@ -37,22 +29,11 @@ Plug LocalPlugin('junegunn/fzf')
 Plug LocalPlugin('mk12/base16-vim')
 Plug LocalPlugin('mk12/vim-meta')
 
-Plug 'Clavelito/indent-awk.vim'
-Plug 'airblade/vim-gitgutter'
-Plug 'glts/vim-textobj-comment'
-Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf.vim'
-Plug 'junegunn/gv.vim'
 Plug 'justinmk/vim-dirvish'
-Plug 'kana/vim-textobj-user'
-Plug 'ledger/vim-ledger'
-Plug 'mbbill/undotree'
-Plug 'michaeljsmith/vim-indent-object'
-Plug 'sgur/vim-textobj-parameter'
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : 'Shortcut' }
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
@@ -199,13 +180,6 @@ inoremap <C--> <C-O><C-O>
 noremap <C-S--> <C-I>
 inoremap <C-S--> <C-O><C-I>
 
-nmap [h <Plug>(GitGutterPrevHunk)
-nmap ]h <Plug>(GitGutterNextHunk)
-omap ih <Plug>(GitGutterTextObjectInnerPending)
-omap ah <Plug>(GitGutterTextObjectOuterPending)
-xmap ih <Plug>(GitGutterTextObjectInnerVisual)
-xmap ah <Plug>(GitGutterTextObjectOuterVisual)
-
 " =========== Shortcuts ========================================================
 
 Shortcut open shortcut menu
@@ -227,9 +201,6 @@ Shortcut project-wide search with input
     \ nnoremap <silent> <Leader>* :call SearchProject(expand('<cword>'))<CR>
     \|xnoremap <silent> <Leader>* y:call SearchProject(@")<CR>
 
-Shortcut go to alternate file
-    \ nnoremap <Leader>a :call AlternateFile()<CR>
-
 Shortcut toggle comment
     \ nnoremap <Leader>c :Commentary<CR>
     \|xnoremap <Leader>c :Commentary<CR>
@@ -239,9 +210,6 @@ Shortcut fix mouse after terminal reset
 Shortcut indent lines
     \ nnoremap <Leader>di =ip
     \|xnoremap <Leader>di =
-Shortcut show number of search matches
-    \ nnoremap <Leader>dm :%s/<C-R>///n<CR>
-    \|xnoremap <Leader>dm y:%s/<C-R>"//n<CR>
 Shortcut sort lines
     \ nnoremap <Leader>ds vip:sort<CR>
     \|xnoremap <Leader>ds :sort<CR>
@@ -274,83 +242,23 @@ Shortcut resolve symlinks
 Shortcut edit vimrc or init.vim
     \ nnoremap <Leader>ev :edit $MYVIMRC<CR>
 
-Shortcut format code
-    \ nnoremap <Leader>f :call FormatCode('%')<CR>
-    \|xnoremap <Leader>f :call FormatCode()<CR>
-
-Shortcut git blame
-    \ nnoremap <Leader>gb :Git blame<CR>
-Shortcut git diff
-    \ nnoremap <Leader>gd :tab Git diff<CR>
-Shortcut git diff current file
-    \ nnoremap <Leader>gD :tab Gvdiffsplit<CR>
-Shortcut git status
-    \ nnoremap <Leader>gg :Git<CR>
-Shortcut browse on GitHub
-    \ nnoremap <Leader>gh :GBrowse<CR>
-Shortcut git diff staged/cached/index
-    \ nnoremap <Leader>gi :tab Git diff --staged<CR>
-Shortcut git diff staged/cached/index current file
-    \ nnoremap <Leader>gI :Gtabedit :%<Bar>Gvdiffsplit @<CR>
-Shortcut git log
-    \ nnoremap <Leader>gl :GV<CR>
-    \|xnoremap <Leader>gl :GV<CR>
-Shortcut git log current file
-    \ nnoremap <Leader>gL :GV!<CR>
-Shortcut git push
-    \ nnoremap <Leader>gp :Git push<CR>
-Shortcut git show HEAD
-    \ nnoremap <Leader>gs :tab Git show<CR>
-Shortcut git show HEAD current file
-    \ nnoremap <Leader>gS :Gtabedit @:%<Bar>Gvdiffsplit @~<CR>
-Shortcut git update/pull
-    \ nnoremap <Leader>gu :Git pull<CR>
-Shortcut git update/pull (autostash)
-    \ nnoremap <Leader>gU :Git pull --autostash<CR>
-
 Shortcut find help
     \ nnoremap <Leader>h :Helptags<CR>
-
-Shortcut jump to commit
-    \ nnoremap <Leader>jc :Commits!<CR>
-Shortcut jump to commit in buffer
-    \ nnoremap <Leader>jC :BCommits!<CR>
-Shortcut jump/switch to filetype
-    \ nnoremap <Leader>jf :Filetypes<CR>
-Shortcut jump to line
-    \ nnoremap <Leader>jl :Lines<CR>
-Shortcut jump to line in buffer
-    \ nnoremap <Leader>jL :BLines<CR>
-Shortcut jump to mapping
-    \ nnoremap <Leader>jm :Maps<CR>
-Shortcut jump to project directory
-    \ nnoremap <silent> <Leader>jp :call SwitchProject()<CR>
-Shortcut jump to command history
-    \ nnoremap <Leader>jr :History:<CR>
-Shortcut jump to search history
-    \ nnoremap <Leader>j/ :History/<CR>
 
 Shortcut kill/delete buffer
     \ nnoremap <silent> <leader>k :call KillBuffer('')<CR>
 Shortcut force kill/delete buffer
     \ nnoremap <silent> <Leader>K :call KillBuffer('!')<CR>
 
-Shortcut lint code
-    \ nnoremap <silent> <Leader>l :call LintCode('%')<CR>
-    \|xnoremap <silent> <Leader>l :call LintCode()<CR>
+Shortcut show number of search matches
+    \ nnoremap <Leader>m :%s/<C-R>///n<CR>
+    \|xnoremap <Leader>m y:%s/<C-R>"//n<CR>
 
 Shortcut stop highlighting the search
     \ nnoremap <Leader>n :nohlsearch<CR>
 
 Shortcut open in GUI editor
     \ nnoremap <Leader>o :call OpenInGuiEditor()<CR>
-
-Shortcut clean plugins
-    \ nnoremap <Leader>pc :PlugClean<CR>
-Shortcut install plugins
-    \ nnoremap <Leader>pi :PlugInstall<CR>
-Shortcut update plugins
-    \ nnoremap <Leader>pu :PlugUpdate<CR>
 
 Shortcut quit
     \ nnoremap <Leader>q :quit<CR>
@@ -367,10 +275,6 @@ Shortcut force save/write file
 
 Shortcut toggle 80-column marker
     \ nnoremap <Leader>t8 :call ToggleColumnLimit()<CR>
-Shortcut toggle auto-pairs
-    \ nnoremap <Leader>ta :call AutoPairsToggle()<CR>
-Shortcut toggle git line highlight
-    \ nnoremap <Leader>tl :GitGutterLineHighlightsToggle<CR>
 Shortcut toggle line numbers
     \ nnoremap <Leader>tn :set number!<CR>
 Shortcut toggle paste mode
@@ -379,8 +283,6 @@ Shortcut toggle relative line numbers
     \ nnoremap <Leader>tr :set relativenumber!<CR>
 Shortcut toggle spell checker
     \ nnoremap <Leader>ts :set spell!<CR>
-Shortcut toggle undo tree
-    \ nnoremap <Leader>tu :UndotreeToggle<CR>
 Shortcut toggle list/whitespace mode
     \ nnoremap <Leader>tw :set list!<CR>
 
@@ -434,19 +336,12 @@ augroup custom
 
     autocmd FileType * call SetTextWidthForFileType()
 
-    autocmd FileType j let b:AutoPairs = {}
-    autocmd FileType lisp,scheme
-        \ let b:AutoPairs = AutoPairsDefine({"'": "", "'''": ""})
-
     " Fix it so that crontab -e can save properly.
     autocmd filetype crontab setlocal nobackup nowritebackup textwidth=0
 
     " Don't do syntax highlighting in diffs.
     autocmd BufEnter * call DisableSyntaxForDiff()
     autocmd OptionSet diff call DisableSyntaxForDiff()
-
-    " By default GitGutter waits for 'updatetime' ms before updating.
-    autocmd BufWritePost,WinEnter * GitGutter
 
     " The Airline tabline gets messed up when reloading the color scheme.
     autocmd ColorScheme * AirlineRefresh
@@ -455,9 +350,8 @@ augroup custom
     autocmd BufWipeout * call airline#extensions#tabline#buflist#clean()
 
     " Exit things with q.
-    autocmd filetype help,git,fugitive* nnoremap <buffer> <silent> q :close<CR>
+    autocmd filetype help nnoremap <buffer> <silent> q :close<CR>
     autocmd filetype dirvish nmap <buffer> <silent> q <Plug>(dirvish_quit)
-    autocmd BufEnter fugitive://*//* nnoremap <buffer> <silent> q :tabclose<CR>
 
     " Redraw after leaving the command-line window to close it.
     " https://vi.stackexchange.com/a/18178
@@ -619,39 +513,6 @@ function! SearchProject(...) abort
     endtry
 endfunction
 
-function! AlternateFile() abort
-    let l:header_extensions = ['h', 'hpp', 'hh']
-    let l:source_extensions = ['c', 'cpp', 'cc']
-    if index(l:header_extensions, expand('%:e')) >= 0
-        for l:c in l:source_extensions
-            let l:file = expand('%:r') . '.' . l:c
-            if filereadable(l:file)
-                silent execute 'edit' l:file
-                echo l:file
-                return
-            endif
-        endfor
-    elseif index(l:source_extensions, expand('%:e')) >= 0
-        for l:h in l:header_extensions
-            let l:file = expand('%:r') . '.' . l:h
-            if filereadable(l:file)
-                silent execute 'edit' l:file
-                echo l:file
-                return
-            endif
-        endfor
-    endif
-    if exists(':A') is 2
-        try
-            A
-        catch
-            call s:EchoException()
-        endtry
-    else
-        call s:Error("Cannot find alternate file")
-    endif
-endfunction
-
 function! DeleteHiddenBuffers() abort
     let l:tpbl = []
     let l:deleted = 0
@@ -690,31 +551,6 @@ function! ResolveSymlinks() abort
     catch
         call s:EchoException()
     endtry
-endfunction
-
-function! FormatCode(...) abort range
-    if exists('b:format_command')
-        let l:cmd = b:format_command
-    elseif &filetype is# 'c' || &filetype is# 'cpp'
-        let l:cmd = 'clang-format'
-    elseif &filetype is# 'rust'
-        let l:cmd = 'rustfmt'
-    elseif &filetype is# 'python'
-        let l:cmd = 'black -l ' . &textwidth . ' -'
-    elseif &filetype is# 'fish'
-        let l:cmd = 'fish_indent'
-    else
-        let l:ft = empty(&filetype) ? '<no filetype>' : &filetype
-        call s:Error('Unable to format ' . l:ft . ' file')
-        return
-    endif
-    let l:first = split(l:cmd)[0]
-    if !executable(l:first)
-        call s:Error('Executable not found: ' . l:first)
-        return
-    endif
-    let l:range = get(a:, 1, a:firstline . ',' . a:lastline)
-    call s:ExecuteRestoringView(l:range . '!' . l:cmd)
 endfunction
 
 function! SwitchProject() abort
@@ -775,25 +611,6 @@ function! KillBuffer(bang) abort
         silent execute 'bdelete' . a:bang l:btarget
     endif
     silent execute l:wcurrent 'wincmd w'
-endfunction
-
-function! LintCode(...) abort range
-    if exists('b:lint_command')
-        let l:cmd = b:lint_command
-    elseif &filetype is# 'sh'
-        let l:cmd = 'shellcheck -'
-    else
-        let l:ft = empty(&filetype) ? '<no filetype>' : &filetype
-        call s:Error('Unable to lint ' . l:ft . ' file')
-        return
-    endif
-    let l:first = split(l:cmd)[0]
-    if !executable(l:first)
-        call s:Error('Executable not found: ' . l:first)
-        return
-    endif
-    let l:range = get(a:, 1, a:firstline . ',' . a:lastline)
-    execute l:range . 'w !' . l:cmd
 endfunction
 
 function! OpenInGuiEditor() abort
