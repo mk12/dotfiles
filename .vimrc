@@ -27,7 +27,6 @@ Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : 'Shortcut' }
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'wsdjeg/vim-fetch'
@@ -55,7 +54,7 @@ set mousefocus
 set noerrorbells
 set nofoldenable
 set nojoinspaces
-set noruler
+set ruler
 set showmode
 set nostartofline
 set number
@@ -115,9 +114,6 @@ nnoremap <Space> <Nop>
 let mapleader = "\<Space>"
 let maplocalleader = ','
 
-inoremap jk <Esc>
-inoremap kj <Esc>
-
 noremap ; :
 noremap : ;
 
@@ -144,6 +140,8 @@ nnoremap <C-J> <C-W>w
 " Save quickly.
 noremap <C-S> :write<CR>
 inoremap <C-S> <C-O>:write<CR>
+noremap <C-X> :x<CR>
+inoremap <C-X> <C-O>:x<CR>
 
 nnoremap Y y$
 
@@ -199,31 +197,9 @@ Shortcut go to open buffer
 Shortcut go to last buffer
     \ nnoremap <silent> <Leader><BS> :buffer #<CR>
 
-Shortcut project-wide search
-    \ nnoremap <silent> <Leader>/ :call SearchProject()<CR>
-Shortcut project-wide search with input
-    \ nnoremap <silent> <Leader>* :call SearchProject(expand('<cword>'))<CR>
-    \|xnoremap <silent> <Leader>* y:call SearchProject(@")<CR>
-
 Shortcut toggle comment
     \ nnoremap <Leader>c :Commentary<CR>
     \|xnoremap <Leader>c :Commentary<CR>
-
-Shortcut fix mouse after terminal reset
-    \ nnoremap <Leader>da :set mouse=<Bar>set mouse=a<CR>
-Shortcut indent lines
-    \ nnoremap <Leader>di =ip
-    \|xnoremap <Leader>di =
-Shortcut sort lines
-    \ nnoremap <Leader>ds vip:sort<CR>
-    \|xnoremap <Leader>ds :sort<CR>
-Shortcut remove trailing whitespace
-    \ nnoremap <Leader>dw :%s/\s\+$//e<CR>
-    \|xnoremap <Leader>dw :s/\s\+$//e<CR>
-Shortcut set file executable bit
-    \ nnoremap <Leader>dx :Chmod +x<CR>
-Shortcut unset file executable bit
-    \ nnoremap <Leader>dX :Chmod -x<CR>
 
 Shortcut edit fish config
     \ nnoremap <Leader>ef :edit ~/.config/fish/config.fish<CR>
@@ -272,19 +248,12 @@ Shortcut force quit
 Shortcut reload/source vimrc or init.vim
     \ nnoremap <Leader>r :source $MYVIMRC<CR>
 
-Shortcut save/write file
-    \ nnoremap <Leader>s :write<CR>
-Shortcut force save/write file
-    \ nnoremap <Leader>S :write!<CR>
-
 Shortcut toggle 80-column marker
     \ nnoremap <Leader>t8 :call ToggleColumnLimit()<CR>
 Shortcut toggle line numbers
     \ nnoremap <Leader>tn :set number!<CR>
 Shortcut toggle paste mode
     \ nnoremap <Leader>tp :set paste!<CR>
-Shortcut toggle relative line numbers
-    \ nnoremap <Leader>tr :set relativenumber!<CR>
 Shortcut toggle spell checker
     \ nnoremap <Leader>ts :set spell!<CR>
 Shortcut toggle list/whitespace mode
@@ -479,38 +448,6 @@ function! MyFzf(type, ...) abort
     \ }))
 endfunction
 
-function! SearchProject(...) abort
-    let l:default_term = get(a:, 1, get(s:, 'last_search_term', ''))
-    let l:term = input('Search: ', l:default_term)
-    if empty(l:term)
-        return
-    endif
-    let s:last_search_term = l:term
-    let l:old_dir = getcwd()
-    let l:dir = InputDirectory()
-    if !empty(l:dir)
-        if l:dir is# '.'
-            let l:dir = '%:h'
-        endif
-        try
-            silent execute 'cd' l:dir
-        catch
-            redraw
-            call s:EchoException()
-            return
-        endtry
-    endif
-    try
-        " Not using silent execute because then pressing enter does not work
-        " (only in vim 8.2; in nvim it works fine either way).
-        execute 'Rg' l:term
-    finally
-        if !empty(l:dir)
-            silent execute 'cd' l:old_dir
-        endif
-    endtry
-endfunction
-
 function! DeleteHiddenBuffers() abort
     let l:tpbl = []
     let l:deleted = 0
@@ -549,23 +486,6 @@ function! ResolveSymlinks() abort
     catch
         call s:EchoException()
     endtry
-endfunction
-
-function! SwitchProject() abort
-    call fzf#run(fzf#wrap({
-        \ 'source': 'z-projects',
-        \ 'options': [
-            \ '--prompt', 'Projects> ',
-            \ '--preview', 'bat --plain --color=always $PROJECTS/{}/README.md',
-        \ ],
-        \ 'sink': {dir -> s:SwitchProjectSink(dir)},
-    \ }))
-endfunction
-
-function! s:SwitchProjectSink(dir) abort
-    execute 'cd ' . $PROJECTS . '/' . a:dir
-    let l:cwd = substitute(getcwd(), '\V\^' . $HOME . '/', '~/', '')
-    echomsg 'Switched to ' . l:cwd
 endfunction
 
 " http://vim.wikia.com/wiki/Deleting_a_buffer_without_closing_the_window#Script
@@ -640,7 +560,7 @@ endfunction
 
 function! SetTextWidthForFileType() abort
     " Check if someone else already set it, e.g. for gitcommit.
-    if &l:textwidth != 0
+    if &l:textwidth != 0 && &filetype isnot# 'vim'
         setlocal colorcolumn=+1
         return
     endif
