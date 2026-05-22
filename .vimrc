@@ -137,12 +137,6 @@ noremap! <M-/> <C-O><C-R>
 " Jump between open windows.
 nnoremap <C-J> <C-W>w
 
-" Save quickly.
-noremap <C-S> :write<CR>
-inoremap <C-S> <C-O>:write<CR>
-noremap <C-X> :x<CR>
-inoremap <C-X> <C-O>:x<CR>
-
 nnoremap Y y$
 
 " Stay in visual mode when indenting/dedenting.
@@ -286,11 +280,6 @@ Shortcut close all other windows
     \ nnoremap <Leader>wo <C-W>o
 Shortcut new tab
     \ nnoremap <Leader>wt :tabnew %<CR>
-
-Shortcut save/write and exit
-    \ nnoremap <Leader>x :exit<CR>
-Shortcut save/write all and exit
-    \ nnoremap <Leader>X :xall<CR>
 
 Shortcut yank to system clipboard
     \ nnoremap <Leader>y :%y+<Bar>call YankToSystemClipboard(@+)<CR>
