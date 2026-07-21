@@ -1,0 +1,17 @@
+[rhg]
+on-unsupported=fallback
+fallback-executable=hg.py
+
+[extensions]
+absorb=
+histedit=
+rebase=
+evolve=$PROJECTS/evolve/hgext3rd/evolve
+topic=$PROJECTS/evolve/hgext3rd/topic
+
+[format]
+use-fileindex-v1=True
+use-delta-info-flags=True
+
+[rust]
+annotate=True
