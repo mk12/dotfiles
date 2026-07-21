@@ -42,6 +42,7 @@ export GOPATH=~/.go
 export LESS=-FQRXi
 export LS_COLORS=
 export PAGER=less
+export PYTHONUSERBASE=~/.local
 
 # =========== Long variables ===================================================
 
