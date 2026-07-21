@@ -343,6 +343,34 @@ local function copyForTaxForms()
     copyForTaxFormsOne(1)
 end
 
+local function saveDramaChapter()
+    hs.eventtap.keyStroke({"cmd"}, "a")
+    hs.eventtap.keyStroke({ "cmd" }, "c")
+    local text = hs.pasteboard.getContents()
+    if not text:find("408\nRequest Time-out", 1, true) then
+        hs.application.find("com.mitchellh.ghostty", true):activate()
+        hs.eventtap.keyStroke({}, "up")
+        hs.eventtap.keyStroke({}, "return")
+    end
+end
+
+local function nextAndSaveDramaChapter()
+    hs.application.find("com.apple.Safari", true):activate()
+    hs.eventtap.keyStroke({"cmd"}, "l")
+    hs.eventtap.keyStroke({"cmd"}, "a")
+    hs.eventtap.keyStroke({ "cmd" }, "c")
+    local url = hs.pasteboard.getContents()
+    url = url:gsub("(%d+)/$", function(n)
+        return tonumber(n) + 1 .. "/"
+    end)
+    hs.pasteboard.setContents(url)
+    hs.eventtap.keyStroke({ "cmd" }, "v")
+    hs.eventtap.keyStroke({}, "return")
+    hs.timer.doAfter(1, function()
+        saveDramaChapter()
+    end)
+end
+
 local function toggleSideWindow()
     local windows = hs.window.orderedWindows()
     windows[3]:raise()
@@ -430,6 +458,9 @@ hs.hotkey.bind(hyper, "/", copyAppend)
 -- hs.hotkey.bind(hyper, "Z", copyForTaxForms)
 -- hs.hotkey.bind(hyper, "Z", copyToPreviewForm)
 -- hs.hotkey.bind(hyper, "X", toggleSideWindow)
+
+-- hs.hotkey.bind(hyper, ",", nextAndSaveDramaChapter)
+-- hs.hotkey.bind(hyper, ".", saveDramaChapter)
 
 -- ========== Timers ===========================================================
 
