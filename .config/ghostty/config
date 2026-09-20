@@ -8,6 +8,8 @@ font-style-bold-italic = Bold Italic
 font-synthetic-style = false
 font-size = 14
 
+macos-option-as-alt = true
+
 # This does nothing right now.
 # Ideally I want shell cursor integration, but no blinking.
 # https://github.com/ghostty-org/ghostty/discussions/2812
