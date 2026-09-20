@@ -21,8 +21,10 @@ Plug LocalPlugin('junegunn/fzf')
 Plug LocalPlugin('mk12/base16-vim')
 Plug LocalPlugin('mk12/vim-meta')
 
+Plug 'glts/vim-textobj-comment'
 Plug 'junegunn/fzf.vim'
 Plug 'justinmk/vim-dirvish'
+Plug 'kana/vim-textobj-user'
 Plug 'sheerun/vim-polyglot'
 Plug 'sunaku/vim-shortcut', { 'on' : 'Shortcut' }
 Plug 'tpope/vim-commentary'
