@@ -51,14 +51,14 @@ end
 # =========== Shortcuts ========================================================
 
 abbr -g g git
-abbr -g gs git status
+abbr -g gs git s
 abbr -g v vim
 abbr -g b zig build
 abbr -g r zig build run --
 
 alias vi=$EDITOR
 alias vim=$EDITOR
-alias e='emacsclient -t -a ""'
+# alias e='emacsclient -t -a ""'
 
 if command -qv zed
     abbr -g c zed
