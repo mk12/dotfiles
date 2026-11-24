@@ -7,6 +7,31 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "agent": {
+    "sandbox_permissions": {
+      "allow_unsandboxed": true
+    },
+    "tool_permissions": {
+      "tools": {
+        "terminal": {
+          "always_allow": [
+            {
+              "pattern": "^zig\\s+build(\\s|$)"
+            },
+            {
+              "pattern": "^sed\\b"
+            },
+            {
+              "pattern": "^rg\\b"
+            }
+          ]
+        }
+      }
+    },
+    "dock": "right",
+    "favorite_models": [],
+    "model_parameters": []
+  },
   "project_panel": {
     "dock": "left"
   },
