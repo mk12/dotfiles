@@ -53,7 +53,8 @@ end
 abbr -g g git
 abbr -g gs git status
 abbr -g v vim
-abbr -g zb zig build
+abbr -g b zig build
+abbr -g r zig build run --
 
 alias vi=$EDITOR
 alias vim=$EDITOR
