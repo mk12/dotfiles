@@ -143,7 +143,8 @@ end
 -- ========== Ghostty ==========================================================
 
 local function showOrHideGhostty()
-    local bundleId = "com.mitchellh.ghostty"
+    -- local bundleId = "com.mitchellh.ghostty"
+    local bundleId = "com.superlogical.rex"
     local app = hs.application.find(bundleId, true)
     if not app then
         hs.application.open(bundleId)
@@ -394,7 +395,7 @@ end
 local function goDownTwoPdfs()
     local windows = hs.window.orderedWindows()
     hs.eventtap.keyStroke({}, "down")
-    windows[2]:raise()
+    windows[2]:focus()
     hs.timer.doAfter(0.05, function()
         hs.eventtap.keyStroke({}, "down")
     end)
@@ -403,7 +404,7 @@ end
 local function goUpTwoPdfs()
     local windows = hs.window.orderedWindows()
     hs.eventtap.keyStroke({}, "up")
-    windows[2]:raise()
+    windows[2]:focus()
     hs.timer.doAfter(0.05, function()
         hs.eventtap.keyStroke({}, "up")
     end)
@@ -453,8 +454,8 @@ hs.hotkey.bind(hyper, "/", copyAppend)
 --     hs.eventtap.event.newMouseEvent(hs.eventtap.event.types["leftMouseUp"], hs.mouse.absolutePosition()):post()
 -- end)
 
--- hs.hotkey.bind(hyper, "Z", goDownTwoPdfs)
--- hs.hotkey.bind(hyper, "X", goUpTwoPdfs)
+hs.hotkey.bind(hyper, "Z", goDownTwoPdfs)
+hs.hotkey.bind(hyper, "X", goUpTwoPdfs)
 -- hs.hotkey.bind(hyper, "Z", copyForTaxForms)
 -- hs.hotkey.bind(hyper, "Z", copyToPreviewForm)
 -- hs.hotkey.bind(hyper, "X", toggleSideWindow)
