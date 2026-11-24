@@ -31,6 +31,12 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'wsdjeg/vim-fetch'
 
+" Register the lookup before plug#end() enables the filetype plugin loader.
+filetype plugin off
+augroup zig_std_dir
+    autocmd!
+    autocmd FileType zig ++once call s:SetZigStdDir()
+augroup END
 call plug#end()
 
 " =========== Options ==========================================================
@@ -299,6 +305,28 @@ augroup custom
 augroup END
 
 " =========== Functions ========================================================
+
+" Older Zig releases emit JSON and newer ones emit ZON.
+function! s:SetZigStdDir() abort
+    if exists('g:zig_std_dir') || !executable('zig')
+        return
+    endif
+
+    let l:env = system(['zig', 'env'])
+    if v:shell_error != 0
+        return
+    endif
+
+    if l:env =~# '^\s*{'
+        let g:zig_std_dir = json_decode(l:env)['std_dir']
+    else
+        let l:std_dir = matchstr(l:env,
+            \ '\n\s*\.std_dir\s*=\s*\zs"\%(\\.\|[^"\\]\)*"')
+        if !empty(l:std_dir)
+            let g:zig_std_dir = json_decode(l:std_dir)
+        endif
+    endif
+endfunction
 
 function! s:Error(msg) abort
     echohl ErrorMsg
