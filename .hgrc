@@ -15,3 +15,6 @@ use-delta-info-flags=True
 
 [rust]
 annotate=True
+
+[alias]
+blame = blame -udc
